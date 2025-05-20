@@ -19,6 +19,22 @@ public class MovieRepositoryTest {
     private MovieRepository movieRepository;
 
     @Test
+    @DisplayName("영화 등록")
+    public void createMovie() {
+        // given
+        Movie movie = Movie.builder()
+                .title("테스트용 영화")
+                .codeFIMS("123")
+                .build();
+
+        // when
+        Movie save = movieRepository.save(movie);
+
+        // then
+        assertThat(save).isEqualTo(movie);
+    }
+
+    @Test
     @DisplayName("영화 목록 불러오기")
     public void movieList() {
         // given
@@ -39,7 +55,24 @@ public class MovieRepositoryTest {
     }
 
     @Test
-    @DisplayName("타이틀 키워드로 검색")
+    @DisplayName("영화 검색 : 아이디")
+    public void findById() {
+        // given
+        Movie movie = Movie.builder()
+                .title("테스트용 영화 제목")
+                .codeFIMS("123123")
+                .build();
+        Movie save = movieRepository.save(movie);
+
+        // when
+        Movie found = movieRepository.findById(save.getId()).get();
+
+        // then
+        assertThat(found).isEqualTo(movie);
+    }
+
+    @Test
+    @DisplayName("영화 검색 : 타이틀 키워드")
     public void findByTitle() {
         // given
         Movie movie = Movie.builder()
