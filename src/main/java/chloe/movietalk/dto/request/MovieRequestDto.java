@@ -1,0 +1,38 @@
+package chloe.movietalk.dto.request;
+
+import chloe.movietalk.domain.Movie;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
+
+@Getter
+@NoArgsConstructor
+public class MovieRequestDto {
+
+    private String codeFIMS;
+    private String title;
+    private String synopsis;
+    private LocalDate releaseDate;
+    private Integer prodYear;
+
+    @Builder
+    public MovieRequestDto(String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear) {
+        this.codeFIMS = codeFIMS;
+        this.title = title;
+        this.synopsis = synopsis;
+        this.releaseDate = releaseDate;
+        this.prodYear = prodYear;
+    }
+
+    public Movie toEntity() {
+        return Movie.builder()
+                .codeFIMS(this.codeFIMS)
+                .title(this.title)
+                .synopsis(this.synopsis)
+                .releaseDate(this.releaseDate)
+                .prodYear(this.prodYear)
+                .build();
+    }
+}
