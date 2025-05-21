@@ -6,12 +6,14 @@ import chloe.movietalk.dto.response.MovieDto;
 import chloe.movietalk.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class MovieServiceImpl implements MovieService {
 
