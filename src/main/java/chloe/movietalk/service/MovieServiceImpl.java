@@ -3,13 +3,14 @@ package chloe.movietalk.service;
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.MovieRequestDto;
 import chloe.movietalk.dto.response.MovieDto;
+import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
+import chloe.movietalk.exception.movie.MovieNotFoundException;
 import chloe.movietalk.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +30,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieDto getMovieById(Long id) {
         Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("영화를 찾을 수 없습니다."));
+                .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
         return MovieDto.fromEntity(movie);
     }
 
@@ -44,7 +45,7 @@ public class MovieServiceImpl implements MovieService {
     public MovieDto createMovie(MovieRequestDto dto) {
         movieRepository.findByCodeFIMS(dto.getCodeFIMS())
                 .ifPresent(a -> {
-                    throw new IllegalStateException("이미 존재하는 영화입니다.");
+                    throw AlreadyExistsMovieException.EXCEPTION;
                 });
 
         Movie save = movieRepository.save(dto.toEntity());
@@ -54,7 +55,7 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public MovieDto updateMovie(Long id, MovieRequestDto dto) {
         Movie movie = movieRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("영화를 찾을 수 없습니다"));
+                .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
         movie.updateMovie(dto.toEntity());
         return MovieDto.fromEntity(movie);
     }

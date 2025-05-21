@@ -3,6 +3,7 @@ package chloe.movietalk.service;
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.MovieRequestDto;
 import chloe.movietalk.dto.response.MovieDto;
+import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
 import chloe.movietalk.repository.MovieRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,8 +65,7 @@ public class MovieServiceTest {
                 .willReturn(Optional.of(requestDto.toEntity()));
 
         // when then
-        IllegalStateException e = Assertions.assertThrows(IllegalStateException.class,
+        Assertions.assertThrows(AlreadyExistsMovieException.class,
                 () -> movieService.createMovie(requestDto));
-        assertThat(e.getMessage()).isEqualTo("이미 존재하는 영화입니다.");
     }
 }
