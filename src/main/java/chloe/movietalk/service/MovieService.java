@@ -14,7 +14,7 @@ public interface MovieService {
 
     public MovieDto createMovie(MovieRequestDto dto);
 
-    public void updateMovie(Long id, MovieRequestDto dto);
+    public MovieDto updateMovie(Long id, MovieRequestDto dto);
 
     public void deleteMovie(Long id);
 }

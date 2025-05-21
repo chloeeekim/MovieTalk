@@ -52,10 +52,11 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void updateMovie(Long id, MovieRequestDto dto) {
+    public MovieDto updateMovie(Long id, MovieRequestDto dto) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("영화를 찾을 수 없습니다"));
         movie.updateMovie(dto.toEntity());
+        return MovieDto.fromEntity(movie);
     }
 
     @Override
