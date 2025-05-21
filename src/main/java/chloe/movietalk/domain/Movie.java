@@ -30,13 +30,18 @@ public class Movie extends BaseEntity {
     @Column(name = "prod_year")
     private Integer prodYear;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "director_id")
+    private Director director;
+
     @Builder
-    public Movie(String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear) {
+    public Movie(String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, Director director) {
         this.codeFIMS = codeFIMS;
         this.title = title;
         this.synopsis = synopsis;
         this.releaseDate = releaseDate;
         this.prodYear = prodYear;
+        this.director = director;
     }
 
     public void updateMovie(Movie movie) {
@@ -45,5 +50,6 @@ public class Movie extends BaseEntity {
         this.synopsis = movie.getSynopsis();
         this.releaseDate = movie.getReleaseDate();
         this.prodYear = movie.getProdYear();
+        this.director = movie.getDirector();
     }
 }
