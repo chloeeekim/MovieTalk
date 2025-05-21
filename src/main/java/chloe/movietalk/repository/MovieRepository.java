@@ -12,4 +12,6 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     List<Movie> findByTitleContaining(String keyword);
 
     Optional<Movie> findByCodeFIMS(String code);
+
+    Optional<Movie> findByDirectorId(Long director_id);
 }

@@ -1,10 +1,13 @@
 package chloe.movietalk.service;
 
+import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.MovieRequestDto;
 import chloe.movietalk.dto.response.MovieDto;
+import chloe.movietalk.exception.director.DirectorNotFoundException;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
 import chloe.movietalk.exception.movie.MovieNotFoundException;
+import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
+    private final DirectorRepository directorRepository;
 
     @Override
     public List<MovieDto> getAllMovies() {
@@ -48,7 +52,13 @@ public class MovieServiceImpl implements MovieService {
                     throw AlreadyExistsMovieException.EXCEPTION;
                 });
 
-        Movie save = movieRepository.save(dto.toEntity());
+        Director director = null;
+        if (dto.getDirectorId() != null) {
+            director = directorRepository.findById(dto.getDirectorId())
+                    .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
+        }
+
+        Movie save = movieRepository.save(dto.toEntity(director));
         return MovieDto.fromEntity(save);
     }
 
@@ -56,7 +66,14 @@ public class MovieServiceImpl implements MovieService {
     public MovieDto updateMovie(Long id, MovieRequestDto dto) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
-        movie.updateMovie(dto.toEntity());
+
+        Director director = null;
+        if (dto.getDirectorId() != null) {
+            director = directorRepository.findById(dto.getDirectorId())
+                    .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
+        }
+
+        movie.updateMovie(dto.toEntity(director));
         return MovieDto.fromEntity(movie);
     }
 
@@ -64,5 +81,4 @@ public class MovieServiceImpl implements MovieService {
     public void deleteMovie(Long id) {
         movieRepository.deleteById(id);
     }
-
 }
