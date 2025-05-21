@@ -1,5 +1,6 @@
 package chloe.movietalk.repository;
 
+import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Movie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,9 @@ public class MovieRepositoryTest {
 
     @Autowired
     private MovieRepository movieRepository;
+
+    @Autowired
+    private DirectorRepository directorRepository;
 
     @Test
     @DisplayName("영화 등록")
@@ -101,6 +105,28 @@ public class MovieRepositoryTest {
 
         // when
         Movie found = movieRepository.findByCodeFIMS("123123").get();
+
+        // then
+        assertThat(found).isEqualTo(movie);
+    }
+
+    @Test
+    @DisplayName("영화 검색 : 감독")
+    public void findByDirectorId() {
+        // given
+        Director director = Director.builder()
+                .name("김감독")
+                .build();
+        Director savedDirector = directorRepository.save(director);
+        Movie movie = Movie.builder()
+                .title("테스트용 영화 제목")
+                .codeFIMS("123123")
+                .director(savedDirector)
+                .build();
+        movieRepository.save(movie);
+
+        // when
+        Movie found = movieRepository.findByDirectorId(savedDirector.getId()).get();
 
         // then
         assertThat(found).isEqualTo(movie);
