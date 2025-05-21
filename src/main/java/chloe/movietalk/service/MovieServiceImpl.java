@@ -41,9 +41,9 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public Long createMovie(MovieRequestDto dto) {
+    public MovieDto createMovie(MovieRequestDto dto) {
         Movie save = movieRepository.save(dto.toEntity());
-        return save.getId();
+        return MovieDto.fromEntity(save);
     }
 
     @Override

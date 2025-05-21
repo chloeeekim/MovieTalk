@@ -12,7 +12,7 @@ public interface MovieService {
 
     public List<MovieDto> searchMovies(String keyword);
 
-    public Long createMovie(MovieRequestDto dto);
+    public MovieDto createMovie(MovieRequestDto dto);
 
     public void updateMovie(Long id, MovieRequestDto dto);
 

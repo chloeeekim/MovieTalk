@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class MovieDto {
 
+    private Long id;
     private String codeFIMS;
     private String title;
     private String synopsis;
@@ -18,7 +19,8 @@ public class MovieDto {
     private Integer prodYear;
 
     @Builder
-    public MovieDto(String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear) {
+    public MovieDto(Long id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear) {
+        this.id = id;
         this.codeFIMS = codeFIMS;
         this.title = title;
         this.synopsis = synopsis;
@@ -28,6 +30,7 @@ public class MovieDto {
 
     public static MovieDto fromEntity(Movie movie) {
         return MovieDto.builder()
+                .id(movie.getId())
                 .codeFIMS(movie.getCodeFIMS())
                 .title(movie.getTitle())
                 .synopsis(movie.getSynopsis())
