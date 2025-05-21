@@ -88,4 +88,21 @@ public class MovieRepositoryTest {
         // then
         assertThat(movieList).containsOnly(movie);
     }
+
+    @Test
+    @DisplayName("영화 검색 : FIMS 코드")
+    public void findByCodeFIMS() {
+        // given
+        Movie movie = Movie.builder()
+                .title("테스트용 영화 제목")
+                .codeFIMS("123123")
+                .build();
+        movieRepository.save(movie);
+
+        // when
+        Movie found = movieRepository.findByCodeFIMS("123123").get();
+
+        // then
+        assertThat(found).isEqualTo(movie);
+    }
 }
