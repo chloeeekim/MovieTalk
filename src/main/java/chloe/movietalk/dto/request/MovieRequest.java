@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class MovieRequestDto {
+public class MovieRequest {
 
     @NotNull
     private String codeFIMS;
@@ -26,7 +26,7 @@ public class MovieRequestDto {
     private Long directorId;
 
     @Builder
-    public MovieRequestDto(String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, Long directorId) {
+    public MovieRequest(String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, Long directorId) {
         this.codeFIMS = codeFIMS;
         this.title = title;
         this.synopsis = synopsis;

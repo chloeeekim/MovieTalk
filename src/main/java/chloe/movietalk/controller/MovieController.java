@@ -1,7 +1,7 @@
 package chloe.movietalk.controller;
 
-import chloe.movietalk.dto.request.MovieRequestDto;
-import chloe.movietalk.dto.response.MovieDto;
+import chloe.movietalk.dto.request.MovieRequest;
+import chloe.movietalk.dto.response.MovieResponse;
 import chloe.movietalk.service.MovieService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,29 +19,29 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping
-    public List<MovieDto> getAllMovies() {
+    public List<MovieResponse> getAllMovies() {
         return movieService.getAllMovies();
     }
 
     @GetMapping("/{id}")
-    public MovieDto getMovieById(@PathVariable Long id) {
+    public MovieResponse getMovieById(@PathVariable Long id) {
         return movieService.getMovieById(id);
     }
 
     @GetMapping("/search")
-    public List<MovieDto> searchMovies(@RequestParam String keyword) {
+    public List<MovieResponse> searchMovies(@RequestParam String keyword) {
         return movieService.searchMovies(keyword);
     }
 
     @PostMapping
-    public ResponseEntity<MovieDto> createMovie(@RequestBody @Valid MovieRequestDto dto) {
-        MovieDto movie = movieService.createMovie(dto);
+    public ResponseEntity<MovieResponse> createMovie(@RequestBody @Valid MovieRequest dto) {
+        MovieResponse movie = movieService.createMovie(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(movie);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MovieDto> updateMovie(@PathVariable Long id, @RequestBody @Valid MovieRequestDto dto) {
-        MovieDto movie = movieService.updateMovie(id, dto);
+    public ResponseEntity<MovieResponse> updateMovie(@PathVariable Long id, @RequestBody @Valid MovieRequest dto) {
+        MovieResponse movie = movieService.updateMovie(id, dto);
         return ResponseEntity.ok().body(movie);
     }
 

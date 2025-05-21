@@ -2,8 +2,8 @@ package chloe.movietalk.service;
 
 import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Movie;
-import chloe.movietalk.dto.request.MovieRequestDto;
-import chloe.movietalk.dto.response.MovieDto;
+import chloe.movietalk.dto.request.MovieRequest;
+import chloe.movietalk.dto.response.MovieResponse;
 import chloe.movietalk.exception.director.DirectorNotFoundException;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
 import chloe.movietalk.exception.movie.MovieNotFoundException;
@@ -25,28 +25,28 @@ public class MovieServiceImpl implements MovieService {
     private final DirectorRepository directorRepository;
 
     @Override
-    public List<MovieDto> getAllMovies() {
+    public List<MovieResponse> getAllMovies() {
         return movieRepository.findAll().stream()
-                .map(MovieDto::fromEntity)
+                .map(MovieResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MovieDto getMovieById(Long id) {
+    public MovieResponse getMovieById(Long id) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
-        return MovieDto.fromEntity(movie);
+        return MovieResponse.fromEntity(movie);
     }
 
     @Override
-    public List<MovieDto> searchMovies(String keyword) {
+    public List<MovieResponse> searchMovies(String keyword) {
         return movieRepository.findByTitleContaining(keyword).stream()
-                .map(MovieDto::fromEntity)
+                .map(MovieResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MovieDto createMovie(MovieRequestDto dto) {
+    public MovieResponse createMovie(MovieRequest dto) {
         movieRepository.findByCodeFIMS(dto.getCodeFIMS())
                 .ifPresent(a -> {
                     throw AlreadyExistsMovieException.EXCEPTION;
@@ -59,11 +59,11 @@ public class MovieServiceImpl implements MovieService {
         }
 
         Movie save = movieRepository.save(dto.toEntity(director));
-        return MovieDto.fromEntity(save);
+        return MovieResponse.fromEntity(save);
     }
 
     @Override
-    public MovieDto updateMovie(Long id, MovieRequestDto dto) {
+    public MovieResponse updateMovie(Long id, MovieRequest dto) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
@@ -74,7 +74,7 @@ public class MovieServiceImpl implements MovieService {
         }
 
         movie.updateMovie(dto.toEntity(director));
-        return MovieDto.fromEntity(movie);
+        return MovieResponse.fromEntity(movie);
     }
 
     @Override

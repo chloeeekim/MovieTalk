@@ -1,8 +1,8 @@
 package chloe.movietalk.service;
 
 import chloe.movietalk.domain.Movie;
-import chloe.movietalk.dto.request.MovieRequestDto;
-import chloe.movietalk.dto.response.MovieDto;
+import chloe.movietalk.dto.request.MovieRequest;
+import chloe.movietalk.dto.response.MovieResponse;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
 import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
@@ -40,7 +40,7 @@ public class MovieServiceTest {
     @DisplayName("영화 생성 성공")
     public void createMovieSuccess() {
         // given
-        MovieRequestDto requestDto = MovieRequestDto.builder()
+        MovieRequest requestDto = MovieRequest.builder()
                 .title("테스트용 영화")
                 .codeFIMS("123123")
                 .build();
@@ -49,7 +49,7 @@ public class MovieServiceTest {
                 .willReturn(requestDto.toEntity(null));
 
         // when
-        MovieDto movie = movieService.createMovie(requestDto);
+        MovieResponse movie = movieService.createMovie(requestDto);
 
         // then
         assertThat(movie.getTitle()).isEqualTo(requestDto.getTitle());
@@ -60,7 +60,7 @@ public class MovieServiceTest {
     @DisplayName("영화 생성 실패 - code 중복")
     public void createMovieException() {
         // given
-        MovieRequestDto requestDto = MovieRequestDto.builder()
+        MovieRequest requestDto = MovieRequest.builder()
                 .title("테스트용 영화")
                 .codeFIMS("123123")
                 .build();

@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class MovieDto {
+public class MovieResponse {
 
     private Long id;
     private String codeFIMS;
@@ -17,10 +17,10 @@ public class MovieDto {
     private String synopsis;
     private LocalDate releaseDate;
     private Integer prodYear;
-    private DirectorDto director;
+    private DirectorResponse director;
 
     @Builder
-    public MovieDto(Long id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, DirectorDto director) {
+    public MovieResponse(Long id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, DirectorResponse director) {
         this.id = id;
         this.codeFIMS = codeFIMS;
         this.title = title;
@@ -30,15 +30,15 @@ public class MovieDto {
         this.director = director;
     }
 
-    public static MovieDto fromEntity(Movie movie) {
-        return MovieDto.builder()
+    public static MovieResponse fromEntity(Movie movie) {
+        return MovieResponse.builder()
                 .id(movie.getId())
                 .codeFIMS(movie.getCodeFIMS())
                 .title(movie.getTitle())
                 .synopsis(movie.getSynopsis())
                 .releaseDate(movie.getReleaseDate())
                 .prodYear(movie.getProdYear())
-                .director(movie.getDirector() == null ? null : DirectorDto.fromEntity(movie.getDirector()))
+                .director(movie.getDirector() == null ? null : DirectorResponse.fromEntity(movie.getDirector()))
                 .build();
     }
 }

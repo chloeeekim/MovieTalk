@@ -1,7 +1,7 @@
 package chloe.movietalk.controller;
 
 import chloe.movietalk.domain.Movie;
-import chloe.movietalk.dto.request.MovieRequestDto;
+import chloe.movietalk.dto.request.MovieRequest;
 import chloe.movietalk.repository.MovieRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -101,7 +101,7 @@ public class MovieControllerTest {
     @DisplayName("영화 등록")
     public void createMovie() throws Exception {
         // given
-        MovieRequestDto movie = MovieRequestDto.builder()
+        MovieRequest movie = MovieRequest.builder()
                 .title("테스트 영화 제목")
                 .codeFIMS("123123")
                 .build();
@@ -127,7 +127,7 @@ public class MovieControllerTest {
                 .codeFIMS("111")
                 .build();
         Movie save = movieRepository.save(movie);
-        MovieRequestDto update = MovieRequestDto.builder()
+        MovieRequest update = MovieRequest.builder()
                 .title("new title")
                 .codeFIMS("222")
                 .build();
