@@ -1,6 +1,7 @@
 package chloe.movietalk.dto.request;
 
 import chloe.movietalk.domain.Movie;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,8 +12,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class MovieRequestDto {
 
+    @NotNull
     private String codeFIMS;
+
+    @NotNull
     private String title;
+
     private String synopsis;
     private LocalDate releaseDate;
     private Integer prodYear;
