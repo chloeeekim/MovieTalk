@@ -126,9 +126,9 @@ public class MovieRepositoryTest {
         movieRepository.save(movie);
 
         // when
-        Movie found = movieRepository.findByDirectorId(savedDirector.getId()).get();
+        List<Movie> movieList = movieRepository.findByDirectorId(savedDirector.getId());
 
         // then
-        assertThat(found).isEqualTo(movie);
+        assertThat(movieList).containsOnly(movie);
     }
 }

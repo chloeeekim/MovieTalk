@@ -13,5 +13,5 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
 
     Optional<Movie> findByCodeFIMS(String code);
 
-    Optional<Movie> findByDirectorId(Long director_id);
+    List<Movie> findByDirectorId(Long director_id);
 }
