@@ -38,4 +38,12 @@ public class Movie {
         this.releaseDate = releaseDate;
         this.prodYear = prodYear;
     }
+
+    public void updateMovie(Movie movie) {
+        this.codeFIMS = movie.getCodeFIMS();
+        this.title = movie.getTitle();
+        this.synopsis = movie.getSynopsis();
+        this.releaseDate = movie.getReleaseDate();
+        this.prodYear = movie.getProdYear();
+    }
 }
