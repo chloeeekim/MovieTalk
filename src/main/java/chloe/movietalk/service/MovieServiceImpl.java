@@ -52,13 +52,7 @@ public class MovieServiceImpl implements MovieService {
                     throw AlreadyExistsMovieException.EXCEPTION;
                 });
 
-        Director director = null;
-        if (dto.getDirectorId() != null) {
-            director = directorRepository.findById(dto.getDirectorId())
-                    .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
-        }
-
-        Movie save = movieRepository.save(dto.toEntity(director));
+        Movie save = movieRepository.save(dto.toEntity(getDirector(dto.getDirectorId())));
         return MovieResponse.fromEntity(save);
     }
 
@@ -67,18 +61,21 @@ public class MovieServiceImpl implements MovieService {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
-        Director director = null;
-        if (dto.getDirectorId() != null) {
-            director = directorRepository.findById(dto.getDirectorId())
-                    .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
-        }
-
-        movie.updateMovie(dto.toEntity(director));
+        movie.updateMovie(dto.toEntity(getDirector(dto.getDirectorId())));
         return MovieResponse.fromEntity(movie);
     }
 
     @Override
     public void deleteMovie(Long id) {
         movieRepository.deleteById(id);
+    }
+
+    private Director getDirector(Long id) {
+        if (id == null) {
+            return null;
+        } else {
+            return directorRepository.findById(id)
+                    .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
+        }
     }
 }
