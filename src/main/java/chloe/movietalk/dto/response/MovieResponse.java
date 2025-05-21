@@ -17,10 +17,10 @@ public class MovieResponse {
     private String synopsis;
     private LocalDate releaseDate;
     private Integer prodYear;
-    private DirectorResponse director;
+    private DirectorInfo director;
 
     @Builder
-    public MovieResponse(Long id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, DirectorResponse director) {
+    public MovieResponse(Long id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, DirectorInfo director) {
         this.id = id;
         this.codeFIMS = codeFIMS;
         this.title = title;
@@ -38,7 +38,7 @@ public class MovieResponse {
                 .synopsis(movie.getSynopsis())
                 .releaseDate(movie.getReleaseDate())
                 .prodYear(movie.getProdYear())
-                .director(movie.getDirector() == null ? null : DirectorResponse.fromEntity(movie.getDirector()))
+                .director(movie.getDirector() == null ? null : DirectorInfo.fromEntity(movie.getDirector()))
                 .build();
     }
 }

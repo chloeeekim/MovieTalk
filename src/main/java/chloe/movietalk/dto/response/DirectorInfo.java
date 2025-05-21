@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class DirectorResponse {
+public class DirectorInfo {
 
     private Long id;
     private String name;
@@ -15,15 +15,15 @@ public class DirectorResponse {
     private String country;
 
     @Builder
-    public DirectorResponse(Long id, String name, String gender, String country) {
+    public DirectorInfo(Long id, String name, String gender, String country) {
         this.id = id;
         this.name = name;
         this.gender = gender;
         this.country = country;
     }
 
-    public static DirectorResponse fromEntity(Director director) {
-        return DirectorResponse.builder()
+    public static DirectorInfo fromEntity(Director director) {
+        return DirectorInfo.builder()
                 .id(director.getId())
                 .name(director.getName())
                 .gender(director.getGender())
