@@ -42,6 +42,11 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public MovieDto createMovie(MovieRequestDto dto) {
+        movieRepository.findByCodeFIMS(dto.getCodeFIMS())
+                .ifPresent(a -> {
+                    throw new IllegalStateException("이미 존재하는 영화입니다.");
+                });
+
         Movie save = movieRepository.save(dto.toEntity());
         return MovieDto.fromEntity(save);
     }
