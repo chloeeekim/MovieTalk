@@ -71,4 +71,21 @@ public class DirectorRepositoryTest {
         // then
         assertThat(found).isEqualTo(director);
     }
+
+    @Test
+    @DisplayName("감독 검색 : 이름")
+    public void findByName() {
+        // given
+        Director director = Director.builder()
+                .name("김감독")
+                .build();
+        directorRepository.save(director);
+
+        // when
+        String keyword = "감독";
+        List<Director> directorList = directorRepository.findByNameContaining(keyword);
+
+        // then
+        assertThat(directorList).containsOnly(director);
+    }
 }
