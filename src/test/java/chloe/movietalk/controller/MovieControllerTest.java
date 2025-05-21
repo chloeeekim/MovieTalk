@@ -52,9 +52,9 @@ public class MovieControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(jsonPath("$[0].title").value("영화 0"))
-                .andExpect(jsonPath("$[1].title").value("영화 1"));
+                .andExpect(jsonPath("data", hasSize(2)))
+                .andExpect(jsonPath("data[0].title").value("영화 0"))
+                .andExpect(jsonPath("data[1].title").value("영화 1"));
     }
 
     @Test
@@ -73,8 +73,8 @@ public class MovieControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("title").value(movie.getTitle()))
-                .andExpect(jsonPath("codeFIMS").value(movie.getCodeFIMS()));
+                .andExpect(jsonPath("data.title").value(movie.getTitle()))
+                .andExpect(jsonPath("data.codeFIMS").value(movie.getCodeFIMS()));
     }
 
     @Test
@@ -93,8 +93,8 @@ public class MovieControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].title").value(movie.getTitle()));
+                .andExpect(jsonPath("data", hasSize(1)))
+                .andExpect(jsonPath("data[0].title").value(movie.getTitle()));
     }
 
     @Test
@@ -114,8 +114,8 @@ public class MovieControllerTest {
         // then
         resultActions
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("title").value(movie.getTitle()))
-                .andExpect(jsonPath("codeFIMS").value(movie.getCodeFIMS()));
+                .andExpect(jsonPath("data.title").value(movie.getTitle()))
+                .andExpect(jsonPath("data.codeFIMS").value(movie.getCodeFIMS()));
     }
 
     @Test
@@ -140,8 +140,8 @@ public class MovieControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("title").value(update.getTitle()))
-                .andExpect(jsonPath("codeFIMS").value(update.getCodeFIMS()));
+                .andExpect(jsonPath("data.title").value(update.getTitle()))
+                .andExpect(jsonPath("data.codeFIMS").value(update.getCodeFIMS()));
     }
 
     @Test
