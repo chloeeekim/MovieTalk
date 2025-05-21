@@ -23,26 +23,26 @@ public class MovieRequestDto {
     private LocalDate releaseDate;
     private Integer prodYear;
 
-    private Director director;
+    private Long directorId;
 
     @Builder
-    public MovieRequestDto(String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, Director director) {
+    public MovieRequestDto(String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, Long directorId) {
         this.codeFIMS = codeFIMS;
         this.title = title;
         this.synopsis = synopsis;
         this.releaseDate = releaseDate;
         this.prodYear = prodYear;
-        this.director = director;
+        this.directorId = directorId;
     }
 
-    public Movie toEntity() {
+    public Movie toEntity(Director director) {
         return Movie.builder()
                 .codeFIMS(this.codeFIMS)
                 .title(this.title)
                 .synopsis(this.synopsis)
                 .releaseDate(this.releaseDate)
                 .prodYear(this.prodYear)
-                .director(this.director)
+                .director(director)
                 .build();
     }
 }
