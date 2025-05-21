@@ -1,5 +1,6 @@
 package chloe.movietalk.dto.response;
 
+import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Movie;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,15 +18,17 @@ public class MovieDto {
     private String synopsis;
     private LocalDate releaseDate;
     private Integer prodYear;
+    private Director director;
 
     @Builder
-    public MovieDto(Long id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear) {
+    public MovieDto(Long id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, Director director) {
         this.id = id;
         this.codeFIMS = codeFIMS;
         this.title = title;
         this.synopsis = synopsis;
         this.releaseDate = releaseDate;
         this.prodYear = prodYear;
+        this.director = director;
     }
 
     public static MovieDto fromEntity(Movie movie) {
@@ -36,6 +39,7 @@ public class MovieDto {
                 .synopsis(movie.getSynopsis())
                 .releaseDate(movie.getReleaseDate())
                 .prodYear(movie.getProdYear())
+                .director(movie.getDirector())
                 .build();
     }
 }
