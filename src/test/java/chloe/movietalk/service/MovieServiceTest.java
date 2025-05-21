@@ -4,6 +4,7 @@ import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.MovieRequestDto;
 import chloe.movietalk.dto.response.MovieDto;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
+import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,9 +28,12 @@ public class MovieServiceTest {
     @Mock
     MovieRepository movieRepository;
 
+    @Mock
+    DirectorRepository directorRepository;
+
     @BeforeEach
     public void beforeEach() {
-        movieService = new MovieServiceImpl(movieRepository);
+        movieService = new MovieServiceImpl(movieRepository, directorRepository);
     }
 
     @Test
@@ -42,7 +46,7 @@ public class MovieServiceTest {
                 .build();
 
         given(movieRepository.save(any(Movie.class)))
-                .willReturn(requestDto.toEntity());
+                .willReturn(requestDto.toEntity(null));
 
         // when
         MovieDto movie = movieService.createMovie(requestDto);
@@ -62,7 +66,7 @@ public class MovieServiceTest {
                 .build();
 
         given(movieRepository.findByCodeFIMS("123123"))
-                .willReturn(Optional.of(requestDto.toEntity()));
+                .willReturn(Optional.of(requestDto.toEntity(null)));
 
         // when then
         Assertions.assertThrows(AlreadyExistsMovieException.class,
