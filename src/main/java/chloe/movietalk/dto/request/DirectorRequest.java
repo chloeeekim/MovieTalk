@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 public class DirectorRequest {
 
     private String name;
-    private Gender gender;
+    private String gender;
     private String country;
 
     @Builder
-    public DirectorRequest(String name, Gender gender, String country) {
+    public DirectorRequest(String name, String gender, String country) {
         this.name = name;
         this.gender = gender;
         this.country = country;
@@ -24,7 +24,7 @@ public class DirectorRequest {
     public Director toEntity() {
         return Director.builder()
                 .name(this.name)
-                .gender(this.gender)
+                .gender(Gender.from(this.gender))
                 .country(this.country)
                 .build();
     }

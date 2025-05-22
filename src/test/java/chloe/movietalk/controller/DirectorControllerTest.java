@@ -3,6 +3,7 @@ package chloe.movietalk.controller;
 import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Gender;
 import chloe.movietalk.domain.Movie;
+import chloe.movietalk.dto.request.DirectorRequest;
 import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -116,9 +117,9 @@ public class DirectorControllerTest {
     @DisplayName("감독 등록")
     public void createDirector() throws Exception {
         // given
-        Director director = Director.builder()
+        DirectorRequest director = DirectorRequest.builder()
                 .name("김감독")
-                .gender(Gender.MALE)
+                .gender("MALE")
                 .country("대한민국")
                 .build();
 
@@ -131,7 +132,7 @@ public class DirectorControllerTest {
         resultActions
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("data.name").value(director.getName()))
-                .andExpect(jsonPath("data.gender").value(director.getGender().toString()))
+                .andExpect(jsonPath("data.gender").value(director.getGender()))
                 .andExpect(jsonPath("data.country").value(director.getCountry()));
     }
 
@@ -145,9 +146,9 @@ public class DirectorControllerTest {
                 .country("대한민국")
                 .build();
         Director save = directorRepository.save(director);
-        Director update = Director.builder()
+        DirectorRequest update = DirectorRequest.builder()
                 .name("이감독")
-                .gender(Gender.FEMALE)
+                .gender("FEMALE")
                 .country("일본")
                 .build();
 
@@ -160,7 +161,7 @@ public class DirectorControllerTest {
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("data.name").value(update.getName()))
-                .andExpect(jsonPath("data.gender").value(update.getGender().toString()))
+                .andExpect(jsonPath("data.gender").value(update.getGender()))
                 .andExpect(jsonPath("data.country").value(update.getCountry()));
     }
 
