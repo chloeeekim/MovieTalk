@@ -2,7 +2,8 @@ package chloe.movietalk.service;
 
 import chloe.movietalk.domain.Director;
 import chloe.movietalk.dto.request.DirectorRequest;
-import chloe.movietalk.dto.response.DirectorResponse;
+import chloe.movietalk.dto.response.DirectorDetailResponse;
+import chloe.movietalk.dto.response.DirectorInfoResponse;
 import chloe.movietalk.dto.response.MovieInfo;
 import chloe.movietalk.exception.director.DirectorNotFoundException;
 import chloe.movietalk.repository.DirectorRepository;
@@ -22,39 +23,39 @@ public class DirectorServiceImpl implements DirectorService {
     private final DirectorRepository directorRepository;
 
     @Override
-    public List<DirectorResponse> getAllDirectors() {
+    public List<DirectorInfoResponse> getAllDirectors() {
         return directorRepository.findAll().stream()
-                .map(director -> DirectorResponse.fromEntity(director, getMovieInfo(director.getId())))
+                .map(DirectorInfoResponse::fromEntity)
                 .toList();
     }
 
     @Override
-    public DirectorResponse getDirectorById(Long id) {
+    public DirectorDetailResponse getDirectorById(Long id) {
         Director director = directorRepository.findById(id)
                 .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
-        return DirectorResponse.fromEntity(director, getMovieInfo(director.getId()));
+        return DirectorDetailResponse.fromEntity(director, getMovieInfo(director.getId()));
     }
 
     @Override
-    public List<DirectorResponse> searchDirector(String keyword) {
+    public List<DirectorInfoResponse> searchDirector(String keyword) {
         return directorRepository.findByNameContaining(keyword).stream()
-                .map(director -> DirectorResponse.fromEntity(director, getMovieInfo(director.getId())))
+                .map(DirectorInfoResponse::fromEntity)
                 .toList();
     }
 
     @Override
-    public DirectorResponse createDirector(DirectorRequest request) {
+    public DirectorInfoResponse createDirector(DirectorRequest request) {
         Director save = directorRepository.save(request.toEntity());
-        return DirectorResponse.fromEntity(save, null);
+        return DirectorInfoResponse.fromEntity(save);
     }
 
     @Override
-    public DirectorResponse updateDirector(Long id, DirectorRequest request) {
+    public DirectorInfoResponse updateDirector(Long id, DirectorRequest request) {
         Director director = directorRepository.findById(id)
                 .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
 
         director.updateDirector(request.toEntity());
-        return DirectorResponse.fromEntity(director, getMovieInfo(director.getId()));
+        return DirectorInfoResponse.fromEntity(director);
     }
 
     @Override
