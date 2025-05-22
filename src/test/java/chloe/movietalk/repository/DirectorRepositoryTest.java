@@ -1,6 +1,7 @@
 package chloe.movietalk.repository;
 
 import chloe.movietalk.domain.Director;
+import chloe.movietalk.domain.Gender;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class DirectorRepositoryTest {
         // given
         Director director = Director.builder()
                 .name("김감독")
-                .gender("남성")
+                .gender(Gender.MALE)
                 .country("대한민국")
                 .build();
 
@@ -60,7 +61,7 @@ public class DirectorRepositoryTest {
         // given
         Director director = Director.builder()
                 .name("김감독")
-                .gender("남성")
+                .gender(Gender.MALE)
                 .country("대한민국")
                 .build();
         Director save = directorRepository.save(director);

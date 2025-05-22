@@ -16,14 +16,14 @@ public class Director extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(length = 50)
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @Column(length = 50)
     private String country;
 
     @Builder
-    public Director(String name, String gender, String country) {
+    public Director(String name, Gender gender, String country) {
         this.name = name;
         this.gender = gender;
         this.country = country;

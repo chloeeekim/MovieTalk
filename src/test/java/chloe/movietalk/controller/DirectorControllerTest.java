@@ -1,6 +1,7 @@
 package chloe.movietalk.controller;
 
 import chloe.movietalk.domain.Director;
+import chloe.movietalk.domain.Gender;
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
@@ -66,7 +67,7 @@ public class DirectorControllerTest {
         // given
         Director director = Director.builder()
                 .name("김감독")
-                .gender("남성")
+                .gender(Gender.MALE)
                 .country("대한민국")
                 .build();
         Director save = directorRepository.save(director);
@@ -85,7 +86,7 @@ public class DirectorControllerTest {
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("data.name").value(director.getName()))
-                .andExpect(jsonPath("data.gender").value(director.getGender()))
+                .andExpect(jsonPath("data.gender").value(director.getGender().toString()))
                 .andExpect(jsonPath("data.country").value(director.getCountry()))
                 .andExpect(jsonPath("data.filmography[0].title").value(movie.getTitle()));
     }
@@ -96,7 +97,7 @@ public class DirectorControllerTest {
         // given
         Director director = Director.builder()
                 .name("김감독")
-                .gender("남성")
+                .gender(Gender.MALE)
                 .country("대한민국")
                 .build();
         directorRepository.save(director);
@@ -117,7 +118,7 @@ public class DirectorControllerTest {
         // given
         Director director = Director.builder()
                 .name("김감독")
-                .gender("남성")
+                .gender(Gender.MALE)
                 .country("대한민국")
                 .build();
 
@@ -130,7 +131,7 @@ public class DirectorControllerTest {
         resultActions
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("data.name").value(director.getName()))
-                .andExpect(jsonPath("data.gender").value(director.getGender()))
+                .andExpect(jsonPath("data.gender").value(director.getGender().toString()))
                 .andExpect(jsonPath("data.country").value(director.getCountry()));
     }
 
@@ -140,13 +141,13 @@ public class DirectorControllerTest {
         // given
         Director director = Director.builder()
                 .name("김감독")
-                .gender("남성")
+                .gender(Gender.MALE)
                 .country("대한민국")
                 .build();
         Director save = directorRepository.save(director);
         Director update = Director.builder()
                 .name("이감독")
-                .gender("여성")
+                .gender(Gender.FEMALE)
                 .country("일본")
                 .build();
 
@@ -159,7 +160,7 @@ public class DirectorControllerTest {
         resultActions
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("data.name").value(update.getName()))
-                .andExpect(jsonPath("data.gender").value(update.getGender()))
+                .andExpect(jsonPath("data.gender").value(update.getGender().toString()))
                 .andExpect(jsonPath("data.country").value(update.getCountry()));
     }
 
@@ -169,7 +170,7 @@ public class DirectorControllerTest {
         // given
         Director director = Director.builder()
                 .name("김감독")
-                .gender("남성")
+                .gender(Gender.MALE)
                 .country("대한민국")
                 .build();
         Director save = directorRepository.save(director);

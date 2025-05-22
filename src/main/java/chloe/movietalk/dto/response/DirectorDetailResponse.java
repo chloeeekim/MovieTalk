@@ -1,6 +1,7 @@
 package chloe.movietalk.dto.response;
 
 import chloe.movietalk.domain.Director;
+import chloe.movietalk.domain.Gender;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,12 +14,12 @@ public class DirectorDetailResponse {
 
     private Long id;
     private String name;
-    private String gender;
+    private Gender gender;
     private String country;
     private List<MovieInfo> filmography;
 
     @Builder
-    public DirectorDetailResponse(Long id, String name, String gender, String country, List<MovieInfo> filmography) {
+    public DirectorDetailResponse(Long id, String name, Gender gender, String country, List<MovieInfo> filmography) {
         this.id = id;
         this.name = name;
         this.gender = gender;
