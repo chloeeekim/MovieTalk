@@ -59,6 +59,8 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public void deleteDirector(Long id) {
+        directorRepository.findById(id)
+                .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
         directorRepository.deleteById(id);
     }
 
