@@ -12,9 +12,9 @@ public interface MovieService {
 
     public List<MovieResponse> searchMovies(String keyword);
 
-    public MovieResponse createMovie(MovieRequest dto);
+    public MovieResponse createMovie(MovieRequest request);
 
-    public MovieResponse updateMovie(Long id, MovieRequest dto);
+    public MovieResponse updateMovie(Long id, MovieRequest request);
 
     public void deleteMovie(Long id);
 }

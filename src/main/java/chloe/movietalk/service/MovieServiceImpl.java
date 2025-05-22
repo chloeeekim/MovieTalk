@@ -46,22 +46,22 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieResponse createMovie(MovieRequest dto) {
-        movieRepository.findByCodeFIMS(dto.getCodeFIMS())
+    public MovieResponse createMovie(MovieRequest request) {
+        movieRepository.findByCodeFIMS(request.getCodeFIMS())
                 .ifPresent(a -> {
                     throw AlreadyExistsMovieException.EXCEPTION;
                 });
 
-        Movie save = movieRepository.save(dto.toEntity(getDirector(dto.getDirectorId())));
+        Movie save = movieRepository.save(request.toEntity(getDirector(request.getDirectorId())));
         return MovieResponse.fromEntity(save);
     }
 
     @Override
-    public MovieResponse updateMovie(Long id, MovieRequest dto) {
+    public MovieResponse updateMovie(Long id, MovieRequest request) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
-        movie.updateMovie(dto.toEntity(getDirector(dto.getDirectorId())));
+        movie.updateMovie(request.toEntity(getDirector(request.getDirectorId())));
         return MovieResponse.fromEntity(movie);
     }
 
