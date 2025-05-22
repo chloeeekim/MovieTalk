@@ -51,4 +51,10 @@ public class ActorController {
         actorService.deleteActor(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/filmography")
+    public ResponseEntity<ActorDetailResponse> updateFilmographyToActor(@PathVariable Long id, @RequestBody List<Long> filmography) {
+        ActorDetailResponse actor = actorService.updateFilmographyToActor(id, filmography);
+        return ResponseEntity.ok().body(actor);
+    }
 }

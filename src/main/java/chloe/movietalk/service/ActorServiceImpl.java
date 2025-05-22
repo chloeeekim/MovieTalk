@@ -5,7 +5,10 @@ import chloe.movietalk.dto.request.ActorRequest;
 import chloe.movietalk.dto.response.actor.ActorDetailResponse;
 import chloe.movietalk.dto.response.actor.ActorInfoResponse;
 import chloe.movietalk.exception.actor.ActorNotFoundException;
+import chloe.movietalk.exception.movie.MovieNotFoundException;
 import chloe.movietalk.repository.ActorRepository;
+import chloe.movietalk.repository.MovieActorRepository;
+import chloe.movietalk.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +21,8 @@ import java.util.List;
 public class ActorServiceImpl implements ActorService {
 
     private final ActorRepository actorRepository;
+    private final MovieRepository movieRepository;
+    private final MovieActorRepository movieActorRepository;
 
     @Override
     public List<ActorInfoResponse> getAllActors() {
@@ -60,5 +65,19 @@ public class ActorServiceImpl implements ActorService {
         actorRepository.findById(id)
                 .orElseThrow(() -> ActorNotFoundException.EXCEPTION);
         actorRepository.deleteById(id);
+    }
+
+    @Override
+    public ActorDetailResponse updateFilmographyToActor(Long id, List<Long> filmography) {
+        Actor actor = actorRepository.findById(id)
+                .orElseThrow(() -> ActorNotFoundException.EXCEPTION);
+
+        actor.getMovieActors().clear();
+
+        filmography.stream()
+                .map(l -> movieRepository.findById(l).orElseThrow(() -> MovieNotFoundException.EXCEPTION))
+                .forEach(actor::addMovie);
+
+        return ActorDetailResponse.fromEntity(actor);
     }
 }

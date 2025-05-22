@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Actor extends Person {
 
-    @OneToMany(mappedBy = "actor", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "actor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieActor> movieActors = new ArrayList<>();
 
     @Builder

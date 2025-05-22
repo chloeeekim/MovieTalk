@@ -36,7 +36,7 @@ public class Movie extends BaseEntity {
     @JoinColumn(name = "director_id")
     private Director director;
 
-    @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieActor> movieActors = new ArrayList<>();
 
     @Builder

@@ -19,4 +19,6 @@ public interface ActorService {
     public ActorInfoResponse updateActor(Long id, ActorRequest request);
 
     public void deleteActor(Long id);
+
+    public ActorDetailResponse updateFilmographyToActor(Long id, List<Long> filmography);
 }
