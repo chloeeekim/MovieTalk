@@ -10,6 +10,8 @@ public enum Gender {
     OTHER;
 
     public static Gender from(String genderStr) {
+        if (genderStr == null)
+            return null;
         return Arrays.stream(values())
                 .filter(g -> g.name().equals(genderStr))
                 .findFirst()
