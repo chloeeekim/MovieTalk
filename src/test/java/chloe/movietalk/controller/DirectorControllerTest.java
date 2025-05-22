@@ -139,7 +139,7 @@ public class DirectorControllerTest {
     }
 
     @Test
-    @DisplayName("감독 등록 실패 : 제목 미입력")
+    @DisplayName("감독 등록 실패 : 이름 미입력")
     public void createDirectorFailure1() throws Exception {
         // given
         DirectorRequest director = DirectorRequest.builder()
