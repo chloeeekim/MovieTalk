@@ -3,6 +3,7 @@ package chloe.movietalk.service;
 import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.MovieRequest;
+import chloe.movietalk.dto.response.MovieDetailResponse;
 import chloe.movietalk.dto.response.MovieInfoResponse;
 import chloe.movietalk.exception.director.DirectorNotFoundException;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
@@ -32,10 +33,10 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieInfoResponse getMovieById(Long id) {
+    public MovieDetailResponse getMovieById(Long id) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
-        return MovieInfoResponse.fromEntity(movie);
+        return MovieDetailResponse.fromEntity(movie);
     }
 
     @Override

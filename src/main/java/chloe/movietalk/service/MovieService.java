@@ -1,6 +1,7 @@
 package chloe.movietalk.service;
 
 import chloe.movietalk.dto.request.MovieRequest;
+import chloe.movietalk.dto.response.MovieDetailResponse;
 import chloe.movietalk.dto.response.MovieInfoResponse;
 
 import java.util.List;
@@ -8,7 +9,7 @@ import java.util.List;
 public interface MovieService {
     public List<MovieInfoResponse> getAllMovies();
 
-    public MovieInfoResponse getMovieById(Long id);
+    public MovieDetailResponse getMovieById(Long id);
 
     public List<MovieInfoResponse> searchMovies(String keyword);
 
