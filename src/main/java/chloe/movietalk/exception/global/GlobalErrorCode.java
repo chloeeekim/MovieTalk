@@ -10,7 +10,8 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum GlobalErrorCode implements BaseErrorCode {
 
-    INVALID_ENUM_VALUE(HttpStatus.BAD_REQUEST.value(), "GLOBAL_001", "잘못된 Enum 값입니다.");
+    INVALID_ENUM_VALUE(HttpStatus.BAD_REQUEST.value(), "GLOBAL_001", "잘못된 Enum 값입니다."),
+    INVALID_FIELD_VALUE(HttpStatus.BAD_REQUEST.value(), "GLOBAL_002", "잘못된 필드 값입니다.");
 
     private Integer status;
     private String code;
