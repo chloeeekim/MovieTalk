@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ToString
@@ -15,12 +16,11 @@ import java.util.List;
 public class Actor extends Person {
 
     @OneToMany(mappedBy = "actor", cascade = CascadeType.REMOVE)
-    private List<MovieActor> movieActors;
+    private List<MovieActor> movieActors = new ArrayList<>();
 
     @Builder
-    public Actor(String name, Gender gender, String country, List<MovieActor> movieActors) {
+    public Actor(String name, Gender gender, String country) {
         super(name, gender, country);
-        this.movieActors = movieActors;
     }
 
     public void updateActor(Actor actor) {
@@ -29,6 +29,12 @@ public class Actor extends Person {
     }
 
     public List<Movie> getMovies() {
-        return movieActors == null ? null : movieActors.stream().map((MovieActor::getMovie)).toList();
+        return movieActors.stream().map((MovieActor::getMovie)).toList();
+    }
+
+    public void addMovie(Movie movie) {
+        MovieActor movieActor = new MovieActor(movie, this);
+        movieActors.add(movieActor);
+        movie.getMovieActors().add(movieActor);
     }
 }

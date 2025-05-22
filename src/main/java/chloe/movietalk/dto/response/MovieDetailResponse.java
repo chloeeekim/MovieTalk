@@ -49,7 +49,7 @@ public class MovieDetailResponse {
                 .releaseDate(movie.getReleaseDate())
                 .prodYear(movie.getProdYear())
                 .director(movie.getDirector() == null ? null : DirectorInfo.fromEntity(movie.getDirector()))
-                .actors(movie.getActors() == null ? null : movie.getActors().stream().map(ActorInfo::fromEntity).toList())
+                .actors(movie.getActors().stream().map(ActorInfo::fromEntity).toList())
                 .build();
     }
 }
