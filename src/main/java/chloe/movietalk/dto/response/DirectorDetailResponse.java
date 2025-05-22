@@ -9,7 +9,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class DirectorResponse {
+public class DirectorDetailResponse {
 
     private Long id;
     private String name;
@@ -18,7 +18,7 @@ public class DirectorResponse {
     private List<MovieInfo> filmography;
 
     @Builder
-    public DirectorResponse(Long id, String name, String gender, String country, List<MovieInfo> filmography) {
+    public DirectorDetailResponse(Long id, String name, String gender, String country, List<MovieInfo> filmography) {
         this.id = id;
         this.name = name;
         this.gender = gender;
@@ -26,8 +26,8 @@ public class DirectorResponse {
         this.filmography = filmography;
     }
 
-    public static DirectorResponse fromEntity(Director director, List<MovieInfo> filmography) {
-        return DirectorResponse.builder()
+    public static DirectorDetailResponse fromEntity(Director director, List<MovieInfo> filmography) {
+        return DirectorDetailResponse.builder()
                 .id(director.getId())
                 .name(director.getName())
                 .gender(director.getGender())
