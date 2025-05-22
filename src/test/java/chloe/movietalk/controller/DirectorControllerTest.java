@@ -4,6 +4,8 @@ import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Gender;
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.DirectorRequest;
+import chloe.movietalk.exception.director.DirectorErrorCode;
+import chloe.movietalk.exception.global.GlobalErrorCode;
 import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -137,6 +139,49 @@ public class DirectorControllerTest {
     }
 
     @Test
+    @DisplayName("감독 등록 실패 : 제목 미입력")
+    public void createDirectorFailure1() throws Exception {
+        // given
+        DirectorRequest director = DirectorRequest.builder()
+                .gender("MALE")
+                .country("대한민국")
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/directors")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(director)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_FIELD_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("감독 등록 실패 : 잘못된 성별 값")
+    public void createDirectorFailure2() throws Exception {
+        // given
+        DirectorRequest director = DirectorRequest.builder()
+                .name("김감독")
+                .gender("WRONG")
+                .country("대한민국")
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/directors")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(director)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_ENUM_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
     @DisplayName("감독 수정")
     public void updateDirector() throws Exception {
         // given
@@ -166,6 +211,28 @@ public class DirectorControllerTest {
     }
 
     @Test
+    @DisplayName("감독 수정 실패 : 존재하지 않는 감독")
+    public void updateDirectorFailure1() throws Exception {
+        // given
+        DirectorRequest update = DirectorRequest.builder()
+                .name("이감독")
+                .gender("FEMALE")
+                .country("일본")
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(put("/api/directors/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(update)));
+
+        // then
+        DirectorErrorCode errorCode = DirectorErrorCode.DIRECTOR_NOT_FOUND;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
     @DisplayName("감독 삭제")
     public void deleteMovie() throws Exception {
         // given
@@ -182,5 +249,20 @@ public class DirectorControllerTest {
         // then
         resultActions
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("감독 삭제 실패 : 존재하지 않는 감독")
+    public void deleteDirectorFailure1() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(delete("/api/directors/{id}", 1L));
+
+        // then
+        DirectorErrorCode errorCode = DirectorErrorCode.DIRECTOR_NOT_FOUND;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
     }
 }

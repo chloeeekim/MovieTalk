@@ -2,6 +2,9 @@ package chloe.movietalk.controller;
 
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.MovieRequest;
+import chloe.movietalk.exception.director.DirectorErrorCode;
+import chloe.movietalk.exception.global.GlobalErrorCode;
+import chloe.movietalk.exception.movie.MovieErrorCode;
 import chloe.movietalk.repository.MovieRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -119,6 +122,68 @@ public class MovieControllerTest {
     }
 
     @Test
+    @DisplayName("영화 등록 실패 : 제목 미입력")
+    public void createMovieFailure1() throws Exception {
+        // given
+        MovieRequest movie = MovieRequest.builder()
+                .codeFIMS("123123")
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(movie)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_FIELD_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("영화 등록 실패 : FIMS 코드 미입력")
+    public void createMovieFailure2() throws Exception {
+        // given
+        MovieRequest movie = MovieRequest.builder()
+                .title("테스트 영화 제목")
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(movie)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_FIELD_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("영화 등록 실패 : 존재하지 않는 감독")
+    public void createMovieFailure3() throws Exception {
+        // given
+        MovieRequest movie = MovieRequest.builder()
+                .title("테스트 영화 제목")
+                .codeFIMS("123123")
+                .directorId(1L)
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(movie)));
+
+        // then
+        DirectorErrorCode errorCode = DirectorErrorCode.DIRECTOR_NOT_FOUND;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
     @DisplayName("영화 수정")
     public void updateMovie() throws Exception {
         // given
@@ -145,6 +210,27 @@ public class MovieControllerTest {
     }
 
     @Test
+    @DisplayName("영화 수정 실패 : 존재하지 않는 영화")
+    public void updateMovieFailure1() throws Exception {
+        // given
+        MovieRequest update = MovieRequest.builder()
+                .title("new title")
+                .codeFIMS("222")
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(put("/api/movies/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(update)));
+
+        // then
+        MovieErrorCode errorCode = MovieErrorCode.MOVIE_NOT_FOUND;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
     @DisplayName("영화 삭제")
     public void deleteMovie() throws Exception {
         // given
@@ -160,5 +246,20 @@ public class MovieControllerTest {
         // then
         resultActions
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("영화 삭제 실패 : 존재하지 않는 영화")
+    public void deleteMovieFailure1() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(delete("/api/movies/{id}", 1L));
+
+        // then
+        MovieErrorCode errorCode = MovieErrorCode.MOVIE_NOT_FOUND;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
     }
 }
