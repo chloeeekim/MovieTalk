@@ -4,6 +4,7 @@ import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.MovieRequest;
 import chloe.movietalk.dto.response.MovieResponse;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
+import chloe.movietalk.exception.movie.MovieNotFoundException;
 import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import org.junit.jupiter.api.Assertions;
@@ -71,5 +72,16 @@ public class MovieServiceTest {
         // when then
         Assertions.assertThrows(AlreadyExistsMovieException.class,
                 () -> movieService.createMovie(requestDto));
+    }
+
+    @Test
+    @DisplayName("영화 삭제 실패 - 존재하지 않는 id")
+    public void deleteMovieSuccess() {
+        // given
+        given(movieRepository.findById(1L)).willReturn(Optional.empty());
+
+        // when then
+        Assertions.assertThrows(MovieNotFoundException.class,
+                () -> movieService.deleteMovie(1L));
     }
 }
