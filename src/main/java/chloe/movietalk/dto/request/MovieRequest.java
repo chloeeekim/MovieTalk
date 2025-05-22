@@ -2,6 +2,7 @@ package chloe.movietalk.dto.request;
 
 import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Movie;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,10 +14,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class MovieRequest {
 
-    @NotNull
+    @NotNull(message = "FIMS 코드가 입력되지 않았습니다.")
     private String codeFIMS;
 
-    @NotNull
+    @NotBlank(message = "제목이 입력되지 않았습니다.")
     private String title;
 
     private String synopsis;

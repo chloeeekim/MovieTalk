@@ -2,6 +2,7 @@ package chloe.movietalk.dto.request;
 
 import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Gender;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DirectorRequest {
 
+    @NotBlank(message = "이름이 입력되지 않았습니다.")
     private String name;
     private String gender;
     private String country;
