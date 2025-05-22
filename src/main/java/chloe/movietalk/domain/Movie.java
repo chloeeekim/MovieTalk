@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @ToString
@@ -36,7 +37,7 @@ public class Movie extends BaseEntity {
     private Director director;
 
     @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE)
-    private List<MovieActor> movieActors;
+    private List<MovieActor> movieActors = new ArrayList<>();
 
     @Builder
     public Movie(String codeFIMS,
@@ -44,15 +45,13 @@ public class Movie extends BaseEntity {
                  String synopsis,
                  LocalDate releaseDate,
                  Integer prodYear,
-                 Director director,
-                 List<MovieActor> movieActors) {
+                 Director director) {
         this.codeFIMS = codeFIMS;
         this.title = title;
         this.synopsis = synopsis;
         this.releaseDate = releaseDate;
         this.prodYear = prodYear;
         this.director = director;
-        this.movieActors = movieActors;
     }
 
     public void updateMovie(Movie movie) {
@@ -66,6 +65,12 @@ public class Movie extends BaseEntity {
     }
 
     public List<Actor> getActors() {
-        return movieActors == null ? null : movieActors.stream().map(MovieActor::getActor).toList();
+        return movieActors.stream().map(MovieActor::getActor).toList();
+    }
+
+    public void addActor(Actor actor) {
+        MovieActor movieActor = new MovieActor(this, actor);
+        movieActors.add(movieActor);
+        actor.getMovieActors().add(movieActor);
     }
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "MOVIE_ACTORS")
+@Table(name = "MOVIE_ACTOR")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MovieActor extends BaseEntity {
 
@@ -22,4 +22,9 @@ public class MovieActor extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "actor_id")
     private Actor actor;
+
+    public MovieActor(Movie movie, Actor actor) {
+        this.movie = movie;
+        this.actor = actor;
+    }
 }
