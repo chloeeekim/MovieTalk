@@ -20,7 +20,7 @@ create table director
     created_at date,
     updated_at date,
     name varchar(255) not null,
-    gender varchar(50),
+    gender enum ('FEMALE','MALE','OTHER'),
     country varchar(50),
     primary key (id)
 );
