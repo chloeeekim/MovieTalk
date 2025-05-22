@@ -20,11 +20,11 @@ public class DirectorRequest {
         this.country = country;
     }
 
-    public static DirectorRequest fromEntity(Director director) {
-        return DirectorRequest.builder()
-                .name(director.getName())
-                .gender(director.getGender())
-                .country(director.getCountry())
+    public Director toEntity() {
+        return Director.builder()
+                .name(this.name)
+                .gender(this.gender)
+                .country(this.country)
                 .build();
     }
 }
