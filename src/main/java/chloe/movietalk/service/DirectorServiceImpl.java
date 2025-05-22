@@ -2,9 +2,9 @@ package chloe.movietalk.service;
 
 import chloe.movietalk.domain.Director;
 import chloe.movietalk.dto.request.DirectorRequest;
-import chloe.movietalk.dto.response.DirectorDetailResponse;
-import chloe.movietalk.dto.response.DirectorInfoResponse;
-import chloe.movietalk.dto.response.MovieInfo;
+import chloe.movietalk.dto.response.director.DirectorDetailResponse;
+import chloe.movietalk.dto.response.director.DirectorInfoResponse;
+import chloe.movietalk.dto.response.movie.MovieInfo;
 import chloe.movietalk.exception.director.DirectorNotFoundException;
 import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;

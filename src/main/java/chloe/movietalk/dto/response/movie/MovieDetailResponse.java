@@ -1,15 +1,18 @@
-package chloe.movietalk.dto.response;
+package chloe.movietalk.dto.response.movie;
 
 import chloe.movietalk.domain.Movie;
+import chloe.movietalk.dto.response.actor.ActorInfo;
+import chloe.movietalk.dto.response.director.DirectorInfo;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class MovieInfoResponse {
+public class MovieDetailResponse {
 
     private Long id;
     private String codeFIMS;
@@ -18,9 +21,17 @@ public class MovieInfoResponse {
     private LocalDate releaseDate;
     private Integer prodYear;
     private DirectorInfo director;
+    private List<ActorInfo> actors;
 
     @Builder
-    public MovieInfoResponse(Long id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, DirectorInfo director) {
+    public MovieDetailResponse(Long id,
+                               String codeFIMS,
+                               String title,
+                               String synopsis,
+                               LocalDate releaseDate,
+                               Integer prodYear,
+                               DirectorInfo director,
+                               List<ActorInfo> actors) {
         this.id = id;
         this.codeFIMS = codeFIMS;
         this.title = title;
@@ -28,10 +39,11 @@ public class MovieInfoResponse {
         this.releaseDate = releaseDate;
         this.prodYear = prodYear;
         this.director = director;
+        this.actors = actors;
     }
 
-    public static MovieInfoResponse fromEntity(Movie movie) {
-        return MovieInfoResponse.builder()
+    public static MovieDetailResponse fromEntity(Movie movie) {
+        return MovieDetailResponse.builder()
                 .id(movie.getId())
                 .codeFIMS(movie.getCodeFIMS())
                 .title(movie.getTitle())
@@ -39,6 +51,7 @@ public class MovieInfoResponse {
                 .releaseDate(movie.getReleaseDate())
                 .prodYear(movie.getProdYear())
                 .director(movie.getDirector() == null ? null : DirectorInfo.fromEntity(movie.getDirector()))
+                .actors(movie.getActors().stream().map(ActorInfo::fromEntity).toList())
                 .build();
     }
 }

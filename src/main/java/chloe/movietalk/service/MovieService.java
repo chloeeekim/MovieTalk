@@ -1,8 +1,8 @@
 package chloe.movietalk.service;
 
 import chloe.movietalk.dto.request.MovieRequest;
-import chloe.movietalk.dto.response.MovieDetailResponse;
-import chloe.movietalk.dto.response.MovieInfoResponse;
+import chloe.movietalk.dto.response.movie.MovieDetailResponse;
+import chloe.movietalk.dto.response.movie.MovieInfoResponse;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package chloe.movietalk.dto.response;
+package chloe.movietalk.dto.response.actor;
 
 import chloe.movietalk.domain.Actor;
 import chloe.movietalk.domain.enums.Gender;

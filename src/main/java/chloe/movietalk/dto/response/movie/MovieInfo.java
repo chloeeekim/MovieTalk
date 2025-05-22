@@ -1,4 +1,4 @@
-package chloe.movietalk.dto.response;
+package chloe.movietalk.dto.response.movie;
 
 import chloe.movietalk.domain.Movie;
 import lombok.Builder;

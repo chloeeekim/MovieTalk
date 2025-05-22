@@ -2,7 +2,7 @@ package chloe.movietalk.service;
 
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.MovieRequest;
-import chloe.movietalk.dto.response.MovieInfoResponse;
+import chloe.movietalk.dto.response.movie.MovieInfoResponse;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
 import chloe.movietalk.exception.movie.MovieNotFoundException;
 import chloe.movietalk.repository.DirectorRepository;

@@ -1,4 +1,4 @@
-package chloe.movietalk.dto.response;
+package chloe.movietalk.dto.response.director;
 
 import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.enums.Gender;
@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class DirectorInfo {
+public class DirectorInfoResponse {
 
     private Long id;
     private String name;
@@ -16,15 +16,15 @@ public class DirectorInfo {
     private String country;
 
     @Builder
-    public DirectorInfo(Long id, String name, Gender gender, String country) {
+    public DirectorInfoResponse(Long id, String name, Gender gender, String country) {
         this.id = id;
         this.name = name;
         this.gender = gender;
         this.country = country;
     }
 
-    public static DirectorInfo fromEntity(Director director) {
-        return DirectorInfo.builder()
+    public static DirectorInfoResponse fromEntity(Director director) {
+        return DirectorInfoResponse.builder()
                 .id(director.getId())
                 .name(director.getName())
                 .gender(director.getGender())

@@ -1,8 +1,8 @@
 package chloe.movietalk.controller;
 
 import chloe.movietalk.dto.request.MovieRequest;
-import chloe.movietalk.dto.response.MovieDetailResponse;
-import chloe.movietalk.dto.response.MovieInfoResponse;
+import chloe.movietalk.dto.response.movie.MovieDetailResponse;
+import chloe.movietalk.dto.response.movie.MovieInfoResponse;
 import chloe.movietalk.service.MovieService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
