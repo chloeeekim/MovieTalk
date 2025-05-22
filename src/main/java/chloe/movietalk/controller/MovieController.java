@@ -34,14 +34,14 @@ public class MovieController {
     }
 
     @PostMapping
-    public ResponseEntity<MovieResponse> createMovie(@RequestBody @Valid MovieRequest dto) {
-        MovieResponse movie = movieService.createMovie(dto);
+    public ResponseEntity<MovieResponse> createMovie(@RequestBody @Valid MovieRequest request) {
+        MovieResponse movie = movieService.createMovie(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(movie);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MovieResponse> updateMovie(@PathVariable Long id, @RequestBody @Valid MovieRequest dto) {
-        MovieResponse movie = movieService.updateMovie(id, dto);
+    public ResponseEntity<MovieResponse> updateMovie(@PathVariable Long id, @RequestBody @Valid MovieRequest request) {
+        MovieResponse movie = movieService.updateMovie(id, request);
         return ResponseEntity.ok().body(movie);
     }
 
