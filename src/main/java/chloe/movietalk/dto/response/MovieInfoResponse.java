@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
-public class MovieResponse {
+public class MovieInfoResponse {
 
     private Long id;
     private String codeFIMS;
@@ -20,7 +20,7 @@ public class MovieResponse {
     private DirectorInfo director;
 
     @Builder
-    public MovieResponse(Long id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, DirectorInfo director) {
+    public MovieInfoResponse(Long id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, DirectorInfo director) {
         this.id = id;
         this.codeFIMS = codeFIMS;
         this.title = title;
@@ -30,8 +30,8 @@ public class MovieResponse {
         this.director = director;
     }
 
-    public static MovieResponse fromEntity(Movie movie) {
-        return MovieResponse.builder()
+    public static MovieInfoResponse fromEntity(Movie movie) {
+        return MovieInfoResponse.builder()
                 .id(movie.getId())
                 .codeFIMS(movie.getCodeFIMS())
                 .title(movie.getTitle())

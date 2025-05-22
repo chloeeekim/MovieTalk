@@ -1,20 +1,20 @@
 package chloe.movietalk.service;
 
 import chloe.movietalk.dto.request.MovieRequest;
-import chloe.movietalk.dto.response.MovieResponse;
+import chloe.movietalk.dto.response.MovieInfoResponse;
 
 import java.util.List;
 
 public interface MovieService {
-    public List<MovieResponse> getAllMovies();
+    public List<MovieInfoResponse> getAllMovies();
 
-    public MovieResponse getMovieById(Long id);
+    public MovieInfoResponse getMovieById(Long id);
 
-    public List<MovieResponse> searchMovies(String keyword);
+    public List<MovieInfoResponse> searchMovies(String keyword);
 
-    public MovieResponse createMovie(MovieRequest request);
+    public MovieInfoResponse createMovie(MovieRequest request);
 
-    public MovieResponse updateMovie(Long id, MovieRequest request);
+    public MovieInfoResponse updateMovie(Long id, MovieRequest request);
 
     public void deleteMovie(Long id);
 }

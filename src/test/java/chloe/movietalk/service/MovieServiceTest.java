@@ -2,7 +2,7 @@ package chloe.movietalk.service;
 
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.MovieRequest;
-import chloe.movietalk.dto.response.MovieResponse;
+import chloe.movietalk.dto.response.MovieInfoResponse;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
 import chloe.movietalk.exception.movie.MovieNotFoundException;
 import chloe.movietalk.repository.DirectorRepository;
@@ -50,7 +50,7 @@ public class MovieServiceTest {
                 .willReturn(requestDto.toEntity(null));
 
         // when
-        MovieResponse movie = movieService.createMovie(requestDto);
+        MovieInfoResponse movie = movieService.createMovie(requestDto);
 
         // then
         assertThat(movie.getTitle()).isEqualTo(requestDto.getTitle());

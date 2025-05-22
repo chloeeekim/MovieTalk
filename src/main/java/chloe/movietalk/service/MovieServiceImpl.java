@@ -3,7 +3,7 @@ package chloe.movietalk.service;
 import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.MovieRequest;
-import chloe.movietalk.dto.response.MovieResponse;
+import chloe.movietalk.dto.response.MovieInfoResponse;
 import chloe.movietalk.exception.director.DirectorNotFoundException;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
 import chloe.movietalk.exception.movie.MovieNotFoundException;
@@ -25,44 +25,44 @@ public class MovieServiceImpl implements MovieService {
     private final DirectorRepository directorRepository;
 
     @Override
-    public List<MovieResponse> getAllMovies() {
+    public List<MovieInfoResponse> getAllMovies() {
         return movieRepository.findAll().stream()
-                .map(MovieResponse::fromEntity)
+                .map(MovieInfoResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MovieResponse getMovieById(Long id) {
+    public MovieInfoResponse getMovieById(Long id) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
-        return MovieResponse.fromEntity(movie);
+        return MovieInfoResponse.fromEntity(movie);
     }
 
     @Override
-    public List<MovieResponse> searchMovies(String keyword) {
+    public List<MovieInfoResponse> searchMovies(String keyword) {
         return movieRepository.findByTitleContaining(keyword).stream()
-                .map(MovieResponse::fromEntity)
+                .map(MovieInfoResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MovieResponse createMovie(MovieRequest request) {
+    public MovieInfoResponse createMovie(MovieRequest request) {
         movieRepository.findByCodeFIMS(request.getCodeFIMS())
                 .ifPresent(a -> {
                     throw AlreadyExistsMovieException.EXCEPTION;
                 });
 
         Movie save = movieRepository.save(request.toEntity(getDirectorInfo(request.getDirectorId())));
-        return MovieResponse.fromEntity(save);
+        return MovieInfoResponse.fromEntity(save);
     }
 
     @Override
-    public MovieResponse updateMovie(Long id, MovieRequest request) {
+    public MovieInfoResponse updateMovie(Long id, MovieRequest request) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
         movie.updateMovie(request.toEntity(getDirectorInfo(request.getDirectorId())));
-        return MovieResponse.fromEntity(movie);
+        return MovieInfoResponse.fromEntity(movie);
     }
 
     @Override
