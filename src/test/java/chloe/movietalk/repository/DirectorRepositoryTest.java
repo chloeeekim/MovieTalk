@@ -1,7 +1,7 @@
 package chloe.movietalk.repository;
 
 import chloe.movietalk.domain.Director;
-import chloe.movietalk.domain.Gender;
+import chloe.movietalk.domain.enums.Gender;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

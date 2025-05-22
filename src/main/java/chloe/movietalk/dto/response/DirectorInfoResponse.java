@@ -1,7 +1,7 @@
 package chloe.movietalk.dto.response;
 
 import chloe.movietalk.domain.Director;
-import chloe.movietalk.domain.Gender;
+import chloe.movietalk.domain.enums.Gender;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

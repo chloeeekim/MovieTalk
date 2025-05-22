@@ -1,4 +1,4 @@
-package chloe.movietalk.domain;
+package chloe.movietalk.domain.enums;
 
 import chloe.movietalk.exception.global.InvalidEnumValueException;
 

@@ -1,5 +1,6 @@
 package chloe.movietalk.domain;
 
+import chloe.movietalk.domain.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

@@ -1,8 +1,8 @@
 package chloe.movietalk.controller;
 
 import chloe.movietalk.domain.Director;
-import chloe.movietalk.domain.Gender;
 import chloe.movietalk.domain.Movie;
+import chloe.movietalk.domain.enums.Gender;
 import chloe.movietalk.dto.request.DirectorRequest;
 import chloe.movietalk.exception.director.DirectorErrorCode;
 import chloe.movietalk.exception.global.GlobalErrorCode;
