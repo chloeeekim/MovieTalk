@@ -1,5 +1,7 @@
-package chloe.movietalk.exception;
+package chloe.movietalk.exception.global;
 
+import chloe.movietalk.exception.BaseErrorCode;
+import chloe.movietalk.exception.ErrorReason;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;

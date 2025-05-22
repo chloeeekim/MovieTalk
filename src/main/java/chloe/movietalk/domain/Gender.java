@@ -1,6 +1,6 @@
 package chloe.movietalk.domain;
 
-import chloe.movietalk.exception.InvalidEnumValueException;
+import chloe.movietalk.exception.global.InvalidEnumValueException;
 
 import java.util.Arrays;
 
