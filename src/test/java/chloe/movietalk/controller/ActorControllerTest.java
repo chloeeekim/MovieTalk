@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -273,5 +275,37 @@ public class ActorControllerTest {
         resultActions
                 .andExpect(status().is(errorCode.getStatus()))
                 .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("배우 필모그라피 업데이트")
+    public void updateFilmographyToActor() throws Exception {
+        // given
+        Actor actor = Actor.builder()
+                .name("김배우")
+                .gender(Gender.MALE)
+                .country("대한민국")
+                .build();
+        Actor save = actorRepository.save(actor);
+
+        Movie movie = Movie.builder()
+                .title("테스트용 영화")
+                .codeFIMS("123123")
+                .build();
+        movieRepository.save(movie);
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/actors/{id}/filmography", save.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(Arrays.asList(movie.getId()))));
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("data.name").value(actor.getName()))
+                .andExpect(jsonPath("data.gender").value(actor.getGender().toString()))
+                .andExpect(jsonPath("data.country").value(actor.getCountry()))
+                .andExpect(jsonPath("data.filmography", hasSize(1)))
+                .andExpect(jsonPath("data.filmography[0].title").value(movie.getTitle()));
     }
 }
