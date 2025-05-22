@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @ToString
 @Entity
@@ -34,14 +35,24 @@ public class Movie extends BaseEntity {
     @JoinColumn(name = "director_id")
     private Director director;
 
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.REMOVE)
+    private List<MovieActor> movieActors;
+
     @Builder
-    public Movie(String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, Director director) {
+    public Movie(String codeFIMS,
+                 String title,
+                 String synopsis,
+                 LocalDate releaseDate,
+                 Integer prodYear,
+                 Director director,
+                 List<MovieActor> movieActors) {
         this.codeFIMS = codeFIMS;
         this.title = title;
         this.synopsis = synopsis;
         this.releaseDate = releaseDate;
         this.prodYear = prodYear;
         this.director = director;
+        this.movieActors = movieActors;
     }
 
     public void updateMovie(Movie movie) {
@@ -51,5 +62,10 @@ public class Movie extends BaseEntity {
         this.releaseDate = movie.getReleaseDate();
         this.prodYear = movie.getProdYear();
         this.director = movie.getDirector();
+        this.movieActors = movie.getMovieActors();
+    }
+
+    public List<Actor> getActors() {
+        return movieActors == null ? null : movieActors.stream().map(MovieActor::getActor).toList();
     }
 }
