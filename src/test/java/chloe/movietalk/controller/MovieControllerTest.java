@@ -1,6 +1,7 @@
 package chloe.movietalk.controller;
 
 import chloe.movietalk.domain.Actor;
+import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.domain.enums.Gender;
 import chloe.movietalk.dto.request.MovieRequest;
@@ -8,6 +9,7 @@ import chloe.movietalk.exception.director.DirectorErrorCode;
 import chloe.movietalk.exception.global.GlobalErrorCode;
 import chloe.movietalk.exception.movie.MovieErrorCode;
 import chloe.movietalk.repository.ActorRepository;
+import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -43,6 +45,9 @@ public class MovieControllerTest {
 
     @Autowired
     ActorRepository actorRepository;
+
+    @Autowired
+    DirectorRepository directorRepository;
 
     @Test
     @DisplayName("영화 목록 불러오기")
@@ -300,5 +305,36 @@ public class MovieControllerTest {
                 .andExpect(jsonPath("data.codeFIMS").value(movie.getCodeFIMS()))
                 .andExpect(jsonPath("data.actors", hasSize(1)))
                 .andExpect(jsonPath("data.actors[0].name").value(actor.getName()));
+    }
+
+    @Test
+    @DisplayName("영화 감독 업데이트")
+    public void updateDirectorToMovie() throws Exception {
+        // given
+        Movie movie = Movie.builder()
+                .title("테스트용 영화")
+                .codeFIMS("123123")
+                .build();
+        Movie save = movieRepository.save(movie);
+
+        Director director = Director.builder()
+                .name("김감독")
+                .gender(Gender.MALE)
+                .country("대한민국")
+                .build();
+        directorRepository.save(director);
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/movies/{id}/director", save.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(director.getId())));
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("data.title").value(movie.getTitle()))
+                .andExpect(jsonPath("data.codeFIMS").value(movie.getCodeFIMS()))
+                .andExpect(jsonPath("data.director").isNotEmpty())
+                .andExpect(jsonPath("data.director.name").value(director.getName()));
     }
 }
