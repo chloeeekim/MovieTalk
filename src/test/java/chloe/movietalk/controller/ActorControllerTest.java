@@ -2,7 +2,6 @@ package chloe.movietalk.controller;
 
 import chloe.movietalk.domain.Actor;
 import chloe.movietalk.domain.Movie;
-import chloe.movietalk.domain.MovieActor;
 import chloe.movietalk.domain.enums.Gender;
 import chloe.movietalk.dto.request.ActorRequest;
 import chloe.movietalk.exception.actor.ActorErrorCode;
@@ -89,8 +88,6 @@ public class ActorControllerTest {
                 .build();
         movieRepository.save(movie);
 
-        MovieActor movieActor = new MovieActor(movie, actor);
-        movieActorRepository.save(movieActor);
         actor.addMovie(movie);
 
         // when
