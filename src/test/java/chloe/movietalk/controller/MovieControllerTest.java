@@ -1,10 +1,13 @@
 package chloe.movietalk.controller;
 
+import chloe.movietalk.domain.Actor;
 import chloe.movietalk.domain.Movie;
+import chloe.movietalk.domain.enums.Gender;
 import chloe.movietalk.dto.request.MovieRequest;
 import chloe.movietalk.exception.director.DirectorErrorCode;
 import chloe.movietalk.exception.global.GlobalErrorCode;
 import chloe.movietalk.exception.movie.MovieErrorCode;
+import chloe.movietalk.repository.ActorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Arrays;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -35,6 +40,9 @@ public class MovieControllerTest {
 
     @Autowired
     MovieRepository movieRepository;
+
+    @Autowired
+    ActorRepository actorRepository;
 
     @Test
     @DisplayName("영화 목록 불러오기")
@@ -261,5 +269,36 @@ public class MovieControllerTest {
         resultActions
                 .andExpect(status().is(errorCode.getStatus()))
                 .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("영화 배우 목록 업데이트")
+    public void updateActorsToMovie() throws Exception {
+        // given
+        Movie movie = Movie.builder()
+                .title("테스트용 영화")
+                .codeFIMS("123123")
+                .build();
+        Movie save = movieRepository.save(movie);
+
+        Actor actor = Actor.builder()
+                .name("김배우")
+                .gender(Gender.MALE)
+                .country("대한민국")
+                .build();
+        actorRepository.save(actor);
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/movies/{id}/actors", save.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(Arrays.asList(actor.getId()))));
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("data.title").value(movie.getTitle()))
+                .andExpect(jsonPath("data.codeFIMS").value(movie.getCodeFIMS()))
+                .andExpect(jsonPath("data.actors", hasSize(1)))
+                .andExpect(jsonPath("data.actors[0].name").value(actor.getName()));
     }
 }
