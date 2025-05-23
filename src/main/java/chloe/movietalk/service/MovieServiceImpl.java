@@ -90,6 +90,18 @@ public class MovieServiceImpl implements MovieService {
         return MovieDetailResponse.fromEntity(movie);
     }
 
+    @Override
+    public MovieDetailResponse updateDirectorToMovie(Long id, Long directorId) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
+
+        Director director = directorRepository.findById(directorId)
+                .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
+
+        movie.changeDirector(director);
+        return MovieDetailResponse.fromEntity(movie);
+    }
+
     private Director getDirectorInfo(Long id) {
         if (id == null) {
             return null;

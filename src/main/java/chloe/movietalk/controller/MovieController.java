@@ -57,4 +57,10 @@ public class MovieController {
         MovieDetailResponse movie = movieService.updateActorsToMovie(id, actorIds);
         return ResponseEntity.ok().body(movie);
     }
+
+    @PostMapping("/{id}/director")
+    public ResponseEntity<MovieDetailResponse> updateDirectorToMovie(@PathVariable Long id, @RequestBody Long directorId) {
+        MovieDetailResponse movie = movieService.updateDirectorToMovie(id, directorId);
+        return ResponseEntity.ok().body(movie);
+    }
 }

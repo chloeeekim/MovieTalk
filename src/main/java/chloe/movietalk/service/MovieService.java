@@ -20,4 +20,6 @@ public interface MovieService {
     public void deleteMovie(Long id);
 
     public MovieDetailResponse updateActorsToMovie(Long id, List<Long> actorIds);
+
+    public MovieDetailResponse updateDirectorToMovie(Long id, Long directorId);
 }
