@@ -42,6 +42,10 @@ public class Movie extends BaseEntity {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
+    private Double totalRating = 0.0;
+
+    private Integer reviewCount = 0;
+
     @Builder
     public Movie(String codeFIMS,
                  String title,
@@ -66,6 +70,8 @@ public class Movie extends BaseEntity {
         this.director = movie.getDirector();
         this.movieActors = movie.getMovieActors();
         this.reviews = movie.getReviews();
+        this.totalRating = movie.getTotalRating();
+        this.reviewCount = movie.getReviewCount();
     }
 
     public List<Actor> getActors() {
@@ -90,5 +96,17 @@ public class Movie extends BaseEntity {
 
     public void removeDirector() {
         this.director = null;
+    }
+
+    public Double getAverageRating() {
+        return reviewCount > 0 ? Math.round(totalRating / reviewCount * 10.0) / 10.0 : 0.0;
+    }
+
+    public void updateTotalRating(Double totalRating) {
+        this.totalRating = totalRating;
+    }
+
+    public void updateReviewCount(Integer reviewCount) {
+        this.reviewCount = reviewCount;
     }
 }

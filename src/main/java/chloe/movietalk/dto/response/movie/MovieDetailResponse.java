@@ -22,6 +22,7 @@ public class MovieDetailResponse {
     private Integer prodYear;
     private DirectorInfo director;
     private List<ActorInfo> actors;
+    private Double averageRating;
 
     @Builder
     public MovieDetailResponse(Long id,
@@ -31,7 +32,8 @@ public class MovieDetailResponse {
                                LocalDate releaseDate,
                                Integer prodYear,
                                DirectorInfo director,
-                               List<ActorInfo> actors) {
+                               List<ActorInfo> actors,
+                               Double averageRating) {
         this.id = id;
         this.codeFIMS = codeFIMS;
         this.title = title;
@@ -40,6 +42,7 @@ public class MovieDetailResponse {
         this.prodYear = prodYear;
         this.director = director;
         this.actors = actors;
+        this.averageRating = averageRating;
     }
 
     public static MovieDetailResponse fromEntity(Movie movie) {
@@ -52,6 +55,7 @@ public class MovieDetailResponse {
                 .prodYear(movie.getProdYear())
                 .director(movie.getDirector() == null ? null : DirectorInfo.fromEntity(movie.getDirector()))
                 .actors(movie.getActors().stream().map(ActorInfo::fromEntity).toList())
+                .averageRating(movie.getAverageRating())
                 .build();
     }
 }

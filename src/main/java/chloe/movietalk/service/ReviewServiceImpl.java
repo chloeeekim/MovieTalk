@@ -40,6 +40,10 @@ public class ReviewServiceImpl implements ReviewService {
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
         Review save = reviewRepository.save(request.toEntity(movie));
+
+        movie.updateTotalRating(movie.getTotalRating() + request.getRating());
+        movie.updateReviewCount(movie.getReviewCount() + 1);
+
         return ReviewDetailResponse.fromEntity(save);
     }
 
@@ -48,14 +52,25 @@ public class ReviewServiceImpl implements ReviewService {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
 
+        Double oldRating = review.getRating();
+
         review.updateReview(request.toEntity());
+
+        Movie movie = review.getMovie();
+        movie.updateTotalRating(movie.getTotalRating() - oldRating + request.getRating());
+
         return ReviewDetailResponse.fromEntity(review);
     }
 
     @Override
     public void deleteReview(Long id) {
-        reviewRepository.findById(id)
+        Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
+
+        Movie movie = review.getMovie();
+        movie.updateTotalRating(movie.getTotalRating() - review.getRating());
+        movie.updateReviewCount(movie.getReviewCount() - 1);
+
         reviewRepository.deleteById(id);
     }
 }
