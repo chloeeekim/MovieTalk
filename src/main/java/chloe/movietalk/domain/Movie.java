@@ -39,6 +39,9 @@ public class Movie extends BaseEntity {
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MovieActor> movieActors = new ArrayList<>();
 
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+
     @Builder
     public Movie(String codeFIMS,
                  String title,
@@ -62,6 +65,7 @@ public class Movie extends BaseEntity {
         this.prodYear = movie.getProdYear();
         this.director = movie.getDirector();
         this.movieActors = movie.getMovieActors();
+        this.reviews = movie.getReviews();
     }
 
     public List<Actor> getActors() {
