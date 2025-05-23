@@ -1,11 +1,12 @@
 package chloe.movietalk.service;
 
 import chloe.movietalk.domain.Director;
+import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.DirectorRequest;
 import chloe.movietalk.dto.response.director.DirectorDetailResponse;
 import chloe.movietalk.dto.response.director.DirectorInfoResponse;
-import chloe.movietalk.dto.response.movie.MovieInfo;
 import chloe.movietalk.exception.director.DirectorNotFoundException;
+import chloe.movietalk.exception.movie.MovieNotFoundException;
 import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class DirectorServiceImpl implements DirectorService {
     public DirectorDetailResponse getDirectorById(Long id) {
         Director director = directorRepository.findById(id)
                 .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
-        return DirectorDetailResponse.fromEntity(director, getMovieInfo(director.getId()));
+        return DirectorDetailResponse.fromEntity(director);
     }
 
     @Override
@@ -65,9 +66,19 @@ public class DirectorServiceImpl implements DirectorService {
         directorRepository.deleteById(id);
     }
 
-    private List<MovieInfo> getMovieInfo(Long id) {
-        return movieRepository.findByDirectorId(id).stream()
-                .map(MovieInfo::fromEntity)
-                .toList();
+    @Override
+    public DirectorDetailResponse updateFilmographyToDirector(Long id, List<Long> filmography) {
+        Director director = directorRepository.findById(id)
+                .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
+
+        director.getFilmography()
+                .forEach(Movie::removeDirector);
+        director.getFilmography().clear();
+
+        filmography.stream()
+                .map(l -> movieRepository.findById(l).orElseThrow(() -> MovieNotFoundException.EXCEPTION))
+                .forEach(m -> m.changeDirector(director));
+
+        return DirectorDetailResponse.fromEntity(director);
     }
 }

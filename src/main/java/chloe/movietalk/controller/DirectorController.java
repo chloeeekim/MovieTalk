@@ -51,4 +51,10 @@ public class DirectorController {
         directorService.deleteDirector(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/filmography")
+    public ResponseEntity<DirectorDetailResponse> updateFilmographyToDirector(@PathVariable Long id, @RequestBody List<Long> filmography) {
+        DirectorDetailResponse director = directorService.updateFilmographyToDirector(id, filmography);
+        return ResponseEntity.ok().body(director);
+    }
 }

@@ -73,4 +73,18 @@ public class Movie extends BaseEntity {
         movieActors.add(movieActor);
         actor.getMovieActors().add(movieActor);
     }
+
+    public void changeDirector(Director newDirector) {
+        if (this.director != null) {
+            this.director.getFilmography().remove(this);
+        }
+        this.director = newDirector;
+        if (newDirector != null && !newDirector.getFilmography().contains(this)) {
+            newDirector.getFilmography().add(this);
+        }
+    }
+
+    public void removeDirector() {
+        this.director = null;
+    }
 }

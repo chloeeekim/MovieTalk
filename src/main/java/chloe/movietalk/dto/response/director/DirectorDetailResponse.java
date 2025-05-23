@@ -28,13 +28,13 @@ public class DirectorDetailResponse {
         this.filmography = filmography;
     }
 
-    public static DirectorDetailResponse fromEntity(Director director, List<MovieInfo> filmography) {
+    public static DirectorDetailResponse fromEntity(Director director) {
         return DirectorDetailResponse.builder()
                 .id(director.getId())
                 .name(director.getName())
                 .gender(director.getGender())
                 .country(director.getCountry())
-                .filmography(filmography)
+                .filmography(director.getFilmography().stream().map(MovieInfo::fromEntity).toList())
                 .build();
     }
 }
