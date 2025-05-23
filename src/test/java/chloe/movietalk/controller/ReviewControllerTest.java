@@ -141,6 +141,94 @@ public class ReviewControllerTest {
     }
 
     @Test
+    @DisplayName("리뷰 등록 실패 : 잘못된 평점 (0.5점 미만)")
+    public void createReviewFailure4() throws Exception {
+        // given
+        CreateReviewRequest request = CreateReviewRequest.builder()
+                .rating(0.0)
+                .comment("좋은 영화입니다.")
+                .movieId(1L)
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/reviews")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_FIELD_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 등록 실패 : 잘못된 평점 (5.0점 초과)")
+    public void createReviewFailure5() throws Exception {
+        // given
+        CreateReviewRequest request = CreateReviewRequest.builder()
+                .rating(5.5)
+                .comment("좋은 영화입니다.")
+                .movieId(1L)
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/reviews")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_FIELD_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 등록 실패 : 잘못된 평점 (0.5점 단위가 아님)")
+    public void createReviewFailure6() throws Exception {
+        // given
+        CreateReviewRequest request = CreateReviewRequest.builder()
+                .rating(3.8)
+                .comment("좋은 영화입니다.")
+                .movieId(1L)
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/reviews")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_FIELD_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 등록 실패 : 잘못된 평점 (소수점 아래 2자리수)")
+    public void createReviewFailure7() throws Exception {
+        // given
+        CreateReviewRequest request = CreateReviewRequest.builder()
+                .rating(3.55)
+                .comment("좋은 영화입니다.")
+                .movieId(1L)
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/reviews")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_FIELD_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
     @DisplayName("리뷰 수정")
     public void updateReview() throws Exception {
         // given
@@ -216,6 +304,90 @@ public class ReviewControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", review.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_FIELD_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 수정 실패 : 잘못된 평점 (0.5점 미만)")
+    public void updateReviewFailure3() throws Exception {
+        // given
+        UpdateReviewRequest request = UpdateReviewRequest.builder()
+                .rating(0.0)
+                .comment("좋은 영화입니다.")
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_FIELD_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 수정 실패 : 잘못된 평점 (5.0점 초과)")
+    public void updateReviewFailure4() throws Exception {
+        // given
+        UpdateReviewRequest request = UpdateReviewRequest.builder()
+                .rating(5.5)
+                .comment("좋은 영화입니다.")
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_FIELD_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 수정 실패 : 잘못된 평점 (0.5점 단위가 아님)")
+    public void updateReviewFailure5() throws Exception {
+        // given
+        UpdateReviewRequest request = UpdateReviewRequest.builder()
+                .rating(3.8)
+                .comment("좋은 영화입니다.")
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+
+        // then
+        GlobalErrorCode errorCode = GlobalErrorCode.INVALID_FIELD_VALUE;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 수정 실패 : 잘못된 평점 (소수점 아래 2자리수)")
+    public void updateReviewFailure6() throws Exception {
+        // given
+        UpdateReviewRequest request = UpdateReviewRequest.builder()
+                .rating(3.55)
+                .comment("좋은 영화입니다.")
+                .build();
+
+        // when
+        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
