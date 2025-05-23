@@ -7,7 +7,6 @@ import chloe.movietalk.dto.response.actor.ActorInfoResponse;
 import chloe.movietalk.exception.actor.ActorNotFoundException;
 import chloe.movietalk.exception.movie.MovieNotFoundException;
 import chloe.movietalk.repository.ActorRepository;
-import chloe.movietalk.repository.MovieActorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +21,6 @@ public class ActorServiceImpl implements ActorService {
 
     private final ActorRepository actorRepository;
     private final MovieRepository movieRepository;
-    private final MovieActorRepository movieActorRepository;
 
     @Override
     public List<ActorInfoResponse> getAllActors() {
