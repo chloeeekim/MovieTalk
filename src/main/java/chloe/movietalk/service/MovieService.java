@@ -18,4 +18,6 @@ public interface MovieService {
     public MovieInfoResponse updateMovie(Long id, MovieRequest request);
 
     public void deleteMovie(Long id);
+
+    public MovieDetailResponse updateActorsToMovie(Long id, List<Long> actorIds);
 }

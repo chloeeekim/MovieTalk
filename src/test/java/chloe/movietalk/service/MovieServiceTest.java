@@ -5,6 +5,7 @@ import chloe.movietalk.dto.request.MovieRequest;
 import chloe.movietalk.dto.response.movie.MovieInfoResponse;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
 import chloe.movietalk.exception.movie.MovieNotFoundException;
+import chloe.movietalk.repository.ActorRepository;
 import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import org.junit.jupiter.api.Assertions;
@@ -32,9 +33,12 @@ public class MovieServiceTest {
     @Mock
     DirectorRepository directorRepository;
 
+    @Mock
+    ActorRepository actorRepository;
+
     @BeforeEach
     public void beforeEach() {
-        movieService = new MovieServiceImpl(movieRepository, directorRepository);
+        movieService = new MovieServiceImpl(movieRepository, directorRepository, actorRepository);
     }
 
     @Test

@@ -51,4 +51,10 @@ public class MovieController {
         movieService.deleteMovie(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/actors")
+    public ResponseEntity<MovieDetailResponse> updateActorsToMovie(@PathVariable Long id, @RequestBody List<Long> actorIds) {
+        MovieDetailResponse movie = movieService.updateActorsToMovie(id, actorIds);
+        return ResponseEntity.ok().body(movie);
+    }
 }

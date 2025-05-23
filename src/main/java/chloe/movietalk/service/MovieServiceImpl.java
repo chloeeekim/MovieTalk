@@ -5,9 +5,11 @@ import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.request.MovieRequest;
 import chloe.movietalk.dto.response.movie.MovieDetailResponse;
 import chloe.movietalk.dto.response.movie.MovieInfoResponse;
+import chloe.movietalk.exception.actor.ActorNotFoundException;
 import chloe.movietalk.exception.director.DirectorNotFoundException;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
 import chloe.movietalk.exception.movie.MovieNotFoundException;
+import chloe.movietalk.repository.ActorRepository;
 import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class MovieServiceImpl implements MovieService {
 
     private final MovieRepository movieRepository;
     private final DirectorRepository directorRepository;
+    private final ActorRepository actorRepository;
 
     @Override
     public List<MovieInfoResponse> getAllMovies() {
@@ -71,6 +74,20 @@ public class MovieServiceImpl implements MovieService {
         movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
         movieRepository.deleteById(id);
+    }
+
+    @Override
+    public MovieDetailResponse updateActorsToMovie(Long id, List<Long> actorIds) {
+        Movie movie = movieRepository.findById(id)
+                .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
+
+        movie.getMovieActors().clear();
+
+        actorIds.stream()
+                .map(l -> actorRepository.findById(l).orElseThrow(() -> ActorNotFoundException.EXCEPTION))
+                .forEach(movie::addActor);
+
+        return MovieDetailResponse.fromEntity(movie);
     }
 
     private Director getDirectorInfo(Long id) {
