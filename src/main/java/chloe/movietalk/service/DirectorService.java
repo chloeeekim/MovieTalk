@@ -20,5 +20,5 @@ public interface DirectorService {
 
     public void deleteDirector(Long id);
 
-    public DirectorDetailResponse updateFilmographyToDirector(Long id, List<Long> movieIds);
+    public DirectorDetailResponse updateDirectorFilmography(Long id, List<Long> movieIds);
 }

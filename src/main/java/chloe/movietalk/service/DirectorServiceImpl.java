@@ -67,7 +67,7 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public DirectorDetailResponse updateFilmographyToDirector(Long id, List<Long> filmography) {
+    public DirectorDetailResponse updateDirectorFilmography(Long id, List<Long> filmography) {
         Director director = directorRepository.findById(id)
                 .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
 

@@ -53,14 +53,14 @@ public class MovieController {
     }
 
     @PostMapping("/{id}/actors")
-    public ResponseEntity<MovieDetailResponse> updateActorsToMovie(@PathVariable Long id, @RequestBody List<Long> actorIds) {
-        MovieDetailResponse movie = movieService.updateActorsToMovie(id, actorIds);
+    public ResponseEntity<MovieDetailResponse> updateMovieActors(@PathVariable Long id, @RequestBody List<Long> actorIds) {
+        MovieDetailResponse movie = movieService.updateMovieActors(id, actorIds);
         return ResponseEntity.ok().body(movie);
     }
 
     @PostMapping("/{id}/director")
-    public ResponseEntity<MovieDetailResponse> updateDirectorToMovie(@PathVariable Long id, @RequestBody Long directorId) {
-        MovieDetailResponse movie = movieService.updateDirectorToMovie(id, directorId);
+    public ResponseEntity<MovieDetailResponse> updateMovieDirector(@PathVariable Long id, @RequestBody Long directorId) {
+        MovieDetailResponse movie = movieService.updateMovieDirector(id, directorId);
         return ResponseEntity.ok().body(movie);
     }
 }

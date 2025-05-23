@@ -276,7 +276,7 @@ public class ActorControllerTest {
 
     @Test
     @DisplayName("배우 필모그라피 업데이트")
-    public void updateFilmographyToActor() throws Exception {
+    public void updateActorFilmography() throws Exception {
         // given
         Actor actor = Actor.builder()
                 .name("김배우")

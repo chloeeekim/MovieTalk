@@ -53,8 +53,8 @@ public class DirectorController {
     }
 
     @PostMapping("/{id}/filmography")
-    public ResponseEntity<DirectorDetailResponse> updateFilmographyToDirector(@PathVariable Long id, @RequestBody List<Long> filmography) {
-        DirectorDetailResponse director = directorService.updateFilmographyToDirector(id, filmography);
+    public ResponseEntity<DirectorDetailResponse> updateDirectorFilmography(@PathVariable Long id, @RequestBody List<Long> filmography) {
+        DirectorDetailResponse director = directorService.updateDirectorFilmography(id, filmography);
         return ResponseEntity.ok().body(director);
     }
 }

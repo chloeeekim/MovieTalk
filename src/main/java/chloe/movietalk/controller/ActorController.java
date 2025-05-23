@@ -53,8 +53,8 @@ public class ActorController {
     }
 
     @PostMapping("/{id}/filmography")
-    public ResponseEntity<ActorDetailResponse> updateFilmographyToActor(@PathVariable Long id, @RequestBody List<Long> filmography) {
-        ActorDetailResponse actor = actorService.updateFilmographyToActor(id, filmography);
+    public ResponseEntity<ActorDetailResponse> updateActorFilmography(@PathVariable Long id, @RequestBody List<Long> filmography) {
+        ActorDetailResponse actor = actorService.updateActorFilmography(id, filmography);
         return ResponseEntity.ok().body(actor);
     }
 }

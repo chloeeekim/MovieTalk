@@ -77,7 +77,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDetailResponse updateActorsToMovie(Long id, List<Long> actorIds) {
+    public MovieDetailResponse updateMovieActors(Long id, List<Long> actorIds) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
@@ -91,7 +91,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDetailResponse updateDirectorToMovie(Long id, Long directorId) {
+    public MovieDetailResponse updateMovieDirector(Long id, Long directorId) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 

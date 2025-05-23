@@ -19,7 +19,7 @@ public interface MovieService {
 
     public void deleteMovie(Long id);
 
-    public MovieDetailResponse updateActorsToMovie(Long id, List<Long> actorIds);
+    public MovieDetailResponse updateMovieActors(Long id, List<Long> actorIds);
 
-    public MovieDetailResponse updateDirectorToMovie(Long id, Long directorId);
+    public MovieDetailResponse updateMovieDirector(Long id, Long directorId);
 }

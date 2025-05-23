@@ -66,7 +66,7 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public ActorDetailResponse updateFilmographyToActor(Long id, List<Long> filmography) {
+    public ActorDetailResponse updateActorFilmography(Long id, List<Long> filmography) {
         Actor actor = actorRepository.findById(id)
                 .orElseThrow(() -> ActorNotFoundException.EXCEPTION);
 

@@ -278,7 +278,7 @@ public class MovieControllerTest {
 
     @Test
     @DisplayName("영화 배우 목록 업데이트")
-    public void updateActorsToMovie() throws Exception {
+    public void updateMovieActors() throws Exception {
         // given
         Movie movie = Movie.builder()
                 .title("테스트용 영화")
@@ -309,7 +309,7 @@ public class MovieControllerTest {
 
     @Test
     @DisplayName("영화 감독 업데이트")
-    public void updateDirectorToMovie() throws Exception {
+    public void updateMovieDirector() throws Exception {
         // given
         Movie movie = Movie.builder()
                 .title("테스트용 영화")
