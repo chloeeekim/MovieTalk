@@ -79,7 +79,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    @DisplayName("영화 삭제 실패 - 존재하지 않는 id")
+    @DisplayName("영화 삭제 성공")
     public void deleteMovieSuccess() {
         // given
         given(movieRepository.findById(1L)).willReturn(Optional.empty());
