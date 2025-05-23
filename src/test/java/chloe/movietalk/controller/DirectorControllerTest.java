@@ -82,6 +82,8 @@ public class DirectorControllerTest {
                 .build();
         movieRepository.save(movie);
 
+        movie.changeDirector(director);
+
         // when
         ResultActions resultActions = mvc.perform(get("/api/directors/{id}", save.getId()));
 
