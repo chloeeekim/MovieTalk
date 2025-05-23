@@ -52,13 +52,17 @@ public class Movie extends BaseEntity {
                  String synopsis,
                  LocalDate releaseDate,
                  Integer prodYear,
-                 Director director) {
+                 Director director,
+                 Double totalRating,
+                 Integer reviewCount) {
         this.codeFIMS = codeFIMS;
         this.title = title;
         this.synopsis = synopsis;
         this.releaseDate = releaseDate;
         this.prodYear = prodYear;
         this.director = director;
+        this.totalRating = totalRating != null ? totalRating : 0.0;
+        this.reviewCount = reviewCount != null ? reviewCount : 0;
     }
 
     public void updateMovie(Movie movie) {
