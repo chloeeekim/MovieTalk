@@ -30,17 +30,8 @@ public class ReviewRepositoryTest {
     @DisplayName("리뷰 등록")
     public void createReview() {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("test")
-                .build();
-        userRepository.save(user);
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
 
         Review review = Review.builder()
                 .rating(3.5)
@@ -60,25 +51,9 @@ public class ReviewRepositoryTest {
     @DisplayName("리뷰 목록 불러오기 : 영화 기준")
     public void reviewListByMovie() {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("test")
-                .build();
-        userRepository.save(user);
-
-        Review review = Review.builder()
-                .rating(3.5)
-                .comment("좋은 영화입니다!")
-                .movie(movie)
-                .user(user)
-                .build();
-        reviewRepository.save(review);
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
 
         // when
         List<Review> reviewList = reviewRepository.findByMovieId(movie.getId());
@@ -91,30 +66,38 @@ public class ReviewRepositoryTest {
     @DisplayName("리뷰 목록 불러오기 : 사용자 기준")
     public void reviewListByUser() {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("test")
-                .build();
-        userRepository.save(user);
-
-        Review review = Review.builder()
-                .rating(3.5)
-                .comment("좋은 영화입니다!")
-                .movie(movie)
-                .user(user)
-                .build();
-        reviewRepository.save(review);
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
 
         // when
         List<Review> reviewList = reviewRepository.findByUserId(user.getId());
 
         // then
         assertThat(reviewList).containsOnly(review);
+    }
+
+    private Movie getMovieForTest() {
+        return movieRepository.save(Movie.builder()
+                .title("테스트용 영화")
+                .codeFIMS("123123")
+                .build());
+    }
+
+    private SiteUser getUserForTest() {
+        return userRepository.save(SiteUser.builder()
+                .email("test@movietalk.com")
+                .passwordHash("1234")
+                .nickname("test")
+                .build());
+    }
+
+    private Review getReviewForTest(Movie movie, SiteUser user) {
+        return reviewRepository.save(Review.builder()
+                .rating(3.5)
+                .comment("좋은 영화입니다!")
+                .movie(movie)
+                .user(user)
+                .build());
     }
 }

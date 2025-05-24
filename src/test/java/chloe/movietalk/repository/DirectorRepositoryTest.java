@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,33 +42,24 @@ public class DirectorRepositoryTest {
     public void directorList() {
         // given
         int count = 30;
-        for (int i = 0; i < count; i++) {
-            Director director = Director.builder()
-                    .name("감독" + i)
-                    .build();
-            directorRepository.save(director);
-        }
+        List<Director> directors = getDirectorsForTest(count);
 
         // when
-        List<Director> directorList = directorRepository.findAll();
+        List<Director> foundList = directorRepository.findAll();
 
         // then
-        assertThat(directorList).hasSize(count);
+        assertThat(foundList).hasSize(count);
+        assertThat(foundList).containsExactlyInAnyOrderElementsOf(directors);
     }
 
     @Test
     @DisplayName("감독 검색 : 아이디")
     public void findById() {
         // given
-        Director director = Director.builder()
-                .name("김감독")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        Director save = directorRepository.save(director);
+        Director director = getDirectorsForTest(1).get(0);
 
         // when
-        Director found = directorRepository.findById(save.getId()).get();
+        Director found = directorRepository.findById(director.getId()).get();
 
         // then
         assertThat(found).isEqualTo(director);
@@ -77,10 +69,7 @@ public class DirectorRepositoryTest {
     @DisplayName("감독 검색 : 이름")
     public void findByName() {
         // given
-        Director director = Director.builder()
-                .name("김감독")
-                .build();
-        directorRepository.save(director);
+        Director director = getDirectorsForTest(1).get(0);
 
         // when
         String keyword = "감독";
@@ -88,5 +77,19 @@ public class DirectorRepositoryTest {
 
         // then
         assertThat(directorList).containsOnly(director);
+    }
+
+    private List<Director> getDirectorsForTest(int count) {
+        List<Director> directors = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Director director = Director.builder()
+                    .name("감독" + i)
+                    .gender(Gender.MALE)
+                    .country("대한민국")
+                    .build();
+            directorRepository.save(director);
+            directors.add(director);
+        }
+        return directors;
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,33 +42,24 @@ public class ActorRepositoryTest {
     public void actorList() {
         // given
         int count = 30;
-        for (int i = 0; i < count; i++) {
-            Actor actor = Actor.builder()
-                    .name("배우 " + i)
-                    .build();
-            actorRepository.save(actor);
-        }
+        List<Actor> actors = getActorsForTest(count);
 
         // when
-        List<Actor> actorList = actorRepository.findAll();
+        List<Actor> foundList = actorRepository.findAll();
 
         // then
-        assertThat(actorList).hasSize(count);
+        assertThat(foundList).hasSize(count);
+        assertThat(foundList).containsExactlyInAnyOrderElementsOf(actors);
     }
 
     @Test
     @DisplayName("배우 검색 : 아이디")
     public void findById() {
         // given
-        Actor actor = Actor.builder()
-                .name("김배우")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        Actor save = actorRepository.save(actor);
+        Actor actor = getActorsForTest(1).get(0);
 
         // when
-        Actor found = actorRepository.findById(save.getId()).get();
+        Actor found = actorRepository.findById(actor.getId()).get();
 
         // then
         assertThat(found).isEqualTo(actor);
@@ -77,12 +69,7 @@ public class ActorRepositoryTest {
     @DisplayName("배우 검색 : 이름")
     public void findByName() {
         // given
-        Actor actor = Actor.builder()
-                .name("김배우")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        Actor save = actorRepository.save(actor);
+        Actor actor = getActorsForTest(1).get(0);
 
         // when
         String keyword = "배우";
@@ -90,5 +77,19 @@ public class ActorRepositoryTest {
 
         // then
         assertThat(actorList).containsOnly(actor);
+    }
+
+    private List<Actor> getActorsForTest(int count) {
+        List<Actor> actors = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Actor actor = Actor.builder()
+                    .name("배우" + i)
+                    .gender(Gender.MALE)
+                    .country("대한민국")
+                    .build();
+            actorRepository.save(actor);
+            actors.add(actor);
+        }
+        return actors;
     }
 }
