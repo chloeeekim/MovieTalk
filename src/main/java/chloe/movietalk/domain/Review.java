@@ -26,16 +26,23 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private SiteUser user;
 
+    private Integer likes = 0;
+
     @Builder
-    public Review(Double rating, String comment, Movie movie, SiteUser user) {
+    public Review(Double rating, String comment, Movie movie, SiteUser user, Integer likes) {
         this.rating = rating;
         this.comment = comment;
         this.movie = movie;
         this.user = user;
+        this.likes = likes != null ? likes : 0;
     }
 
     public void updateReview(Review review) {
         this.rating = review.getRating();
         this.comment = review.getComment();
+    }
+
+    public void updateTotalLikes(Integer likes) {
+        this.likes = likes;
     }
 }

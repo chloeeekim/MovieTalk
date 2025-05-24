@@ -23,12 +23,16 @@ public class ReviewByMovieResponse {
     @Schema(description = "사용자 정보")
     private UserInfo userInfo;
 
+    @Schema(description = "좋아요 수")
+    private Integer likes;
+
     @Builder
-    public ReviewByMovieResponse(Long id, Double rating, String comment, UserInfo userInfo) {
+    public ReviewByMovieResponse(Long id, Double rating, String comment, UserInfo userInfo, Integer likes) {
         this.id = id;
         this.rating = rating;
         this.comment = comment;
         this.userInfo = userInfo;
+        this.likes = likes;
     }
 
     public static ReviewByMovieResponse fromEntity(Review review) {
@@ -37,6 +41,7 @@ public class ReviewByMovieResponse {
                 .rating(review.getRating())
                 .comment(review.getComment())
                 .userInfo(UserInfo.fromEntity(review.getUser()))
+                .likes(review.getLikes())
                 .build();
     }
 }

@@ -114,6 +114,8 @@ public class ReviewServiceImpl implements ReviewService {
                 .review(review)
                 .build();
 
+        review.updateTotalLikes(review.getLikes() + 1);
+
         reviewLikeRepository.save(like);
     }
 
@@ -121,6 +123,9 @@ public class ReviewServiceImpl implements ReviewService {
     public void unlikeReview(Long userId, Long reviewId) {
         ReviewLike like = reviewLikeRepository.findByUserIdAndReviewId(userId, reviewId)
                 .orElseThrow(() -> ReviewlikeNotFoundException.EXCEPTION);
+
+        Review review = like.getReview();
+        review.updateTotalLikes(review.getLikes() - 1);
 
         reviewLikeRepository.delete(like);
     }
