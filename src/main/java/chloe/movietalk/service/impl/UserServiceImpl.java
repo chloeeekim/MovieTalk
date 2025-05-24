@@ -1,4 +1,4 @@
-package chloe.movietalk.service;
+package chloe.movietalk.service.impl;
 
 import chloe.movietalk.auth.JwtProvider;
 import chloe.movietalk.domain.SiteUser;
@@ -11,6 +11,7 @@ import chloe.movietalk.exception.auth.AlreadyExistsUserException;
 import chloe.movietalk.exception.auth.InvalidPasswordException;
 import chloe.movietalk.exception.auth.UserNotFoundException;
 import chloe.movietalk.repository.UserRepository;
+import chloe.movietalk.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

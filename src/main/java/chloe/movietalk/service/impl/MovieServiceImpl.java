@@ -1,4 +1,4 @@
-package chloe.movietalk.service;
+package chloe.movietalk.service.impl;
 
 import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Movie;
@@ -12,6 +12,7 @@ import chloe.movietalk.exception.movie.MovieNotFoundException;
 import chloe.movietalk.repository.ActorRepository;
 import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
+import chloe.movietalk.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

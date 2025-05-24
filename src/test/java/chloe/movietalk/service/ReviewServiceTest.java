@@ -6,6 +6,7 @@ import chloe.movietalk.dto.request.CreateReviewRequest;
 import chloe.movietalk.dto.request.UpdateReviewRequest;
 import chloe.movietalk.repository.MovieRepository;
 import chloe.movietalk.repository.ReviewRepository;
+import chloe.movietalk.service.impl.ReviewServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

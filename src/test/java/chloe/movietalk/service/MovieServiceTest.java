@@ -8,6 +8,7 @@ import chloe.movietalk.exception.movie.MovieNotFoundException;
 import chloe.movietalk.repository.ActorRepository;
 import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
+import chloe.movietalk.service.impl.MovieServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
