@@ -49,23 +49,9 @@ public class ReviewServiceTest {
     @DisplayName("리뷰 등록 시 영화 평점 업데이트 확인")
     public void updateMovieRatingWhenReviewIsCreated() {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .build();
-
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("테스트")
-                .build();
-
-        Review review = Review.builder()
-                .rating(3.5)
-                .comment("좋은 영화입니다.")
-                .movie(movie)
-                .user(user)
-                .build();
+        Movie movie = getMovieForTest(0.0, 0);
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user, 3.5);
 
         given(movieRepository.findById(1L))
                 .willReturn(Optional.of(movie));
@@ -89,25 +75,9 @@ public class ReviewServiceTest {
     @DisplayName("리뷰 업데이트 시 영화 평점 업데이트 확인")
     public void updateMovieRatingWhenReviewIsUpdated() {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .totalRating(3.5)
-                .reviewCount(1)
-                .build();
-
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("테스트")
-                .build();
-
-        Review review = Review.builder()
-                .rating(3.5)
-                .comment("좋은 영화입니다.")
-                .movie(movie)
-                .user(user)
-                .build();
+        Movie movie = getMovieForTest(3.5, 1);
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user, 3.5);
 
         given(reviewRepository.findById(1L))
                 .willReturn(Optional.of(review));
@@ -125,25 +95,9 @@ public class ReviewServiceTest {
     @DisplayName("리뷰 삭제 시 영화 평점 업데이트 확인")
     public void updateMovieRatingWhenReviewIsDeleted() {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .totalRating(3.5)
-                .reviewCount(1)
-                .build();
-
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("테스트")
-                .build();
-
-        Review review = Review.builder()
-                .rating(3.5)
-                .comment("좋은 영화입니다.")
-                .movie(movie)
-                .user(user)
-                .build();
+        Movie movie = getMovieForTest(3.5, 1);
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user, 3.5);
 
         given(reviewRepository.findById(1L))
                 .willReturn(Optional.of(review));
@@ -155,5 +109,31 @@ public class ReviewServiceTest {
         assertThat(movie.getTotalRating()).isEqualTo(0.0);
         assertThat(movie.getAverageRating()).isEqualTo(0.0);
         assertThat(movie.getReviewCount()).isEqualTo(0);
+    }
+
+    private Movie getMovieForTest(Double totalRating, Integer reviewCount) {
+        return Movie.builder()
+                .title("테스트용 영화")
+                .codeFIMS("123123")
+                .totalRating(totalRating)
+                .reviewCount(reviewCount)
+                .build();
+    }
+
+    private SiteUser getUserForTest() {
+        return SiteUser.builder()
+                .email("test@movietalk.com")
+                .passwordHash("1234")
+                .nickname("테스트")
+                .build();
+    }
+
+    private Review getReviewForTest(Movie movie, SiteUser user, Double rating) {
+        return Review.builder()
+                .rating(rating)
+                .comment("좋은 영화입니다.")
+                .movie(movie)
+                .user(user)
+                .build();
     }
 }
