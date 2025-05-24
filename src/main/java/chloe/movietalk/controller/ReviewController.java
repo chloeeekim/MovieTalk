@@ -3,6 +3,7 @@ package chloe.movietalk.controller;
 import chloe.movietalk.dto.request.CreateReviewRequest;
 import chloe.movietalk.dto.request.UpdateReviewRequest;
 import chloe.movietalk.dto.response.review.ReviewByMovieResponse;
+import chloe.movietalk.dto.response.review.ReviewByUserResponse;
 import chloe.movietalk.dto.response.review.ReviewDetailResponse;
 import chloe.movietalk.exception.ErrorResponse;
 import chloe.movietalk.service.ReviewService;
@@ -91,12 +92,32 @@ public class ReviewController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공",
                     content = {
-                            @Content(array = @ArraySchema(schema = @Schema(implementation = ReviewByMovieResponse.class)))})
+                            @Content(array = @ArraySchema(schema = @Schema(implementation = ReviewByMovieResponse.class)))}),
+            @ApiResponse(responseCode = "404", description = "해당 ID의 영화가 존재하지 않습니다.",
+                    content = {
+                            @Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public List<ReviewByMovieResponse> getAllReviewsByMovie(
             @Parameter(name = "id", description = "영화 ID", required = true)
             @PathVariable Long id
     ) {
         return reviewService.getAllReviewsByMovie(id);
+    }
+
+    @GetMapping("/users/{id}")
+    @Operation(summary = "Get all review lists list by user id", description = "사용자 ID가 일치하는 리뷰 목록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공",
+                    content = {
+                            @Content(array = @ArraySchema(schema = @Schema(implementation = ReviewByMovieResponse.class)))}),
+            @ApiResponse(responseCode = "404", description = "해당 ID의 사용자가 존재하지 않습니다.",
+                    content = {
+                            @Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public List<ReviewByUserResponse> getAllReviewsByUser(
+            @Parameter(name = "id", description = "사용자 ID", required = true)
+            @PathVariable Long id
+    ) {
+        return reviewService.getAllReviewsByUser(id);
     }
 }

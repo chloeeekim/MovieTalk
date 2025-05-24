@@ -22,11 +22,16 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "movie_id", nullable = false, updatable = false)
     private Movie movie;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false, updatable = false)
+    private SiteUser user;
+
     @Builder
-    public Review(Double rating, String comment, Movie movie) {
+    public Review(Double rating, String comment, Movie movie, SiteUser user) {
         this.rating = rating;
         this.comment = comment;
         this.movie = movie;
+        this.user = user;
     }
 
     public void updateReview(Review review) {

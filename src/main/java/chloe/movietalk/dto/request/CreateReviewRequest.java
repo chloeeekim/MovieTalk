@@ -3,6 +3,7 @@ package chloe.movietalk.dto.request;
 import chloe.movietalk.common.HalfPointStep;
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.domain.Review;
+import chloe.movietalk.domain.SiteUser;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -31,18 +32,24 @@ public class CreateReviewRequest {
     @Schema(description = "영화 ID", example = "1")
     private Long movieId;
 
+    @NotNull(message = "사용자가 입력되지 않았습니다.")
+    @Schema(description = "사용자 ID", example = "1")
+    private Long userId;
+
     @Builder
-    public CreateReviewRequest(Double rating, String comment, Long movieId) {
+    public CreateReviewRequest(Double rating, String comment, Long movieId, Long userId) {
         this.rating = rating;
         this.comment = comment;
         this.movieId = movieId;
+        this.userId = userId;
     }
 
-    public Review toEntity(Movie movie) {
+    public Review toEntity(Movie movie, SiteUser user) {
         return Review.builder()
                 .rating(this.rating)
                 .comment(this.comment)
                 .movie(movie)
+                .user(user)
                 .build();
     }
 }

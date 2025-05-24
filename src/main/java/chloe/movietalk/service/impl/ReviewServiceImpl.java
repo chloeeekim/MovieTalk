@@ -2,14 +2,18 @@ package chloe.movietalk.service.impl;
 
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.domain.Review;
+import chloe.movietalk.domain.SiteUser;
 import chloe.movietalk.dto.request.CreateReviewRequest;
 import chloe.movietalk.dto.request.UpdateReviewRequest;
 import chloe.movietalk.dto.response.review.ReviewByMovieResponse;
+import chloe.movietalk.dto.response.review.ReviewByUserResponse;
 import chloe.movietalk.dto.response.review.ReviewDetailResponse;
+import chloe.movietalk.exception.auth.UserNotFoundException;
 import chloe.movietalk.exception.movie.MovieNotFoundException;
 import chloe.movietalk.exception.review.ReviewNotFoundException;
 import chloe.movietalk.repository.MovieRepository;
 import chloe.movietalk.repository.ReviewRepository;
+import chloe.movietalk.repository.UserRepository;
 import chloe.movietalk.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +28,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final MovieRepository movieRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<ReviewByMovieResponse> getAllReviewsByMovie(Long movieId) {
@@ -36,11 +41,23 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    public List<ReviewByUserResponse> getAllReviewsByUser(Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
+
+        return reviewRepository.findByUserId(userId).stream()
+                .map(ReviewByUserResponse::fromEntity)
+                .toList();
+    }
+
+    @Override
     public ReviewDetailResponse createReview(CreateReviewRequest request) {
         Movie movie = movieRepository.findById(request.getMovieId())
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
+        SiteUser user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
-        Review save = reviewRepository.save(request.toEntity(movie));
+        Review save = reviewRepository.save(request.toEntity(movie, user));
 
         movie.updateTotalRating(movie.getTotalRating() + request.getRating());
         movie.updateReviewCount(movie.getReviewCount() + 1);

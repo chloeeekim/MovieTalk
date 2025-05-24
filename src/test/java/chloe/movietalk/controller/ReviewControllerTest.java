@@ -2,13 +2,16 @@ package chloe.movietalk.controller;
 
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.domain.Review;
+import chloe.movietalk.domain.SiteUser;
 import chloe.movietalk.dto.request.CreateReviewRequest;
 import chloe.movietalk.dto.request.UpdateReviewRequest;
+import chloe.movietalk.exception.auth.AuthErrorCode;
 import chloe.movietalk.exception.global.GlobalErrorCode;
 import chloe.movietalk.exception.movie.MovieErrorCode;
 import chloe.movietalk.exception.review.ReviewErrorCode;
 import chloe.movietalk.repository.MovieRepository;
 import chloe.movietalk.repository.ReviewRepository;
+import chloe.movietalk.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,6 +45,9 @@ public class ReviewControllerTest {
     @Autowired
     MovieRepository movieRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     @Test
     @DisplayName("리뷰 등록")
     public void createReview() throws Exception {
@@ -51,11 +57,18 @@ public class ReviewControllerTest {
                 .codeFIMS("123123")
                 .build();
         movieRepository.save(movie);
+        SiteUser user = SiteUser.builder()
+                .email("test@movietalk.com")
+                .passwordHash("1234")
+                .nickname("test")
+                .build();
+        userRepository.save(user);
 
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .rating(3.5)
                 .comment("좋은 영화입니다.")
                 .movieId(movie.getId())
+                .userId(user.getId())
                 .build();
 
         // when
@@ -67,7 +80,9 @@ public class ReviewControllerTest {
         resultActions
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("data.rating").value(request.getRating()))
-                .andExpect(jsonPath("data.comment").value(request.getComment()));
+                .andExpect(jsonPath("data.comment").value(request.getComment()))
+                .andExpect(jsonPath("data.movieInfo.title").value(movie.getTitle()))
+                .andExpect(jsonPath("data.userInfo.email").value(user.getEmail()));
     }
 
     @Test
@@ -104,6 +119,7 @@ public class ReviewControllerTest {
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .rating(3.5)
                 .comment("좋은 영화입니다.")
+                .userId(1L)
                 .build();
 
         // when
@@ -122,10 +138,17 @@ public class ReviewControllerTest {
     @DisplayName("리뷰 등록 실패 : 존재하지 않는 영화")
     public void createReviewFailure3() throws Exception {
         // given
+        SiteUser user = SiteUser.builder()
+                .email("test@movietalk.com")
+                .passwordHash("1234")
+                .nickname("test")
+                .build();
+        userRepository.save(user);
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .rating(3.5)
                 .comment("좋은 영화입니다.")
                 .movieId(1L)
+                .userId(user.getId())
                 .build();
 
         // when
@@ -148,6 +171,7 @@ public class ReviewControllerTest {
                 .rating(0.0)
                 .comment("좋은 영화입니다.")
                 .movieId(1L)
+                .userId(1L)
                 .build();
 
         // when
@@ -170,6 +194,7 @@ public class ReviewControllerTest {
                 .rating(5.5)
                 .comment("좋은 영화입니다.")
                 .movieId(1L)
+                .userId(1L)
                 .build();
 
         // when
@@ -192,6 +217,7 @@ public class ReviewControllerTest {
                 .rating(3.8)
                 .comment("좋은 영화입니다.")
                 .movieId(1L)
+                .userId(1L)
                 .build();
 
         // when
@@ -214,6 +240,7 @@ public class ReviewControllerTest {
                 .rating(3.55)
                 .comment("좋은 영화입니다.")
                 .movieId(1L)
+                .userId(1L)
                 .build();
 
         // when
@@ -237,10 +264,17 @@ public class ReviewControllerTest {
                 .codeFIMS("123123")
                 .build();
         movieRepository.save(movie);
+        SiteUser user = SiteUser.builder()
+                .email("test@movietalk.com")
+                .passwordHash("1234")
+                .nickname("test")
+                .build();
+        userRepository.save(user);
         Review review = Review.builder()
                 .rating(3.5)
                 .comment("좋은 영화입니다.")
                 .movie(movie)
+                .user(user)
                 .build();
         reviewRepository.save(review);
 
@@ -291,10 +325,17 @@ public class ReviewControllerTest {
                 .codeFIMS("123123")
                 .build();
         movieRepository.save(movie);
+        SiteUser user = SiteUser.builder()
+                .email("test@movietalk.com")
+                .passwordHash("1234")
+                .nickname("test")
+                .build();
+        userRepository.save(user);
         Review review = Review.builder()
                 .rating(3.5)
                 .comment("좋은 영화입니다.")
                 .movie(movie)
+                .user(user)
                 .build();
         reviewRepository.save(review);
 
@@ -407,11 +448,18 @@ public class ReviewControllerTest {
                 .codeFIMS("123123")
                 .build();
         movieRepository.save(movie);
+        SiteUser user = SiteUser.builder()
+                .email("test@movietalk.com")
+                .passwordHash("1234")
+                .nickname("test")
+                .build();
+        userRepository.save(user);
 
         Review review = Review.builder()
                 .rating(3.5)
                 .comment("좋은 영화입니다.")
                 .movie(movie)
+                .user(user)
                 .build();
         reviewRepository.save(review);
 
@@ -447,10 +495,17 @@ public class ReviewControllerTest {
                 .codeFIMS("123123")
                 .build();
         movieRepository.save(movie);
+        SiteUser user = SiteUser.builder()
+                .email("test@movietalk.com")
+                .passwordHash("1234")
+                .nickname("test")
+                .build();
+        userRepository.save(user);
         Review review = Review.builder()
                 .rating(3.5)
                 .comment("좋은 영화입니다.")
                 .movie(movie)
+                .user(user)
                 .build();
         reviewRepository.save(review);
 
@@ -462,7 +517,8 @@ public class ReviewControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("data", hasSize(1)))
                 .andExpect(jsonPath("data[0].rating").value(review.getRating()))
-                .andExpect(jsonPath("data[0].comment").value(review.getComment()));
+                .andExpect(jsonPath("data[0].comment").value(review.getComment()))
+                .andExpect(jsonPath("data[0].userInfo.email").value(user.getEmail()));
     }
 
     @Test
@@ -475,6 +531,56 @@ public class ReviewControllerTest {
 
         // then
         MovieErrorCode errorCode = MovieErrorCode.MOVIE_NOT_FOUND;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 목록 불러오기 : 사용자 기준")
+    public void getReviewsByUser() throws Exception {
+        // given
+        Movie movie = Movie.builder()
+                .title("테스트 영화 제목")
+                .codeFIMS("123123")
+                .build();
+        movieRepository.save(movie);
+        SiteUser user = SiteUser.builder()
+                .email("test@movietalk.com")
+                .passwordHash("1234")
+                .nickname("test")
+                .build();
+        userRepository.save(user);
+        Review review = Review.builder()
+                .rating(3.5)
+                .comment("좋은 영화입니다.")
+                .movie(movie)
+                .user(user)
+                .build();
+        reviewRepository.save(review);
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/api/reviews/users/{id}", user.getId()));
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("data", hasSize(1)))
+                .andExpect(jsonPath("data[0].rating").value(review.getRating()))
+                .andExpect(jsonPath("data[0].comment").value(review.getComment()))
+                .andExpect(jsonPath("data[0].movieInfo.title").value(movie.getTitle()));
+    }
+
+    @Test
+    @DisplayName("사용자 기준 리뷰 목록 불러오기 실패 : 존재하지 않는 사용자")
+    public void getReviewsByUserFailure() throws Exception {
+        // given
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/api/reviews/users/{id}", 1L));
+
+        // then
+        AuthErrorCode errorCode = AuthErrorCode.USER_NOT_FOUND;
         resultActions
                 .andExpect(status().is(errorCode.getStatus()))
                 .andExpect(jsonPath("code").value(errorCode.getCode()));

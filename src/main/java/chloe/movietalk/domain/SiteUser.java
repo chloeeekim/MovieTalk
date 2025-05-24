@@ -4,6 +4,9 @@ import chloe.movietalk.domain.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @ToString
 @Entity
 @Getter
@@ -27,12 +30,16 @@ public class SiteUser extends BaseEntity {
     @Column(nullable = false)
     private UserRole role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+
     @Builder
-    public SiteUser(String email, String passwordHash, String nickname, UserRole role) {
+    public SiteUser(String email, String passwordHash, String nickname, UserRole role, List<Review> reviews) {
         this.email = email;
         this.passwordHash = passwordHash;
         this.nickname = nickname;
         this.role = role == null ? UserRole.USER : role;
+        this.reviews = reviews;
     }
 
     public void updateUser(SiteUser user) {

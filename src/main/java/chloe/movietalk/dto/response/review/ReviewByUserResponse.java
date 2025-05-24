@@ -1,7 +1,7 @@
 package chloe.movietalk.dto.response.review;
 
 import chloe.movietalk.domain.Review;
-import chloe.movietalk.dto.response.user.UserInfo;
+import chloe.movietalk.dto.response.movie.MovieInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ReviewByMovieResponse {
+public class ReviewByUserResponse {
 
     @Schema(description = "리뷰 ID")
     private Long id;
@@ -20,23 +20,23 @@ public class ReviewByMovieResponse {
     @Schema(description = "코멘트")
     private String comment;
 
-    @Schema(description = "사용자 정보")
-    private UserInfo userInfo;
+    @Schema(description = "영화 정보")
+    private MovieInfo movieInfo;
 
     @Builder
-    public ReviewByMovieResponse(Long id, Double rating, String comment, UserInfo userInfo) {
+    public ReviewByUserResponse(Long id, Double rating, String comment, MovieInfo movieInfo) {
         this.id = id;
         this.rating = rating;
         this.comment = comment;
-        this.userInfo = userInfo;
+        this.movieInfo = movieInfo;
     }
 
-    public static ReviewByMovieResponse fromEntity(Review review) {
-        return ReviewByMovieResponse.builder()
+    public static ReviewByUserResponse fromEntity(Review review) {
+        return ReviewByUserResponse.builder()
                 .id(review.getId())
                 .rating(review.getRating())
                 .comment(review.getComment())
-                .userInfo(UserInfo.fromEntity(review.getUser()))
+                .movieInfo(MovieInfo.fromEntity(review.getMovie()))
                 .build();
     }
 }
