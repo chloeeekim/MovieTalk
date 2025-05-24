@@ -2,6 +2,7 @@ package chloe.movietalk.service.impl;
 
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.domain.Review;
+import chloe.movietalk.domain.ReviewLike;
 import chloe.movietalk.domain.SiteUser;
 import chloe.movietalk.dto.request.CreateReviewRequest;
 import chloe.movietalk.dto.request.UpdateReviewRequest;
@@ -10,8 +11,11 @@ import chloe.movietalk.dto.response.review.ReviewByUserResponse;
 import chloe.movietalk.dto.response.review.ReviewDetailResponse;
 import chloe.movietalk.exception.auth.UserNotFoundException;
 import chloe.movietalk.exception.movie.MovieNotFoundException;
+import chloe.movietalk.exception.review.AlreadyLikedReviewException;
 import chloe.movietalk.exception.review.ReviewNotFoundException;
+import chloe.movietalk.exception.review.ReviewlikeNotFoundException;
 import chloe.movietalk.repository.MovieRepository;
+import chloe.movietalk.repository.ReviewLikeRepository;
 import chloe.movietalk.repository.ReviewRepository;
 import chloe.movietalk.repository.UserRepository;
 import chloe.movietalk.service.ReviewService;
@@ -29,6 +33,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final MovieRepository movieRepository;
     private final UserRepository userRepository;
+    private final ReviewLikeRepository reviewLikeRepository;
 
     @Override
     public List<ReviewByMovieResponse> getAllReviewsByMovie(Long movieId) {
@@ -90,5 +95,33 @@ public class ReviewServiceImpl implements ReviewService {
         movie.updateReviewCount(movie.getReviewCount() - 1);
 
         reviewRepository.deleteById(id);
+    }
+
+    @Override
+    public void likeReview(Long userId, Long reviewId) {
+        if (reviewLikeRepository.existsByUserIdAndReviewId(userId, reviewId)) {
+            throw AlreadyLikedReviewException.EXCEPTION;
+        }
+
+        SiteUser user = userRepository.findById(userId)
+                .orElseThrow(() -> UserNotFoundException.EXCEPTION);
+
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
+
+        ReviewLike like = ReviewLike.builder()
+                .user(user)
+                .review(review)
+                .build();
+
+        reviewLikeRepository.save(like);
+    }
+
+    @Override
+    public void unlikeReview(Long userId, Long reviewId) {
+        ReviewLike like = reviewLikeRepository.findByUserIdAndReviewId(userId, reviewId)
+                .orElseThrow(() -> ReviewlikeNotFoundException.EXCEPTION);
+
+        reviewLikeRepository.delete(like);
     }
 }

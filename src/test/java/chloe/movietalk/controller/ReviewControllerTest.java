@@ -2,6 +2,7 @@ package chloe.movietalk.controller;
 
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.domain.Review;
+import chloe.movietalk.domain.ReviewLike;
 import chloe.movietalk.domain.SiteUser;
 import chloe.movietalk.dto.request.CreateReviewRequest;
 import chloe.movietalk.dto.request.UpdateReviewRequest;
@@ -10,9 +11,11 @@ import chloe.movietalk.exception.global.GlobalErrorCode;
 import chloe.movietalk.exception.movie.MovieErrorCode;
 import chloe.movietalk.exception.review.ReviewErrorCode;
 import chloe.movietalk.repository.MovieRepository;
+import chloe.movietalk.repository.ReviewLikeRepository;
 import chloe.movietalk.repository.ReviewRepository;
 import chloe.movietalk.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +50,9 @@ public class ReviewControllerTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    ReviewLikeRepository reviewLikeRepository;
 
     @Test
     @DisplayName("리뷰 등록")
@@ -584,5 +590,147 @@ public class ReviewControllerTest {
         resultActions
                 .andExpect(status().is(errorCode.getStatus()))
                 .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 좋아요 성공")
+    public void likeReview() throws Exception {
+        // given
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/reviews/{id}/like", review.getId())
+                .param("userId", user.getId().toString()));
+
+        // then
+        resultActions.andExpect(status().isOk());
+        Assertions.assertThat(reviewLikeRepository.existsByUserIdAndReviewId(user.getId(), review.getId())).isTrue();
+    }
+
+    @Test
+    @DisplayName("리뷰 좋아요 실패 : 이미 좋아요된 리뷰")
+    public void likeReviewFailure1() throws Exception {
+        // given
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
+        ReviewLike like = getReviewLikeForTest(user, review);
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/reviews/{id}/like", review.getId())
+                .param("userId", user.getId().toString()));
+
+        // then
+        ReviewErrorCode errorCode = ReviewErrorCode.ALREADY_LIKED_REVIEW;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 좋아요 실패 : 존재하지 않는 사용자")
+    public void likeReviewFailure2() throws Exception {
+        // given
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/reviews/{id}/like", review.getId())
+                .param("userId", "2"));
+
+        // then
+        AuthErrorCode errorCode = AuthErrorCode.USER_NOT_FOUND;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 좋아요 실패 : 존재하지 않는 리뷰")
+    public void likeReviewFailure3() throws Exception {
+        // given
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/api/reviews/{id}/like", "1")
+                .param("userId", user.getId().toString()));
+
+        // then
+        ReviewErrorCode errorCode = ReviewErrorCode.REVIEW_NOT_FOUND;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    @Test
+    @DisplayName("리뷰 좋아요 취소 성공")
+    public void unlikeReview() throws Exception {
+        // given
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
+        ReviewLike like = getReviewLikeForTest(user, review);
+
+        // when
+        ResultActions resultActions = mvc.perform(delete("/api/reviews/{id}/like", review.getId())
+                .param("userId", user.getId().toString()));
+
+        // then
+        resultActions.andExpect(status().isOk());
+        Assertions.assertThat(reviewLikeRepository.existsByUserIdAndReviewId(user.getId(), review.getId())).isFalse();
+    }
+
+    @Test
+    @DisplayName("리뷰 좋아요 취소 실패 : 존재하지 않는 좋아요")
+    public void unlikeReviewFailure1() throws Exception {
+        // given
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
+
+        // when
+        ResultActions resultActions = mvc.perform(delete("/api/reviews/{id}/like", review.getId())
+                .param("userId", user.getId().toString()));
+
+        // then
+        ReviewErrorCode errorCode = ReviewErrorCode.REVIEWLIKE_NOT_FOUND;
+        resultActions
+                .andExpect(status().is(errorCode.getStatus()))
+                .andExpect(jsonPath("code").value(errorCode.getCode()));
+    }
+
+    private Movie getMovieForTest() {
+        return movieRepository.save(Movie.builder()
+                .title("테스트 영화 제목")
+                .codeFIMS("123123")
+                .build());
+    }
+
+    private SiteUser getUserForTest() {
+        return userRepository.save(SiteUser.builder()
+                .email("test@movietalk.com")
+                .passwordHash("1234")
+                .nickname("test")
+                .build());
+    }
+
+    private Review getReviewForTest(Movie movie, SiteUser user) {
+        return reviewRepository.save(Review.builder()
+                .rating(3.5)
+                .comment("좋은 영화입니다.")
+                .movie(movie)
+                .user(user)
+                .build());
+    }
+
+    private ReviewLike getReviewLikeForTest(SiteUser user, Review review) {
+        return reviewLikeRepository.save(ReviewLike.builder()
+                .user(user)
+                .review(review)
+                .build());
     }
 }

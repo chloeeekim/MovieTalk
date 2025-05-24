@@ -120,4 +120,41 @@ public class ReviewController {
     ) {
         return reviewService.getAllReviewsByUser(id);
     }
+
+    @Operation(summary = "Like review", description = "사용자가 리뷰에 좋아요를 표시합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공",
+                    content = {}),
+            @ApiResponse(responseCode = "400", description = "이미 좋아요 표시된 리뷰입니다.",
+                    content = {
+                            @Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "404", description = "해당 ID의 사용자나 리뷰가 존재하지 않습니다.",
+                    content = {
+                            @Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @PostMapping("/{id}/like")
+    public ResponseEntity<Void> likeReview(
+            @Parameter(name = "id", description = "리뷰 ID", required = true)
+            @PathVariable Long id,
+
+            @Parameter(name = "userId", description = "사용자 ID", required = true)
+            @RequestParam Long userId
+    ) {
+        reviewService.likeReview(userId, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Unlike review", description = "사용자가 리뷰 좋아요를 취소합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공",
+                    content = {}),
+            @ApiResponse(responseCode = "404", description = "좋아요 기록이 없거나, 해당 ID의 사용자나 리뷰가 존재하지 않습니다.",
+                    content = {
+                            @Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    @DeleteMapping("/{id}/like")
+    public ResponseEntity<Void> unlikeReview(@PathVariable Long id, @RequestParam Long userId) {
+        reviewService.unlikeReview(userId, id);
+        return ResponseEntity.ok().build();
+    }
 }

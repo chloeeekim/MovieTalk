@@ -19,4 +19,8 @@ public interface ReviewService {
     public ReviewDetailResponse updateReview(Long id, UpdateReviewRequest request);
 
     public void deleteReview(Long id);
+
+    public void likeReview(Long userId, Long reviewId);
+
+    public void unlikeReview(Long userId, Long reviewId);
 }

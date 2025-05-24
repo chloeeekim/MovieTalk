@@ -6,6 +6,7 @@ import chloe.movietalk.domain.SiteUser;
 import chloe.movietalk.dto.request.CreateReviewRequest;
 import chloe.movietalk.dto.request.UpdateReviewRequest;
 import chloe.movietalk.repository.MovieRepository;
+import chloe.movietalk.repository.ReviewLikeRepository;
 import chloe.movietalk.repository.ReviewRepository;
 import chloe.movietalk.repository.UserRepository;
 import chloe.movietalk.service.impl.ReviewServiceImpl;
@@ -36,9 +37,12 @@ public class ReviewServiceTest {
     @Mock
     UserRepository userRepository;
 
+    @Mock
+    ReviewLikeRepository reviewLikeRepository;
+
     @BeforeEach
     public void beforeEach() {
-        reviewService = new ReviewServiceImpl(reviewRepository, movieRepository, userRepository);
+        reviewService = new ReviewServiceImpl(reviewRepository, movieRepository, userRepository, reviewLikeRepository);
     }
 
     @Test
