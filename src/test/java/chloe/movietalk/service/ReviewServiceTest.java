@@ -2,6 +2,7 @@ package chloe.movietalk.service;
 
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.domain.Review;
+import chloe.movietalk.domain.ReviewLike;
 import chloe.movietalk.domain.SiteUser;
 import chloe.movietalk.dto.request.CreateReviewRequest;
 import chloe.movietalk.dto.request.UpdateReviewRequest;
@@ -51,7 +52,7 @@ public class ReviewServiceTest {
         // given
         Movie movie = getMovieForTest(0.0, 0);
         SiteUser user = getUserForTest();
-        Review review = getReviewForTest(movie, user, 3.5);
+        Review review = getReviewForTest(movie, user, 3.5, 0);
 
         given(movieRepository.findById(1L))
                 .willReturn(Optional.of(movie));
@@ -77,7 +78,7 @@ public class ReviewServiceTest {
         // given
         Movie movie = getMovieForTest(3.5, 1);
         SiteUser user = getUserForTest();
-        Review review = getReviewForTest(movie, user, 3.5);
+        Review review = getReviewForTest(movie, user, 3.5, 0);
 
         given(reviewRepository.findById(1L))
                 .willReturn(Optional.of(review));
@@ -97,7 +98,7 @@ public class ReviewServiceTest {
         // given
         Movie movie = getMovieForTest(3.5, 1);
         SiteUser user = getUserForTest();
-        Review review = getReviewForTest(movie, user, 3.5);
+        Review review = getReviewForTest(movie, user, 3.5, 0);
 
         given(reviewRepository.findById(1L))
                 .willReturn(Optional.of(review));
@@ -109,6 +110,45 @@ public class ReviewServiceTest {
         assertThat(movie.getTotalRating()).isEqualTo(0.0);
         assertThat(movie.getAverageRating()).isEqualTo(0.0);
         assertThat(movie.getReviewCount()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("리뷰 좋아요 시 리뷰 좋아요 수 업데이트 확인")
+    public void updateLikesWhenReviewLiked() {
+        // given
+        Movie movie = getMovieForTest(3.5, 1);
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user, 3.5, 0);
+
+        given(reviewLikeRepository.existsByUserIdAndReviewId(1L, 1L))
+                .willReturn(false);
+        given(userRepository.findById(1L)).willReturn(Optional.of(user));
+        given(reviewRepository.findById(1L)).willReturn(Optional.of(review));
+
+        // when
+        reviewService.likeReview(1L, 1L);
+
+        // then
+        assertThat(review.getLikes()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("리뷰 좋아요 취소 시 리뷰 좋아요 수 업데이트 확인")
+    public void updateLikesWhenReviewUnliked() {
+        // given
+        Movie movie = getMovieForTest(3.5, 1);
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user, 3.5, 1);
+        ReviewLike like = getReviewLikeForTest(review, user);
+
+        given(reviewLikeRepository.findByUserIdAndReviewId(1L, 1L))
+                .willReturn(Optional.of(like));
+
+        // when
+        reviewService.unlikeReview(1L, 1L);
+
+        // then
+        assertThat(review.getLikes()).isEqualTo(0);
     }
 
     private Movie getMovieForTest(Double totalRating, Integer reviewCount) {
@@ -128,11 +168,19 @@ public class ReviewServiceTest {
                 .build();
     }
 
-    private Review getReviewForTest(Movie movie, SiteUser user, Double rating) {
+    private Review getReviewForTest(Movie movie, SiteUser user, Double rating, Integer likes) {
         return Review.builder()
                 .rating(rating)
                 .comment("좋은 영화입니다.")
                 .movie(movie)
+                .user(user)
+                .likes(likes)
+                .build();
+    }
+
+    private ReviewLike getReviewLikeForTest(Review review, SiteUser user) {
+        return ReviewLike.builder()
+                .review(review)
                 .user(user)
                 .build();
     }
