@@ -1,6 +1,7 @@
 package chloe.movietalk.repository;
 
 import chloe.movietalk.domain.Movie;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +15,8 @@ public interface MovieRepository extends JpaRepository<Movie, Long> {
     Optional<Movie> findByCodeFIMS(String code);
 
     List<Movie> findByDirectorId(Long directorId);
+
+    @Override
+    @EntityGraph(attributePaths = {"reviews"})
+    Optional<Movie> findById(Long id);
 }

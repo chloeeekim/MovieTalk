@@ -3,6 +3,7 @@ package chloe.movietalk.controller;
 import chloe.movietalk.dto.request.MovieRequest;
 import chloe.movietalk.dto.response.movie.MovieDetailResponse;
 import chloe.movietalk.dto.response.movie.MovieInfoResponse;
+import chloe.movietalk.dto.response.movie.UpdateMovieResponse;
 import chloe.movietalk.exception.ErrorResponse;
 import chloe.movietalk.service.MovieService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -132,12 +133,12 @@ public class MovieController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공",
                     content = {
-                            @Content(schema = @Schema(implementation = MovieDetailResponse.class))}),
+                            @Content(schema = @Schema(implementation = UpdateMovieResponse.class))}),
             @ApiResponse(responseCode = "404", description = "해당 ID의 영화 혹은 배우가 존재하지 않습니다.",
                     content = {
                             @Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public ResponseEntity<MovieDetailResponse> updateMovieActors(
+    public ResponseEntity<UpdateMovieResponse> updateMovieActors(
             @Parameter(name = "id", description = "영화 ID", required = true)
             @PathVariable Long id,
 
@@ -147,7 +148,7 @@ public class MovieController {
             )
             @RequestBody List<Long> actorIds
     ) {
-        MovieDetailResponse movie = movieService.updateMovieActors(id, actorIds);
+        UpdateMovieResponse movie = movieService.updateMovieActors(id, actorIds);
         return ResponseEntity.ok().body(movie);
     }
 
@@ -156,12 +157,12 @@ public class MovieController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공",
                     content = {
-                            @Content(schema = @Schema(implementation = MovieDetailResponse.class))}),
+                            @Content(schema = @Schema(implementation = UpdateMovieResponse.class))}),
             @ApiResponse(responseCode = "404", description = "해당 ID의 영화 혹은 감독이 존재하지 않습니다.",
                     content = {
                             @Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public ResponseEntity<MovieDetailResponse> updateMovieDirector(
+    public ResponseEntity<UpdateMovieResponse> updateMovieDirector(
             @Parameter(name = "id", description = "영화 ID", required = true)
             @PathVariable Long id,
 
@@ -171,7 +172,7 @@ public class MovieController {
             )
             @RequestBody Long directorId
     ) {
-        MovieDetailResponse movie = movieService.updateMovieDirector(id, directorId);
+        UpdateMovieResponse movie = movieService.updateMovieDirector(id, directorId);
         return ResponseEntity.ok().body(movie);
     }
 }

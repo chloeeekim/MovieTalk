@@ -1,10 +1,8 @@
 package chloe.movietalk.dto.response.movie;
 
 import chloe.movietalk.domain.Movie;
-import chloe.movietalk.domain.Review;
 import chloe.movietalk.dto.response.actor.ActorInfo;
 import chloe.movietalk.dto.response.director.DirectorInfo;
-import chloe.movietalk.dto.response.review.ReviewByMovieResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +13,7 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class MovieDetailResponse {
+public class UpdateMovieResponse {
 
     @Schema(description = "영화 ID")
     private Long id;
@@ -41,23 +39,15 @@ public class MovieDetailResponse {
     @Schema(description = "배우 목록")
     private List<ActorInfo> actors;
 
-    @Schema(description = "평균 평점")
-    private Double averageRating;
-
-    @Schema(description = "좋아요 수 기준 상위 리뷰 3개")
-    private List<ReviewByMovieResponse> topReviews;
-
     @Builder
-    public MovieDetailResponse(Long id,
+    public UpdateMovieResponse(Long id,
                                String codeFIMS,
                                String title,
                                String synopsis,
                                LocalDate releaseDate,
                                Integer prodYear,
                                DirectorInfo director,
-                               List<ActorInfo> actors,
-                               Double averageRating,
-                               List<ReviewByMovieResponse> topReviews) {
+                               List<ActorInfo> actors) {
         this.id = id;
         this.codeFIMS = codeFIMS;
         this.title = title;
@@ -66,12 +56,10 @@ public class MovieDetailResponse {
         this.prodYear = prodYear;
         this.director = director;
         this.actors = actors;
-        this.averageRating = averageRating;
-        this.topReviews = topReviews;
     }
 
-    public static MovieDetailResponse fromEntity(Movie movie, List<Review> topReviews) {
-        return MovieDetailResponse.builder()
+    public static UpdateMovieResponse fromEntity(Movie movie) {
+        return UpdateMovieResponse.builder()
                 .id(movie.getId())
                 .codeFIMS(movie.getCodeFIMS())
                 .title(movie.getTitle())
@@ -80,8 +68,6 @@ public class MovieDetailResponse {
                 .prodYear(movie.getProdYear())
                 .director(movie.getDirector() == null ? null : DirectorInfo.fromEntity(movie.getDirector()))
                 .actors(movie.getActors().stream().map(ActorInfo::fromEntity).toList())
-                .averageRating(movie.getAverageRating())
-                .topReviews(topReviews.stream().map(ReviewByMovieResponse::fromEntity).toList())
                 .build();
     }
 }

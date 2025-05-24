@@ -2,9 +2,11 @@ package chloe.movietalk.service.impl;
 
 import chloe.movietalk.domain.Director;
 import chloe.movietalk.domain.Movie;
+import chloe.movietalk.domain.Review;
 import chloe.movietalk.dto.request.MovieRequest;
 import chloe.movietalk.dto.response.movie.MovieDetailResponse;
 import chloe.movietalk.dto.response.movie.MovieInfoResponse;
+import chloe.movietalk.dto.response.movie.UpdateMovieResponse;
 import chloe.movietalk.exception.actor.ActorNotFoundException;
 import chloe.movietalk.exception.director.DirectorNotFoundException;
 import chloe.movietalk.exception.movie.AlreadyExistsMovieException;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +43,8 @@ public class MovieServiceImpl implements MovieService {
     public MovieDetailResponse getMovieById(Long id) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
-        return MovieDetailResponse.fromEntity(movie);
+
+        return MovieDetailResponse.fromEntity(movie, getTop3Review(movie.getReviews()));
     }
 
     @Override
@@ -78,7 +82,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDetailResponse updateMovieActors(Long id, List<Long> actorIds) {
+    public UpdateMovieResponse updateMovieActors(Long id, List<Long> actorIds) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
@@ -88,11 +92,11 @@ public class MovieServiceImpl implements MovieService {
                 .map(l -> actorRepository.findById(l).orElseThrow(() -> ActorNotFoundException.EXCEPTION))
                 .forEach(movie::addActor);
 
-        return MovieDetailResponse.fromEntity(movie);
+        return UpdateMovieResponse.fromEntity(movie);
     }
 
     @Override
-    public MovieDetailResponse updateMovieDirector(Long id, Long directorId) {
+    public UpdateMovieResponse updateMovieDirector(Long id, Long directorId) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
@@ -100,7 +104,7 @@ public class MovieServiceImpl implements MovieService {
                 .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
 
         movie.changeDirector(director);
-        return MovieDetailResponse.fromEntity(movie);
+        return UpdateMovieResponse.fromEntity(movie);
     }
 
     private Director getDirectorInfo(Long id) {
@@ -110,5 +114,12 @@ public class MovieServiceImpl implements MovieService {
             return directorRepository.findById(id)
                     .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
         }
+    }
+
+    private List<Review> getTop3Review(List<Review> reviews) {
+        return reviews.stream()
+                .sorted(Comparator.comparingInt(Review::getLikes).reversed())
+                .limit(3)
+                .toList();
     }
 }

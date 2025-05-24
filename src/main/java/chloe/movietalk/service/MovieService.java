@@ -3,6 +3,7 @@ package chloe.movietalk.service;
 import chloe.movietalk.dto.request.MovieRequest;
 import chloe.movietalk.dto.response.movie.MovieDetailResponse;
 import chloe.movietalk.dto.response.movie.MovieInfoResponse;
+import chloe.movietalk.dto.response.movie.UpdateMovieResponse;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface MovieService {
 
     public void deleteMovie(Long id);
 
-    public MovieDetailResponse updateMovieActors(Long id, List<Long> actorIds);
+    public UpdateMovieResponse updateMovieActors(Long id, List<Long> actorIds);
 
-    public MovieDetailResponse updateMovieDirector(Long id, Long directorId);
+    public UpdateMovieResponse updateMovieDirector(Long id, Long directorId);
 }
