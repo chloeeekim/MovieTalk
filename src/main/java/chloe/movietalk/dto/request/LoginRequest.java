@@ -3,6 +3,7 @@ package chloe.movietalk.dto.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -18,4 +19,10 @@ public class LoginRequest {
     @NotBlank(message = "비밀번호가 입력되지 않았습니다.")
     @Schema(description = "비밀번호", example = "password")
     private String password;
+
+    @Builder
+    public LoginRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }
