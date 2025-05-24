@@ -20,7 +20,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -52,13 +54,7 @@ public class ActorControllerTest {
     public void getAllActors() throws Exception {
         // given
         int count = 2;
-        for (int i = 0; i < count; i++) {
-            Actor actor = Actor.builder()
-                    .name("배우 " + i)
-                    .build();
-            actorRepository.save(actor);
-            System.out.println("save");
-        }
+        List<Actor> actors = getActorsForTest(count);
 
         // when
         ResultActions resultActions = mvc.perform(get("/api/actors"));
@@ -66,32 +62,22 @@ public class ActorControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data", hasSize(2)))
-                .andExpect(jsonPath("data[0].name").value("배우 0"))
-                .andExpect(jsonPath("data[1].name").value("배우 1"));
+                .andExpect(jsonPath("data", hasSize(count)))
+                .andExpect(jsonPath("data[0].name").value(actors.get(0).getName()))
+                .andExpect(jsonPath("data[1].name").value(actors.get(1).getName()));
     }
 
     @Test
     @DisplayName("배우 상세 정보")
     public void findActorById() throws Exception {
         // given
-        Actor actor = Actor.builder()
-                .name("김배우")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        Actor save = actorRepository.save(actor);
-
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
+        Actor actor = getActorsForTest(1).get(0);
+        Movie movie = getMovieForTest(actor);
 
         actor.addMovie(movie);
 
         // when
-        ResultActions resultActions = mvc.perform(get("/api/actors/{id}", save.getId()));
+        ResultActions resultActions = mvc.perform(get("/api/actors/{id}", actor.getId()));
 
         // then
         resultActions
@@ -106,12 +92,7 @@ public class ActorControllerTest {
     @DisplayName("배우 검색 : 이름 키워드")
     public void searchActors() throws Exception {
         // given
-        Actor actor = Actor.builder()
-                .name("김배우")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        actorRepository.save(actor);
+        Actor actor = getActorsForTest(1).get(0);
 
         // when
         ResultActions resultActions = mvc.perform(get("/api/actors/search").param("keyword", "배우"));
@@ -193,12 +174,7 @@ public class ActorControllerTest {
     @DisplayName("배우 수정")
     public void updateActor() throws Exception {
         // given
-        Actor actor = Actor.builder()
-                .name("김배우")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        Actor save = actorRepository.save(actor);
+        Actor actor = getActorsForTest(1).get(0);
         ActorRequest update = ActorRequest.builder()
                 .name("이배우")
                 .gender("FEMALE")
@@ -206,7 +182,7 @@ public class ActorControllerTest {
                 .build();
 
         // when
-        ResultActions resultActions = mvc.perform(put("/api/actors/{id}", save.getId())
+        ResultActions resultActions = mvc.perform(put("/api/actors/{id}", actor.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(update)));
 
@@ -244,15 +220,10 @@ public class ActorControllerTest {
     @DisplayName("배우 삭제")
     public void deleteMovie() throws Exception {
         // given
-        Actor actor = Actor.builder()
-                .name("김배우")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        Actor save = actorRepository.save(actor);
+        Actor actor = getActorsForTest(1).get(0);
 
         // when
-        ResultActions resultActions = mvc.perform(delete("/api/actors/{id}", save.getId()));
+        ResultActions resultActions = mvc.perform(delete("/api/actors/{id}", actor.getId()));
 
         // then
         resultActions
@@ -278,21 +249,17 @@ public class ActorControllerTest {
     @DisplayName("배우 필모그라피 업데이트")
     public void updateActorFilmography() throws Exception {
         // given
-        Actor actor = Actor.builder()
-                .name("김배우")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        Actor save = actorRepository.save(actor);
+        Actor actor = getActorsForTest(1).get(0);
 
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
+        System.out.println(actor.toString());
+
+        Movie movie = getMovieForTest(null);
+
+        System.out.println(movie.toString());
+
 
         // when
-        ResultActions resultActions = mvc.perform(post("/api/actors/{id}/filmography", save.getId())
+        ResultActions resultActions = mvc.perform(post("/api/actors/{id}/filmography", actor.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Arrays.asList(movie.getId()))));
 
@@ -304,5 +271,30 @@ public class ActorControllerTest {
                 .andExpect(jsonPath("data.country").value(actor.getCountry()))
                 .andExpect(jsonPath("data.filmography", hasSize(1)))
                 .andExpect(jsonPath("data.filmography[0].title").value(movie.getTitle()));
+    }
+
+    private List<Actor> getActorsForTest(int count) {
+        List<Actor> actors = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Actor actor = Actor.builder()
+                    .name("배우 " + i)
+                    .gender(Gender.MALE)
+                    .country("대한민국")
+                    .build();
+            actorRepository.save(actor);
+            actors.add(actor);
+        }
+        return actors;
+    }
+
+    private Movie getMovieForTest(Actor actor) {
+        Movie movie = Movie.builder()
+                .title("테스트용 영화")
+                .codeFIMS("123123")
+                .build();
+        if (actor != null) {
+            movie.addActor(actor);
+        }
+        return movieRepository.save(movie);
     }
 }

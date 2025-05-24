@@ -22,7 +22,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -54,13 +56,7 @@ public class MovieControllerTest {
     public void getAllMovies() throws Exception {
         // given
         int count = 2;
-        for (int i = 0; i < count; i++) {
-            Movie movie = Movie.builder()
-                    .title("영화 " + i)
-                    .codeFIMS("code" + i)
-                    .build();
-            movieRepository.save(movie);
-        }
+        List<Movie> movies = getMoviesForTest(count);
 
         // when
         ResultActions resultActions = mvc.perform(get("/api/movies"));
@@ -68,23 +64,19 @@ public class MovieControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data", hasSize(2)))
-                .andExpect(jsonPath("data[0].title").value("영화 0"))
-                .andExpect(jsonPath("data[1].title").value("영화 1"));
+                .andExpect(jsonPath("data", hasSize(count)))
+                .andExpect(jsonPath("data[0].title").value(movies.get(0).getTitle()))
+                .andExpect(jsonPath("data[1].title").value(movies.get(1).getTitle()));
     }
 
     @Test
     @DisplayName("영화 검색 : 아이디")
     public void findMovieById() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트 영화 제목")
-                .codeFIMS("123123")
-                .build();
-        Movie save = movieRepository.save(movie);
+        Movie movie = getMoviesForTest(1).get(0);
 
         // when
-        ResultActions resultActions = mvc.perform(get("/api/movies/{id}", save.getId()));
+        ResultActions resultActions = mvc.perform(get("/api/movies/{id}", movie.getId()));
 
         // then
         resultActions
@@ -97,11 +89,7 @@ public class MovieControllerTest {
     @DisplayName("영화 검색 : 타이틀 키워드")
     public void searchMovies() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트 영화 제목")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
+        Movie movie = getMoviesForTest(1).get(0);
 
         // when
         ResultActions resultActions = mvc.perform(get("/api/movies/search").param("keyword", "테스트"));
@@ -200,18 +188,14 @@ public class MovieControllerTest {
     @DisplayName("영화 수정")
     public void updateMovie() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("old title")
-                .codeFIMS("111")
-                .build();
-        Movie save = movieRepository.save(movie);
+        Movie movie = getMoviesForTest(1).get(0);
         MovieRequest update = MovieRequest.builder()
                 .title("new title")
                 .codeFIMS("222")
                 .build();
 
         // when
-        ResultActions resultActions = mvc.perform(put("/api/movies/{id}", save.getId())
+        ResultActions resultActions = mvc.perform(put("/api/movies/{id}", movie.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(update)));
 
@@ -247,14 +231,10 @@ public class MovieControllerTest {
     @DisplayName("영화 삭제")
     public void deleteMovie() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트 영화 제목")
-                .codeFIMS("123123")
-                .build();
-        Movie save = movieRepository.save(movie);
+        Movie movie = getMoviesForTest(1).get(0);
 
         // when
-        ResultActions resultActions = mvc.perform(delete("/api/movies/{id}", save.getId()));
+        ResultActions resultActions = mvc.perform(delete("/api/movies/{id}", movie.getId()));
 
         // then
         resultActions
@@ -280,21 +260,11 @@ public class MovieControllerTest {
     @DisplayName("영화 배우 목록 업데이트")
     public void updateMovieActors() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .build();
-        Movie save = movieRepository.save(movie);
-
-        Actor actor = Actor.builder()
-                .name("김배우")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        actorRepository.save(actor);
+        Movie movie = getMoviesForTest(1).get(0);
+        Actor actor = getActorForTest();
 
         // when
-        ResultActions resultActions = mvc.perform(post("/api/movies/{id}/actors", save.getId())
+        ResultActions resultActions = mvc.perform(post("/api/movies/{id}/actors", movie.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Arrays.asList(actor.getId()))));
 
@@ -311,21 +281,11 @@ public class MovieControllerTest {
     @DisplayName("영화 감독 업데이트")
     public void updateMovieDirector() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .build();
-        Movie save = movieRepository.save(movie);
-
-        Director director = Director.builder()
-                .name("김감독")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        directorRepository.save(director);
+        Movie movie = getMoviesForTest(1).get(0);
+        Director director = getDirectorForTest();
 
         // when
-        ResultActions resultActions = mvc.perform(post("/api/movies/{id}/director", save.getId())
+        ResultActions resultActions = mvc.perform(post("/api/movies/{id}/director", movie.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(director.getId())));
 
@@ -336,5 +296,34 @@ public class MovieControllerTest {
                 .andExpect(jsonPath("data.codeFIMS").value(movie.getCodeFIMS()))
                 .andExpect(jsonPath("data.director").isNotEmpty())
                 .andExpect(jsonPath("data.director.name").value(director.getName()));
+    }
+
+    private List<Movie> getMoviesForTest(int count) {
+        List<Movie> movies = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Movie movie = Movie.builder()
+                    .title("테스트용 영화 " + i)
+                    .codeFIMS("code" + i)
+                    .build();
+            movieRepository.save(movie);
+            movies.add(movie);
+        }
+        return movies;
+    }
+
+    private Actor getActorForTest() {
+        return actorRepository.save(Actor.builder()
+                .name("김배우")
+                .gender(Gender.MALE)
+                .country("대한민국")
+                .build());
+    }
+
+    private Director getDirectorForTest() {
+        return directorRepository.save(Director.builder()
+                .name("김감독")
+                .gender(Gender.MALE)
+                .country("대한민국")
+                .build());
     }
 }

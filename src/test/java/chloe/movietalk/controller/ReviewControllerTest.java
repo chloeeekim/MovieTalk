@@ -58,17 +58,8 @@ public class ReviewControllerTest {
     @DisplayName("리뷰 등록")
     public void createReview() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트 영화 제목")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("test")
-                .build();
-        userRepository.save(user);
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
 
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .rating(3.5)
@@ -95,11 +86,7 @@ public class ReviewControllerTest {
     @DisplayName("리뷰 등록 실패 : 평점 미입력")
     public void createReviewFailure1() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트 영화 제목")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
+        Movie movie = getMovieForTest();
 
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .comment("좋은 영화입니다.")
@@ -144,12 +131,8 @@ public class ReviewControllerTest {
     @DisplayName("리뷰 등록 실패 : 존재하지 않는 영화")
     public void createReviewFailure3() throws Exception {
         // given
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("test")
-                .build();
-        userRepository.save(user);
+        SiteUser user = getUserForTest();
+
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .rating(3.5)
                 .comment("좋은 영화입니다.")
@@ -265,24 +248,9 @@ public class ReviewControllerTest {
     @DisplayName("리뷰 수정")
     public void updateReview() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트 영화 제목")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("test")
-                .build();
-        userRepository.save(user);
-        Review review = Review.builder()
-                .rating(3.5)
-                .comment("좋은 영화입니다.")
-                .movie(movie)
-                .user(user)
-                .build();
-        reviewRepository.save(review);
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
 
         UpdateReviewRequest request = UpdateReviewRequest.builder()
                 .rating(4.5)
@@ -326,24 +294,9 @@ public class ReviewControllerTest {
     @DisplayName("리뷰 수정 실패 : 평점 미입력")
     public void updateReviewFailure2() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트 영화 제목")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("test")
-                .build();
-        userRepository.save(user);
-        Review review = Review.builder()
-                .rating(3.5)
-                .comment("좋은 영화입니다.")
-                .movie(movie)
-                .user(user)
-                .build();
-        reviewRepository.save(review);
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
 
         UpdateReviewRequest request = UpdateReviewRequest.builder()
                 .comment("대단한 영화입니다.")
@@ -449,25 +402,9 @@ public class ReviewControllerTest {
     @DisplayName("리뷰 삭제")
     public void deleteReview() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트 영화 제목")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("test")
-                .build();
-        userRepository.save(user);
-
-        Review review = Review.builder()
-                .rating(3.5)
-                .comment("좋은 영화입니다.")
-                .movie(movie)
-                .user(user)
-                .build();
-        reviewRepository.save(review);
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
 
         // when
         ResultActions resultActions = mvc.perform(delete("/api/reviews/{id}", review.getId()));
@@ -496,24 +433,9 @@ public class ReviewControllerTest {
     @DisplayName("리뷰 목록 불러오기 : 영화 기준")
     public void getReviewsByMovie() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트 영화 제목")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("test")
-                .build();
-        userRepository.save(user);
-        Review review = Review.builder()
-                .rating(3.5)
-                .comment("좋은 영화입니다.")
-                .movie(movie)
-                .user(user)
-                .build();
-        reviewRepository.save(review);
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
 
         // when
         ResultActions resultActions = mvc.perform(get("/api/reviews/movies/{id}", movie.getId()));
@@ -546,24 +468,9 @@ public class ReviewControllerTest {
     @DisplayName("리뷰 목록 불러오기 : 사용자 기준")
     public void getReviewsByUser() throws Exception {
         // given
-        Movie movie = Movie.builder()
-                .title("테스트 영화 제목")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
-        SiteUser user = SiteUser.builder()
-                .email("test@movietalk.com")
-                .passwordHash("1234")
-                .nickname("test")
-                .build();
-        userRepository.save(user);
-        Review review = Review.builder()
-                .rating(3.5)
-                .comment("좋은 영화입니다.")
-                .movie(movie)
-                .user(user)
-                .build();
-        reviewRepository.save(review);
+        Movie movie = getMovieForTest();
+        SiteUser user = getUserForTest();
+        Review review = getReviewForTest(movie, user);
 
         // when
         ResultActions resultActions = mvc.perform(get("/api/reviews/users/{id}", user.getId()));

@@ -19,7 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,12 +50,7 @@ public class DirectorControllerTest {
     public void getAllDirectors() throws Exception {
         // given
         int count = 2;
-        for (int i = 0; i < count; i++) {
-            Director director = Director.builder()
-                    .name("감독 " + i)
-                    .build();
-            directorRepository.save(director);
-        }
+        List<Director> directors = getDirectorsForTest(count);
 
         // when
         ResultActions resultActions = mvc.perform(get("/api/directors"));
@@ -61,33 +58,22 @@ public class DirectorControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data", hasSize(2)))
-                .andExpect(jsonPath("data[0].name").value("감독 0"))
-                .andExpect(jsonPath("data[1].name").value("감독 1"));
+                .andExpect(jsonPath("data", hasSize(count)))
+                .andExpect(jsonPath("data[0].name").value(directors.get(0).getName()))
+                .andExpect(jsonPath("data[1].name").value(directors.get(1).getName()));
     }
 
     @Test
     @DisplayName("감독 상세 정보")
     public void findDirectorById() throws Exception {
         // given
-        Director director = Director.builder()
-                .name("김감독")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        Director save = directorRepository.save(director);
-
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .director(director)
-                .build();
-        movieRepository.save(movie);
+        Director director = getDirectorsForTest(1).get(0);
+        Movie movie = getMovieForTest(director);
 
         movie.changeDirector(director);
 
         // when
-        ResultActions resultActions = mvc.perform(get("/api/directors/{id}", save.getId()));
+        ResultActions resultActions = mvc.perform(get("/api/directors/{id}", director.getId()));
 
         // then
         resultActions
@@ -102,12 +88,7 @@ public class DirectorControllerTest {
     @DisplayName("감독 검색 : 이름 키워드")
     public void searchDirectors() throws Exception {
         // given
-        Director director = Director.builder()
-                .name("김감독")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        directorRepository.save(director);
+        Director director = getDirectorsForTest(1).get(0);
 
         // when
         ResultActions resultActions = mvc.perform(get("/api/directors/search").param("keyword", "감독"));
@@ -189,12 +170,7 @@ public class DirectorControllerTest {
     @DisplayName("감독 수정")
     public void updateDirector() throws Exception {
         // given
-        Director director = Director.builder()
-                .name("김감독")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        Director save = directorRepository.save(director);
+        Director director = getDirectorsForTest(1).get(0);
         DirectorRequest update = DirectorRequest.builder()
                 .name("이감독")
                 .gender("FEMALE")
@@ -202,7 +178,7 @@ public class DirectorControllerTest {
                 .build();
 
         // when
-        ResultActions resultActions = mvc.perform(put("/api/directors/{id}", save.getId())
+        ResultActions resultActions = mvc.perform(put("/api/directors/{id}", director.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(update)));
 
@@ -240,15 +216,10 @@ public class DirectorControllerTest {
     @DisplayName("감독 삭제")
     public void deleteMovie() throws Exception {
         // given
-        Director director = Director.builder()
-                .name("김감독")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        Director save = directorRepository.save(director);
+        Director director = getDirectorsForTest(1).get(0);
 
         // when
-        ResultActions resultActions = mvc.perform(delete("/api/directors/{id}", save.getId()));
+        ResultActions resultActions = mvc.perform(delete("/api/directors/{id}", director.getId()));
 
         // then
         resultActions
@@ -274,21 +245,11 @@ public class DirectorControllerTest {
     @DisplayName("감독 필모그라피 업데이트")
     public void updateDirectorFilmography() throws Exception {
         // given
-        Director director = Director.builder()
-                .name("김감독")
-                .gender(Gender.MALE)
-                .country("대한민국")
-                .build();
-        Director save = directorRepository.save(director);
-
-        Movie movie = Movie.builder()
-                .title("테스트용 영화")
-                .codeFIMS("123123")
-                .build();
-        movieRepository.save(movie);
+        Director director = getDirectorsForTest(1).get(0);
+        Movie movie = getMovieForTest(null);
 
         // when
-        ResultActions resultActions = mvc.perform(post("/api/directors/{id}/filmography", save.getId())
+        ResultActions resultActions = mvc.perform(post("/api/directors/{id}/filmography", director.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Arrays.asList(movie.getId()))));
 
@@ -300,5 +261,27 @@ public class DirectorControllerTest {
                 .andExpect(jsonPath("data.country").value(director.getCountry()))
                 .andExpect(jsonPath("data.filmography", hasSize(1)))
                 .andExpect(jsonPath("data.filmography[0].title").value(movie.getTitle()));
+    }
+
+    private List<Director> getDirectorsForTest(int count) {
+        List<Director> directors = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            Director director = Director.builder()
+                    .name("감독 " + i)
+                    .gender(Gender.MALE)
+                    .country("대한민국")
+                    .build();
+            directorRepository.save(director);
+            directors.add(director);
+        }
+        return directors;
+    }
+
+    private Movie getMovieForTest(Director director) {
+        return movieRepository.save(Movie.builder()
+                .title("테스트용 영화")
+                .codeFIMS("123123")
+                .director(director)
+                .build());
     }
 }
