@@ -4,7 +4,15 @@ import chloe.movietalk.dto.request.LoginRequest;
 import chloe.movietalk.dto.request.SignupRequest;
 import chloe.movietalk.dto.response.user.LoginResponse;
 import chloe.movietalk.dto.response.user.UserInfoResponse;
+import chloe.movietalk.exception.ErrorResponse;
 import chloe.movietalk.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,18 +25,46 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
+@Tag(name = "User", description = "User APIs - 사용자 회원가입, 로그인 기능 제공")
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserInfoResponse> signup(@RequestBody @Valid SignupRequest request) {
+    @Operation(summary = "Sign up", description = "회원가입을 시도합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공",
+                    content = {
+                            @Content(array = @ArraySchema(schema = @Schema(implementation = UserInfoResponse.class)))}),
+            @ApiResponse(responseCode = "400", description = "이미 존재하는 사용자입니다.",
+                    content = {
+                            @Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<UserInfoResponse> signup(
+            @Schema(implementation = SignupRequest.class)
+            @RequestBody @Valid SignupRequest request
+    ) {
         UserInfoResponse response = userService.signUp(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest request) {
+    @Operation(summary = "Log in", description = "로그인을 시도합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공",
+                    content = {
+                            @Content(array = @ArraySchema(schema = @Schema(implementation = LoginResponse.class)))}),
+            @ApiResponse(responseCode = "404", description = "해당하는 사용자가 존재하지 않습니다.",
+                    content = {
+                            @Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "401", description = "사용자를 인증할 수 없습니다. (e.g., 잘못된 비밀번호입니다.)",
+                    content = {
+                            @Content(schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    public ResponseEntity<LoginResponse> login(
+            @Schema(implementation = LoginRequest.class)
+            @RequestBody @Valid LoginRequest request
+    ) {
         LoginResponse response = userService.logIn(request);
         return ResponseEntity.ok().body(response);
     }

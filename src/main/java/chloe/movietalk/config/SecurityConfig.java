@@ -22,7 +22,8 @@ public class SecurityConfig {
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final CustomAuthenticationEntryPointHandler authenticationEntryPointHandler;
 
-    private static final String[] AUTH_WHITELIST = {"/api/login", "/api/signup"};
+    private static final String[] AUTH_WHITELIST = {"/api/login", "/api/signup",
+            "/swagger-ui/**", "/api-docs", "api-docs/**", "/swagger-ui.html"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

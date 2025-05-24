@@ -2,6 +2,7 @@ package chloe.movietalk.dto.response.movie;
 
 import chloe.movietalk.domain.Movie;
 import chloe.movietalk.dto.response.director.DirectorInfo;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +13,25 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class MovieInfoResponse {
 
+    @Schema(description = "영화 ID")
     private Long id;
+
+    @Schema(description = "FIMS 코드")
     private String codeFIMS;
+
+    @Schema(description = "영화 제목")
     private String title;
+
+    @Schema(description = "시놉시스")
     private String synopsis;
+
+    @Schema(description = "개봉일")
     private LocalDate releaseDate;
+
+    @Schema(description = "제작연도")
     private Integer prodYear;
+
+    @Schema(description = "감독")
     private DirectorInfo director;
 
     @Builder

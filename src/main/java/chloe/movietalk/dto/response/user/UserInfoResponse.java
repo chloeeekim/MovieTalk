@@ -2,6 +2,7 @@ package chloe.movietalk.dto.response.user;
 
 import chloe.movietalk.domain.SiteUser;
 import chloe.movietalk.domain.enums.UserRole;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfoResponse {
 
+    @Schema(description = "사용자 ID")
     private Long id;
+
+    @Schema(description = "이메일")
     private String email;
+
+    @Schema(description = "닉네임")
     private String nickname;
+
+    @Schema(description = "권한")
     private UserRole role;
 
     @Builder
