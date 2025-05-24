@@ -89,7 +89,7 @@ public class MovieRepositoryTest {
         Movie movie = getMoviesForTest(1, null).get(0);
 
         // when
-        Movie found = movieRepository.findByCodeFIMS("123123").get();
+        Movie found = movieRepository.findByCodeFIMS("code0").get();
 
         // then
         assertThat(found).isEqualTo(movie);
