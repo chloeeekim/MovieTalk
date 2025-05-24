@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 public class DirectorRequest {
 
     @NotBlank(message = "이름이 입력되지 않았습니다.")
-    @Schema(description = "감독 이름")
+    @Schema(description = "감독 이름", example = "김감독")
     private String name;
 
     @Schema(description = "성별", allowableValues = {"MALE", "FEMALE", "OTHER"})
     private String gender;
 
-    @Schema(description = "국적")
+    @Schema(description = "국적", example = "대한민국")
     private String country;
 
     @Builder

@@ -16,14 +16,14 @@ import java.time.LocalDate;
 public class MovieRequest {
 
     @NotNull(message = "FIMS 코드가 입력되지 않았습니다.")
-    @Schema(description = "FIMS 코드")
+    @Schema(description = "FIMS 코드", example = "11111111")
     private String codeFIMS;
 
     @NotBlank(message = "제목이 입력되지 않았습니다.")
-    @Schema(description = "영화 제목")
+    @Schema(description = "영화 제목", example = "영화")
     private String title;
 
-    @Schema(description = "시놉시스")
+    @Schema(description = "시놉시스", example = "시놉시스")
     private String synopsis;
 
     @Schema(description = "개봉일", example = "2000-01-01")
@@ -32,7 +32,7 @@ public class MovieRequest {
     @Schema(description = "제작연도", example = "2000")
     private Integer prodYear;
 
-    @Schema(description = "감독 ID")
+    @Schema(description = "감독 ID", example = "1")
     private Long directorId;
 
     @Builder

@@ -21,14 +21,14 @@ public class CreateReviewRequest {
     @DecimalMax(value = "5.0", message = "평점은 5.0점 이하여야 합니다.")
     @Digits(integer = 1, fraction = 1, message = "평점은 소수점 아래 한자리수여야 합니다.")
     @HalfPointStep
-    @Schema(description = "평점 (0.5점 단위)")
+    @Schema(description = "평점 (0.5점 단위)", example = "3.5")
     private Double rating;
 
-    @Schema(description = "코멘트")
+    @Schema(description = "코멘트", example = "좋은 영화입니다.")
     private String comment;
 
     @NotNull(message = "영화가 입력되지 않았습니다.")
-    @Schema(description = "영화 ID")
+    @Schema(description = "영화 ID", example = "1")
     private Long movieId;
 
     @Builder
