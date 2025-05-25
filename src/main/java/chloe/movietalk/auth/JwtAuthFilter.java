@@ -1,5 +1,6 @@
 package chloe.movietalk.auth;
 
+import chloe.movietalk.exception.auth.InvalidRefreshToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,13 +30,21 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request);
 
-        if (token != null && jwtProvider.isValidToken(token)) {
-            Long userId = jwtProvider.getUserId(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userId.toString());
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            // accessToken이 만료된 경우
+            if (jwtProvider.isTokenExpired(token)) {
+                throw InvalidRefreshToken.EXCEPTION;
+            } else {
+                // accessToken이 만료되지 않았고, valid한 경우, 인증정보 등록
+                if (jwtProvider.isValidToken(token)) {
+                    Long userId = jwtProvider.getUserId(token);
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(userId.toString());
+                    UsernamePasswordAuthenticationToken authenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
+            }
         }
 
         filterChain.doFilter(request, response);

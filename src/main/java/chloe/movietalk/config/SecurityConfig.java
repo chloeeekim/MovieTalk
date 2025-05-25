@@ -21,6 +21,7 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final CustomAccessDeniedHandler accessDeniedHandler;
     private final CustomAuthenticationEntryPointHandler authenticationEntryPointHandler;
+    private final JwtAuthFilter authFilter;
 
     private static final String[] AUTH_WHITELIST = {"/api/login", "/api/signup",
             "/swagger-ui/**", "/api-docs", "api-docs/**", "/swagger-ui.html"};
@@ -39,7 +40,7 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
 
         // JwtAuthFilter를 UsernamePasswordAuthenticationFilter 앞에 추가
-        http.addFilterBefore(new JwtAuthFilter(customUserDetailService, jwtProvider),
+        http.addFilterBefore(authFilter,
                 UsernamePasswordAuthenticationFilter.class);
 
         // exception handling

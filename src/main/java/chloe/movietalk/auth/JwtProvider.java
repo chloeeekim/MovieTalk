@@ -38,7 +38,7 @@ public class JwtProvider {
         Long now = System.currentTimeMillis();
         return Jwts.builder()
                 .setHeader(createHeader())
-                .setSubject("accessToken")
+                .setSubject(user.getId().toString())
                 .setClaims(createClaims(user))
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + accessTokenExpTime))
@@ -46,11 +46,11 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateRefreshToken() {
+    public String generateRefreshToken(Long userId) {
         Long now = System.currentTimeMillis();
         return Jwts.builder()
                 .setHeader(createHeader())
-                .setSubject("refreshToken")
+                .setSubject(userId.toString())
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + refreshTokenExpTime))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -58,18 +58,23 @@ public class JwtProvider {
     }
 
     public Long getUserId(String token) {
-        return parseClaims(token).get("userId", Long.class);
+        return Long.valueOf(parseClaims(token).getSubject());
     }
 
     public Claims parseClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public boolean isTokenExpired(String token) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            Date expirationDate = parseClaims(token).getExpiration();
+            return expirationDate != null && expirationDate.before(new Date());
         } catch (ExpiredJwtException e) {
-            return e.getClaims();
+            return true;
         }
     }
 
