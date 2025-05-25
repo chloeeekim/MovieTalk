@@ -13,4 +13,6 @@ public interface UserService {
     public UserInfoResponse logIn(LoginRequest loginRequest, HttpServletRequest request, HttpServletResponse response);
 
     public void refresh(HttpServletRequest request, HttpServletResponse response);
+
+    public void logout(HttpServletRequest request);
 }

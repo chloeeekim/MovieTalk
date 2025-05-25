@@ -39,8 +39,8 @@ public class JwtProvider {
         Long now = System.currentTimeMillis();
         return Jwts.builder()
                 .setHeader(createHeader())
-                .setSubject(user.getId().toString())
                 .setClaims(createClaims(user))
+                .setSubject(user.getId().toString())
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + accessTokenExpTime))
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -60,6 +60,10 @@ public class JwtProvider {
 
     public UUID getUserId(String token) {
         return UUID.fromString(parseClaims(token).getSubject());
+    }
+
+    public Date getExpiration(String token) {
+        return parseClaims(token).getExpiration();
     }
 
     public Claims parseClaims(String token) {

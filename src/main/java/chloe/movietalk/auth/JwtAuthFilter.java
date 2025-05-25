@@ -1,6 +1,8 @@
 package chloe.movietalk.auth;
 
+import chloe.movietalk.common.RedisUtil;
 import chloe.movietalk.exception.auth.InvalidAccessToken;
+import chloe.movietalk.exception.auth.LoginRequiredException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +27,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
 
+    private final RedisUtil redisUtil;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -32,6 +36,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String token = resolveToken(request);
 
         if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            String blackLists = (String) redisUtil.getBlacklist(token);
+
+            if (blackLists != null && blackLists.equals("logout")) {
+                throw LoginRequiredException.EXCEPTION;
+            }
+
             // accessToken이 만료된 경우
             if (jwtProvider.isTokenExpired(token)) {
                 throw InvalidAccessToken.EXCEPTION;

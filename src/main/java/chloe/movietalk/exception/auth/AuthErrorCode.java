@@ -16,7 +16,8 @@ public enum AuthErrorCode implements BaseErrorCode {
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED.value(), "AUTH_004", "비밀번호가 일치하지 않습니다."),
     ALREADY_EXISTS_USER(HttpStatus.BAD_REQUEST.value(), "AUTH_005", "이미 존재하는 이메일입니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED.value(), "AUTH_006", "유효하지 않은 Refresh Token입니다."),
-    INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED.value(), "AUTH_007", "유효하지 않은 Access Token입니다.");
+    INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED.value(), "AUTH_007", "유효하지 않은 Access Token입니다."),
+    LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED.value(), "AUTH_008", "계정에 로그인 해야 합니다.");
 
     private Integer status;
     private String code;
