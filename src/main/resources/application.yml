@@ -35,3 +35,10 @@ springdoc:
 
   # response media type의 기본값
   default-produces-media-type: application/json
+
+# redis
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 6379

@@ -72,7 +72,6 @@ public class UserServiceImpl implements UserService {
         cookie.setSecure(true);
         cookie.setMaxAge(60 * 60 * 24 * 14); // 2주 후 만료
         cookie.setPath("/");
-        cookie.setAttribute("SameSite", "None");
         response.addCookie(cookie);
 
         return UserInfoResponse.fromEntity(user);
