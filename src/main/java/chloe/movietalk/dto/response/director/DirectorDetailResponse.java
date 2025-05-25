@@ -9,13 +9,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 public class DirectorDetailResponse {
 
     @Schema(description = "감독 ID")
-    private Long id;
+    private UUID id;
 
     @Schema(description = "감독 이름")
     private String name;
@@ -30,7 +31,7 @@ public class DirectorDetailResponse {
     private List<MovieInfo> filmography;
 
     @Builder
-    public DirectorDetailResponse(Long id, String name, Gender gender, String country, List<MovieInfo> filmography) {
+    public DirectorDetailResponse(UUID id, String name, Gender gender, String country, List<MovieInfo> filmography) {
         this.id = id;
         this.name = name;
         this.gender = gender;

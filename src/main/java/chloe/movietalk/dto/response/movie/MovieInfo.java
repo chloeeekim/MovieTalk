@@ -6,12 +6,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @NoArgsConstructor
 public class MovieInfo {
 
     @Schema(description = "영화 ID")
-    private Long id;
+    private UUID id;
 
     @Schema(description = "FIMS 코드")
     private String codeFIMS;
@@ -20,7 +22,7 @@ public class MovieInfo {
     private String title;
 
     @Builder
-    public MovieInfo(Long id, String codeFIMS, String title) {
+    public MovieInfo(UUID id, String codeFIMS, String title) {
         this.id = id;
         this.codeFIMS = codeFIMS;
         this.title = title;

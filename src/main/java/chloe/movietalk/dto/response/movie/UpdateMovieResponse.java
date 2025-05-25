@@ -10,13 +10,14 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 public class UpdateMovieResponse {
 
     @Schema(description = "영화 ID")
-    private Long id;
+    private UUID id;
 
     @Schema(description = "FIMS 코드")
     private String codeFIMS;
@@ -40,7 +41,7 @@ public class UpdateMovieResponse {
     private List<ActorInfo> actors;
 
     @Builder
-    public UpdateMovieResponse(Long id,
+    public UpdateMovieResponse(UUID id,
                                String codeFIMS,
                                String title,
                                String synopsis,

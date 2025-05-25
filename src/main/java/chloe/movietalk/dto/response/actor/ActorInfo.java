@@ -7,12 +7,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @NoArgsConstructor
 public class ActorInfo {
 
     @Schema(description = "배우 ID")
-    private Long id;
+    private UUID id;
 
     @Schema(description = "배우 이름")
     private String name;
@@ -24,7 +26,7 @@ public class ActorInfo {
     private String country;
 
     @Builder
-    public ActorInfo(Long id, String name, Gender gender, String country) {
+    public ActorInfo(UUID id, String name, Gender gender, String country) {
         this.id = id;
         this.name = name;
         this.gender = gender;

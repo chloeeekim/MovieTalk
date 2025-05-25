@@ -7,12 +7,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @NoArgsConstructor
 public class DirectorInfo {
 
     @Schema(description = "감독 ID")
-    private Long id;
+    private UUID id;
 
     @Schema(description = "감독 이름")
     private String name;
@@ -24,7 +26,7 @@ public class DirectorInfo {
     private String country;
 
     @Builder
-    public DirectorInfo(Long id, String name, Gender gender, String country) {
+    public DirectorInfo(UUID id, String name, Gender gender, String country) {
         this.id = id;
         this.name = name;
         this.gender = gender;

@@ -8,13 +8,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 public class MovieInfoResponse {
 
     @Schema(description = "영화 ID")
-    private Long id;
+    private UUID id;
 
     @Schema(description = "FIMS 코드")
     private String codeFIMS;
@@ -35,7 +36,7 @@ public class MovieInfoResponse {
     private DirectorInfo director;
 
     @Builder
-    public MovieInfoResponse(Long id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, DirectorInfo director) {
+    public MovieInfoResponse(UUID id, String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, DirectorInfo director) {
         this.id = id;
         this.codeFIMS = codeFIMS;
         this.title = title;

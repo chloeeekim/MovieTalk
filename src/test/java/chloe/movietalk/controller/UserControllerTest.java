@@ -189,7 +189,7 @@ public class UserControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data.id").value(user.getId()))
+                .andExpect(jsonPath("data.id").value(user.getId().toString()))
                 .andExpect(jsonPath("data.email").value(user.getEmail()))
                 .andExpect(jsonPath("data.nickname").value(user.getNickname()));
     }

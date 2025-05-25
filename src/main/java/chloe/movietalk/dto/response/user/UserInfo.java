@@ -7,12 +7,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @NoArgsConstructor
 public class UserInfo {
 
     @Schema(description = "사용자 ID")
-    private Long id;
+    private UUID id;
 
     @Schema(description = "이메일")
     private String email;
@@ -24,7 +26,7 @@ public class UserInfo {
     private UserRole role;
 
     @Builder
-    public UserInfo(Long id, String email, String nickname, UserRole role) {
+    public UserInfo(UUID id, String email, String nickname, UserRole role) {
         this.id = id;
         this.email = email;
         this.nickname = nickname;

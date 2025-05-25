@@ -7,12 +7,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @NoArgsConstructor
 public class ReviewByMovieResponse {
 
     @Schema(description = "리뷰 ID")
-    private Long id;
+    private UUID id;
 
     @Schema(description = "평점")
     private Double rating;
@@ -27,7 +29,7 @@ public class ReviewByMovieResponse {
     private Integer likes;
 
     @Builder
-    public ReviewByMovieResponse(Long id, Double rating, String comment, UserInfo userInfo, Integer likes) {
+    public ReviewByMovieResponse(UUID id, Double rating, String comment, UserInfo userInfo, Integer likes) {
         this.id = id;
         this.rating = rating;
         this.comment = comment;

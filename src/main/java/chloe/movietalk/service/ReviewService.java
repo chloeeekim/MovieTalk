@@ -7,20 +7,21 @@ import chloe.movietalk.dto.response.review.ReviewByUserResponse;
 import chloe.movietalk.dto.response.review.ReviewDetailResponse;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ReviewService {
 
-    public List<ReviewByMovieResponse> getAllReviewsByMovie(Long movieId);
+    public List<ReviewByMovieResponse> getAllReviewsByMovie(UUID movieId);
 
-    public List<ReviewByUserResponse> getAllReviewsByUser(Long userId);
+    public List<ReviewByUserResponse> getAllReviewsByUser(UUID userId);
 
     public ReviewDetailResponse createReview(CreateReviewRequest request);
 
-    public ReviewDetailResponse updateReview(Long id, UpdateReviewRequest request);
+    public ReviewDetailResponse updateReview(UUID id, UpdateReviewRequest request);
 
-    public void deleteReview(Long id);
+    public void deleteReview(UUID id);
 
-    public void likeReview(Long userId, Long reviewId);
+    public void likeReview(UUID userId, UUID reviewId);
 
-    public void unlikeReview(Long userId, Long reviewId);
+    public void unlikeReview(UUID userId, UUID reviewId);
 }

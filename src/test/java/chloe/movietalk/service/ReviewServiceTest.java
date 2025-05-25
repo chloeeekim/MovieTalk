@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,17 +55,19 @@ public class ReviewServiceTest {
         SiteUser user = getUserForTest();
         Review review = getReviewForTest(movie, user, 3.5, 0);
 
-        given(movieRepository.findById(1L))
+        UUID uuid = UUID.randomUUID();
+
+        given(movieRepository.findById(uuid))
                 .willReturn(Optional.of(movie));
 
-        given(userRepository.findById(1L))
+        given(userRepository.findById(uuid))
                 .willReturn(Optional.of(user));
 
         given(reviewRepository.save(any(Review.class)))
                 .willReturn(review);
 
         // when
-        reviewService.createReview(new CreateReviewRequest(3.5, "좋은 영화입니다.", 1L, 1L));
+        reviewService.createReview(new CreateReviewRequest(3.5, "좋은 영화입니다.", uuid, uuid));
 
         // then
         assertThat(movie.getTotalRating()).isEqualTo(3.5);
@@ -80,11 +83,13 @@ public class ReviewServiceTest {
         SiteUser user = getUserForTest();
         Review review = getReviewForTest(movie, user, 3.5, 0);
 
-        given(reviewRepository.findById(1L))
+        UUID uuid = UUID.randomUUID();
+
+        given(reviewRepository.findById(uuid))
                 .willReturn(Optional.of(review));
 
         // when
-        reviewService.updateReview(1L, new UpdateReviewRequest(5.0, "훌륭한 영화입니다."));
+        reviewService.updateReview(uuid, new UpdateReviewRequest(5.0, "훌륭한 영화입니다."));
 
         // then
         assertThat(movie.getTotalRating()).isEqualTo(5.0);
@@ -100,11 +105,13 @@ public class ReviewServiceTest {
         SiteUser user = getUserForTest();
         Review review = getReviewForTest(movie, user, 3.5, 0);
 
-        given(reviewRepository.findById(1L))
+        UUID uuid = UUID.randomUUID();
+
+        given(reviewRepository.findById(uuid))
                 .willReturn(Optional.of(review));
 
         // when
-        reviewService.deleteReview(1L);
+        reviewService.deleteReview(uuid);
 
         // then
         assertThat(movie.getTotalRating()).isEqualTo(0.0);
@@ -120,13 +127,15 @@ public class ReviewServiceTest {
         SiteUser user = getUserForTest();
         Review review = getReviewForTest(movie, user, 3.5, 0);
 
-        given(reviewLikeRepository.existsByUserIdAndReviewId(1L, 1L))
+        UUID uuid = UUID.randomUUID();
+
+        given(reviewLikeRepository.existsByUserIdAndReviewId(uuid, uuid))
                 .willReturn(false);
-        given(userRepository.findById(1L)).willReturn(Optional.of(user));
-        given(reviewRepository.findById(1L)).willReturn(Optional.of(review));
+        given(userRepository.findById(uuid)).willReturn(Optional.of(user));
+        given(reviewRepository.findById(uuid)).willReturn(Optional.of(review));
 
         // when
-        reviewService.likeReview(1L, 1L);
+        reviewService.likeReview(uuid, uuid);
 
         // then
         assertThat(review.getLikes()).isEqualTo(1);
@@ -141,11 +150,13 @@ public class ReviewServiceTest {
         Review review = getReviewForTest(movie, user, 3.5, 1);
         ReviewLike like = getReviewLikeForTest(review, user);
 
-        given(reviewLikeRepository.findByUserIdAndReviewId(1L, 1L))
+        UUID uuid = UUID.randomUUID();
+
+        given(reviewLikeRepository.findByUserIdAndReviewId(uuid, uuid))
                 .willReturn(Optional.of(like));
 
         // when
-        reviewService.unlikeReview(1L, 1L);
+        reviewService.unlikeReview(uuid, uuid);
 
         // then
         assertThat(review.getLikes()).isEqualTo(0);

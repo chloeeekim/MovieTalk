@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -33,10 +34,10 @@ public class MovieRequest {
     private Integer prodYear;
 
     @Schema(description = "감독 ID", example = "1")
-    private Long directorId;
+    private UUID directorId;
 
     @Builder
-    public MovieRequest(String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, Long directorId) {
+    public MovieRequest(String codeFIMS, String title, String synopsis, LocalDate releaseDate, Integer prodYear, UUID directorId) {
         this.codeFIMS = codeFIMS;
         this.title = title;
         this.synopsis = synopsis;

@@ -13,6 +13,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @NoArgsConstructor
 public class CreateReviewRequest {
@@ -30,14 +32,14 @@ public class CreateReviewRequest {
 
     @NotNull(message = "영화가 입력되지 않았습니다.")
     @Schema(description = "영화 ID", example = "1")
-    private Long movieId;
+    private UUID movieId;
 
     @NotNull(message = "사용자가 입력되지 않았습니다.")
     @Schema(description = "사용자 ID", example = "1")
-    private Long userId;
+    private UUID userId;
 
     @Builder
-    public CreateReviewRequest(Double rating, String comment, Long movieId, Long userId) {
+    public CreateReviewRequest(Double rating, String comment, UUID movieId, UUID userId) {
         this.rating = rating;
         this.comment = comment;
         this.movieId = movieId;

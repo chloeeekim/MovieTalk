@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -61,7 +62,7 @@ public class ReviewController {
     })
     public ResponseEntity<ReviewDetailResponse> updateReview(
             @Parameter(name = "id", description = "리뷰 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable UUID id,
 
             @Schema(implementation = UpdateReviewRequest.class)
             @RequestBody @Valid UpdateReviewRequest request
@@ -81,7 +82,7 @@ public class ReviewController {
     })
     public ResponseEntity<Void> deleteReview(
             @Parameter(name = "id", description = "리뷰 ID", required = true)
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         reviewService.deleteReview(id);
         return ResponseEntity.noContent().build();
@@ -99,7 +100,7 @@ public class ReviewController {
     })
     public List<ReviewByMovieResponse> getAllReviewsByMovie(
             @Parameter(name = "id", description = "영화 ID", required = true)
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         return reviewService.getAllReviewsByMovie(id);
     }
@@ -116,7 +117,7 @@ public class ReviewController {
     })
     public List<ReviewByUserResponse> getAllReviewsByUser(
             @Parameter(name = "id", description = "사용자 ID", required = true)
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         return reviewService.getAllReviewsByUser(id);
     }
@@ -135,10 +136,10 @@ public class ReviewController {
     @PostMapping("/{id}/like")
     public ResponseEntity<Void> likeReview(
             @Parameter(name = "id", description = "리뷰 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable UUID id,
 
             @Parameter(name = "userId", description = "사용자 ID", required = true)
-            @RequestParam Long userId
+            @RequestParam UUID userId
     ) {
         reviewService.likeReview(userId, id);
         return ResponseEntity.ok().build();
@@ -153,7 +154,13 @@ public class ReviewController {
                             @Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     @DeleteMapping("/{id}/like")
-    public ResponseEntity<Void> unlikeReview(@PathVariable Long id, @RequestParam Long userId) {
+    public ResponseEntity<Void> unlikeReview(
+            @Parameter(name = "id", description = "리뷰 ID", required = true)
+            @PathVariable UUID id,
+
+            @Parameter(name = "userID", description = "사용자 ID", required = true)
+            @RequestParam UUID userId
+    ) {
         reviewService.unlikeReview(userId, id);
         return ResponseEntity.ok().build();
     }

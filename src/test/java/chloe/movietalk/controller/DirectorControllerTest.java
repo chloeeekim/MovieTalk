@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -201,7 +202,7 @@ public class DirectorControllerTest {
                 .build();
 
         // when
-        ResultActions resultActions = mvc.perform(put("/api/directors/{id}", 1L)
+        ResultActions resultActions = mvc.perform(put("/api/directors/{id}", UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(update)));
 
@@ -232,7 +233,7 @@ public class DirectorControllerTest {
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(delete("/api/directors/{id}", 1L));
+        ResultActions resultActions = mvc.perform(delete("/api/directors/{id}", UUID.randomUUID()));
 
         // then
         DirectorErrorCode errorCode = DirectorErrorCode.DIRECTOR_NOT_FOUND;

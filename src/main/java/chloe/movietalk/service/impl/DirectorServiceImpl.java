@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -32,7 +33,7 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public DirectorDetailResponse getDirectorById(Long id) {
+    public DirectorDetailResponse getDirectorById(UUID id) {
         Director director = directorRepository.findById(id)
                 .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
         return DirectorDetailResponse.fromEntity(director);
@@ -52,7 +53,7 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public DirectorInfoResponse updateDirector(Long id, DirectorRequest request) {
+    public DirectorInfoResponse updateDirector(UUID id, DirectorRequest request) {
         Director director = directorRepository.findById(id)
                 .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
 
@@ -61,14 +62,14 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public void deleteDirector(Long id) {
+    public void deleteDirector(UUID id) {
         directorRepository.findById(id)
                 .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
         directorRepository.deleteById(id);
     }
 
     @Override
-    public DirectorDetailResponse updateDirectorFilmography(Long id, List<Long> filmography) {
+    public DirectorDetailResponse updateDirectorFilmography(UUID id, List<UUID> filmography) {
         Director director = directorRepository.findById(id)
                 .orElseThrow(() -> DirectorNotFoundException.EXCEPTION);
 

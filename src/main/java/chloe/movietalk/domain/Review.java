@@ -3,6 +3,8 @@ package chloe.movietalk.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @ToString
 @Entity
 @Getter
@@ -10,8 +12,9 @@ import lombok.*;
 public class Review extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(nullable = false, unique = true, updatable = false, columnDefinition = "BINARY(16)")
+    private UUID id;
 
     private Double rating;
 

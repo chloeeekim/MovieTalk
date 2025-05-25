@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -84,7 +86,7 @@ public class UserServiceImpl implements UserService {
         if (refreshTokenFromCookie == null || !jwtProvider.isValidToken(refreshTokenFromCookie)) {
             throw InvalidRefreshToken.EXCEPTION;
         }
-        Long id = jwtProvider.getUserId(refreshTokenFromCookie);
+        UUID id = jwtProvider.getUserId(refreshTokenFromCookie);
         SiteUser user = userRepository.findById(id)
                 .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 

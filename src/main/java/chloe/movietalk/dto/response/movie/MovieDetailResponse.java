@@ -12,13 +12,14 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
 public class MovieDetailResponse {
 
     @Schema(description = "영화 ID")
-    private Long id;
+    private UUID id;
 
     @Schema(description = "FIMS 코드")
     private String codeFIMS;
@@ -48,7 +49,7 @@ public class MovieDetailResponse {
     private List<ReviewByMovieResponse> topReviews;
 
     @Builder
-    public MovieDetailResponse(Long id,
+    public MovieDetailResponse(UUID id,
                                String codeFIMS,
                                String title,
                                String synopsis,

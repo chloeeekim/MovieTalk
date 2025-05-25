@@ -13,6 +13,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -46,7 +47,7 @@ public class JwtProvider {
                 .compact();
     }
 
-    public String generateRefreshToken(Long userId) {
+    public String generateRefreshToken(UUID userId) {
         Long now = System.currentTimeMillis();
         return Jwts.builder()
                 .setHeader(createHeader())
@@ -57,8 +58,8 @@ public class JwtProvider {
                 .compact();
     }
 
-    public Long getUserId(String token) {
-        return Long.valueOf(parseClaims(token).getSubject());
+    public UUID getUserId(String token) {
+        return UUID.fromString(parseClaims(token).getSubject());
     }
 
     public Claims parseClaims(String token) {

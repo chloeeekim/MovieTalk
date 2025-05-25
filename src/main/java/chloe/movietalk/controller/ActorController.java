@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,7 +53,7 @@ public class ActorController {
     })
     public ActorDetailResponse getActorById(
             @Parameter(name = "id", description = "배우 ID", required = true)
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         return actorService.getActorById(id);
     }
@@ -98,7 +99,7 @@ public class ActorController {
     })
     public ResponseEntity<ActorInfoResponse> updateActor(
             @Parameter(name = "id", description = "배우 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable UUID id,
 
             @Schema(implementation = ActorRequest.class)
             @RequestBody @Valid ActorRequest request
@@ -118,7 +119,7 @@ public class ActorController {
     })
     public ResponseEntity<Void> deleteActor(
             @Parameter(name = "id", description = "배우 ID", required = true)
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         actorService.deleteActor(id);
         return ResponseEntity.noContent().build();
@@ -136,13 +137,13 @@ public class ActorController {
     })
     public ResponseEntity<ActorDetailResponse> updateActorFilmography(
             @Parameter(name = "id", description = "배우 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable UUID id,
 
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "새로운 필모그라피로 설정할 영화 ID 리스트",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Long.class)))
             )
-            @RequestBody List<Long> filmography
+            @RequestBody List<UUID> filmography
     ) {
         ActorDetailResponse actor = actorService.updateActorFilmography(id, filmography);
         return ResponseEntity.ok().body(actor);

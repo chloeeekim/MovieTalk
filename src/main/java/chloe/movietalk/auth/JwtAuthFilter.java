@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -37,7 +38,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             } else {
                 // accessToken이 만료되지 않았고, valid한 경우, 인증정보 등록
                 if (jwtProvider.isValidToken(token)) {
-                    Long userId = jwtProvider.getUserId(token);
+                    UUID userId = jwtProvider.getUserId(token);
                     UserDetails userDetails = userDetailsService.loadUserByUsername(userId.toString());
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

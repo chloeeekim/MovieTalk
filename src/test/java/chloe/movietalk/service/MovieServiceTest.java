@@ -18,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -83,10 +84,12 @@ public class MovieServiceTest {
     @DisplayName("영화 삭제 성공")
     public void deleteMovieSuccess() {
         // given
-        given(movieRepository.findById(1L)).willReturn(Optional.empty());
+        UUID uuid = UUID.randomUUID();
+        
+        given(movieRepository.findById(uuid)).willReturn(Optional.empty());
 
         // when then
         Assertions.assertThrows(MovieNotFoundException.class,
-                () -> movieService.deleteMovie(1L));
+                () -> movieService.deleteMovie(uuid));
     }
 }

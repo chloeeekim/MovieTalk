@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +41,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieDetailResponse getMovieById(Long id) {
+    public MovieDetailResponse getMovieById(UUID id) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
@@ -66,7 +67,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public MovieInfoResponse updateMovie(Long id, MovieRequest request) {
+    public MovieInfoResponse updateMovie(UUID id, MovieRequest request) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
@@ -75,14 +76,14 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public void deleteMovie(Long id) {
+    public void deleteMovie(UUID id) {
         movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
         movieRepository.deleteById(id);
     }
 
     @Override
-    public UpdateMovieResponse updateMovieActors(Long id, List<Long> actorIds) {
+    public UpdateMovieResponse updateMovieActors(UUID id, List<UUID> actorIds) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
@@ -96,7 +97,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public UpdateMovieResponse updateMovieDirector(Long id, Long directorId) {
+    public UpdateMovieResponse updateMovieDirector(UUID id, UUID directorId) {
         Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
@@ -107,7 +108,7 @@ public class MovieServiceImpl implements MovieService {
         return UpdateMovieResponse.fromEntity(movie);
     }
 
-    private Director getDirectorInfo(Long id) {
+    private Director getDirectorInfo(UUID id) {
         if (id == null) {
             return null;
         } else {

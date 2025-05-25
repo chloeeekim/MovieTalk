@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -36,7 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewLikeRepository reviewLikeRepository;
 
     @Override
-    public List<ReviewByMovieResponse> getAllReviewsByMovie(Long movieId) {
+    public List<ReviewByMovieResponse> getAllReviewsByMovie(UUID movieId) {
         movieRepository.findById(movieId)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
@@ -46,7 +47,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public List<ReviewByUserResponse> getAllReviewsByUser(Long userId) {
+    public List<ReviewByUserResponse> getAllReviewsByUser(UUID userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
@@ -71,7 +72,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public ReviewDetailResponse updateReview(Long id, UpdateReviewRequest request) {
+    public ReviewDetailResponse updateReview(UUID id, UpdateReviewRequest request) {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
 
@@ -86,7 +87,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void deleteReview(Long id) {
+    public void deleteReview(UUID id) {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> ReviewNotFoundException.EXCEPTION);
 
@@ -98,7 +99,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void likeReview(Long userId, Long reviewId) {
+    public void likeReview(UUID userId, UUID reviewId) {
         if (reviewLikeRepository.existsByUserIdAndReviewId(userId, reviewId)) {
             throw AlreadyLikedReviewException.EXCEPTION;
         }
@@ -120,7 +121,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public void unlikeReview(Long userId, Long reviewId) {
+    public void unlikeReview(UUID userId, UUID reviewId) {
         ReviewLike like = reviewLikeRepository.findByUserIdAndReviewId(userId, reviewId)
                 .orElseThrow(() -> ReviewlikeNotFoundException.EXCEPTION);
 

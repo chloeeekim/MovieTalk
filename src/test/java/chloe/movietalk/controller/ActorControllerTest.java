@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -205,7 +206,7 @@ public class ActorControllerTest {
                 .build();
 
         // when
-        ResultActions resultActions = mvc.perform(put("/api/actors/{id}", 1L)
+        ResultActions resultActions = mvc.perform(put("/api/actors/{id}", UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(update)));
 
@@ -236,7 +237,7 @@ public class ActorControllerTest {
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(delete("/api/actors/{id}", 1L));
+        ResultActions resultActions = mvc.perform(delete("/api/actors/{id}", UUID.randomUUID()));
 
         // then
         ActorErrorCode errorCode = ActorErrorCode.ACTOR_NOT_FOUND;

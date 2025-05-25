@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,7 +54,7 @@ public class MovieController {
     })
     public MovieDetailResponse getMovieById(
             @Parameter(name = "id", description = "영화 ID", required = true)
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         return movieService.getMovieById(id);
     }
@@ -102,7 +103,7 @@ public class MovieController {
     })
     public ResponseEntity<MovieInfoResponse> updateMovie(
             @Parameter(name = "id", description = "영화 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable UUID id,
 
             @Schema(implementation = MovieRequest.class)
             @RequestBody @Valid MovieRequest request
@@ -122,7 +123,7 @@ public class MovieController {
     })
     public ResponseEntity<Void> deleteMovie(
             @Parameter(name = "id", description = "영화 ID", required = true)
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         movieService.deleteMovie(id);
         return ResponseEntity.noContent().build();
@@ -140,13 +141,13 @@ public class MovieController {
     })
     public ResponseEntity<UpdateMovieResponse> updateMovieActors(
             @Parameter(name = "id", description = "영화 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable UUID id,
 
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "새로운 배우 목록으로 설정할 배우 ID 리스트",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Long.class)))
             )
-            @RequestBody List<Long> actorIds
+            @RequestBody List<UUID> actorIds
     ) {
         UpdateMovieResponse movie = movieService.updateMovieActors(id, actorIds);
         return ResponseEntity.ok().body(movie);
@@ -164,13 +165,13 @@ public class MovieController {
     })
     public ResponseEntity<UpdateMovieResponse> updateMovieDirector(
             @Parameter(name = "id", description = "영화 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable UUID id,
 
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "새로운 배우 목록으로 설정할 배우 ID 리스트",
                     content = @Content(schema = @Schema(implementation = Long.class))
             )
-            @RequestBody Long directorId
+            @RequestBody UUID directorId
     ) {
         UpdateMovieResponse movie = movieService.updateMovieDirector(id, directorId);
         return ResponseEntity.ok().body(movie);

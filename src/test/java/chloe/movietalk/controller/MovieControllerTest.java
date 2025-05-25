@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -169,7 +170,7 @@ public class MovieControllerTest {
         MovieRequest movie = MovieRequest.builder()
                 .title("테스트 영화 제목")
                 .codeFIMS("123123")
-                .directorId(1L)
+                .directorId(UUID.randomUUID())
                 .build();
 
         // when
@@ -216,7 +217,7 @@ public class MovieControllerTest {
                 .build();
 
         // when
-        ResultActions resultActions = mvc.perform(put("/api/movies/{id}", 1L)
+        ResultActions resultActions = mvc.perform(put("/api/movies/{id}", UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(update)));
 
@@ -247,7 +248,7 @@ public class MovieControllerTest {
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(delete("/api/movies/{id}", 1L));
+        ResultActions resultActions = mvc.perform(delete("/api/movies/{id}", UUID.randomUUID()));
 
         // then
         MovieErrorCode errorCode = MovieErrorCode.MOVIE_NOT_FOUND;

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -31,7 +32,7 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public ActorDetailResponse getActorById(Long id) {
+    public ActorDetailResponse getActorById(UUID id) {
         Actor actor = actorRepository.findById(id)
                 .orElseThrow(() -> ActorNotFoundException.EXCEPTION);
         return ActorDetailResponse.fromEntity(actor);
@@ -51,7 +52,7 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public ActorInfoResponse updateActor(Long id, ActorRequest request) {
+    public ActorInfoResponse updateActor(UUID id, ActorRequest request) {
         Actor actor = actorRepository.findById(id)
                 .orElseThrow(() -> ActorNotFoundException.EXCEPTION);
 
@@ -60,14 +61,14 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public void deleteActor(Long id) {
+    public void deleteActor(UUID id) {
         actorRepository.findById(id)
                 .orElseThrow(() -> ActorNotFoundException.EXCEPTION);
         actorRepository.deleteById(id);
     }
 
     @Override
-    public ActorDetailResponse updateActorFilmography(Long id, List<Long> filmography) {
+    public ActorDetailResponse updateActorFilmography(UUID id, List<UUID> filmography) {
         Actor actor = actorRepository.findById(id)
                 .orElseThrow(() -> ActorNotFoundException.EXCEPTION);
 

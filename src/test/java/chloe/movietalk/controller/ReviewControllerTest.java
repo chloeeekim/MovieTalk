@@ -26,6 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -112,7 +114,7 @@ public class ReviewControllerTest {
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .rating(3.5)
                 .comment("좋은 영화입니다.")
-                .userId(1L)
+                .userId(UUID.randomUUID())
                 .build();
 
         // when
@@ -136,7 +138,7 @@ public class ReviewControllerTest {
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .rating(3.5)
                 .comment("좋은 영화입니다.")
-                .movieId(1L)
+                .movieId(UUID.randomUUID())
                 .userId(user.getId())
                 .build();
 
@@ -159,8 +161,8 @@ public class ReviewControllerTest {
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .rating(0.0)
                 .comment("좋은 영화입니다.")
-                .movieId(1L)
-                .userId(1L)
+                .movieId(UUID.randomUUID())
+                .userId(UUID.randomUUID())
                 .build();
 
         // when
@@ -182,8 +184,8 @@ public class ReviewControllerTest {
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .rating(5.5)
                 .comment("좋은 영화입니다.")
-                .movieId(1L)
-                .userId(1L)
+                .movieId(UUID.randomUUID())
+                .userId(UUID.randomUUID())
                 .build();
 
         // when
@@ -205,8 +207,8 @@ public class ReviewControllerTest {
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .rating(3.8)
                 .comment("좋은 영화입니다.")
-                .movieId(1L)
-                .userId(1L)
+                .movieId(UUID.randomUUID())
+                .userId(UUID.randomUUID())
                 .build();
 
         // when
@@ -228,8 +230,8 @@ public class ReviewControllerTest {
         CreateReviewRequest request = CreateReviewRequest.builder()
                 .rating(3.55)
                 .comment("좋은 영화입니다.")
-                .movieId(1L)
-                .userId(1L)
+                .movieId(UUID.randomUUID())
+                .userId(UUID.randomUUID())
                 .build();
 
         // when
@@ -279,7 +281,7 @@ public class ReviewControllerTest {
                 .build();
 
         // when
-        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", 1L)
+        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -324,7 +326,7 @@ public class ReviewControllerTest {
                 .build();
 
         // when
-        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", 1L)
+        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -345,7 +347,7 @@ public class ReviewControllerTest {
                 .build();
 
         // when
-        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", 1L)
+        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -366,7 +368,7 @@ public class ReviewControllerTest {
                 .build();
 
         // when
-        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", 1L)
+        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -387,7 +389,7 @@ public class ReviewControllerTest {
                 .build();
 
         // when
-        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", 1L)
+        ResultActions resultActions = mvc.perform(put("/api/reviews/{id}", UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
 
@@ -420,7 +422,7 @@ public class ReviewControllerTest {
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(delete("/api/reviews/{id}", 1L));
+        ResultActions resultActions = mvc.perform(delete("/api/reviews/{id}", UUID.randomUUID()));
 
         // then
         ReviewErrorCode errorCode = ReviewErrorCode.REVIEW_NOT_FOUND;
@@ -455,7 +457,7 @@ public class ReviewControllerTest {
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(get("/api/reviews/movies/{id}", 1L));
+        ResultActions resultActions = mvc.perform(get("/api/reviews/movies/{id}", UUID.randomUUID()));
 
         // then
         MovieErrorCode errorCode = MovieErrorCode.MOVIE_NOT_FOUND;
@@ -490,7 +492,7 @@ public class ReviewControllerTest {
         // given
 
         // when
-        ResultActions resultActions = mvc.perform(get("/api/reviews/users/{id}", 1L));
+        ResultActions resultActions = mvc.perform(get("/api/reviews/users/{id}", UUID.randomUUID()));
 
         // then
         AuthErrorCode errorCode = AuthErrorCode.USER_NOT_FOUND;
@@ -546,7 +548,7 @@ public class ReviewControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(post("/api/reviews/{id}/like", review.getId())
-                .param("userId", "2"));
+                .param("userId", UUID.randomUUID().toString()));
 
         // then
         AuthErrorCode errorCode = AuthErrorCode.USER_NOT_FOUND;
@@ -563,7 +565,7 @@ public class ReviewControllerTest {
         SiteUser user = getUserForTest();
 
         // when
-        ResultActions resultActions = mvc.perform(post("/api/reviews/{id}/like", "1")
+        ResultActions resultActions = mvc.perform(post("/api/reviews/{id}/like", UUID.randomUUID())
                 .param("userId", user.getId().toString()));
 
         // then

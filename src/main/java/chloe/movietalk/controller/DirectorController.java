@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -52,7 +53,7 @@ public class DirectorController {
     })
     public DirectorDetailResponse getDirectorById(
             @Parameter(name = "id", description = "감독 ID", required = true)
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         return directorService.getDirectorById(id);
     }
@@ -98,7 +99,7 @@ public class DirectorController {
     })
     public ResponseEntity<DirectorInfoResponse> updateDirector(
             @Parameter(name = "id", description = "감독 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable UUID id,
 
             @Schema(implementation = DirectorRequest.class)
             @RequestBody @Valid DirectorRequest request
@@ -118,7 +119,7 @@ public class DirectorController {
     })
     public ResponseEntity<Void> deleteDirector(
             @Parameter(name = "id", description = "감독 ID", required = true)
-            @PathVariable Long id
+            @PathVariable UUID id
     ) {
         directorService.deleteDirector(id);
         return ResponseEntity.noContent().build();
@@ -136,13 +137,13 @@ public class DirectorController {
     })
     public ResponseEntity<DirectorDetailResponse> updateDirectorFilmography(
             @Parameter(name = "id", description = "감독 ID", required = true)
-            @PathVariable Long id,
+            @PathVariable UUID id,
 
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "새로운 필모그라피로 설정할 영화 ID 리스트",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Long.class)))
             )
-            @RequestBody List<Long> filmography
+            @RequestBody List<UUID> filmography
     ) {
         DirectorDetailResponse director = directorService.updateDirectorFilmography(id, filmography);
         return ResponseEntity.ok().body(director);
