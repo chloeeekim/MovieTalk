@@ -95,7 +95,13 @@ public class UserController {
 
     @PostMapping("/logout")
     @Operation(summary = "Log out", description = "로그아웃을 진행합니다.")
-    @ApiResponses()
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공",
+                    content = {}),
+            @ApiResponse(responseCode = "401", description = "계정에 로그인 해야 합니다.",
+                    content = {
+                            @Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
     public ResponseEntity<Void> logout(
             HttpServletRequest request
     ) {
