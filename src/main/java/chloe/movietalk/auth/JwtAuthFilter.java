@@ -1,6 +1,6 @@
 package chloe.movietalk.auth;
 
-import chloe.movietalk.exception.auth.InvalidRefreshToken;
+import chloe.movietalk.exception.auth.InvalidAccessToken;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // accessToken이 만료된 경우
             if (jwtProvider.isTokenExpired(token)) {
-                throw InvalidRefreshToken.EXCEPTION;
+                throw InvalidAccessToken.EXCEPTION;
             } else {
                 // accessToken이 만료되지 않았고, valid한 경우, 인증정보 등록
                 if (jwtProvider.isValidToken(token)) {
