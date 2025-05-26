@@ -33,7 +33,7 @@ public class MovieRequest {
     @Schema(description = "제작연도", example = "2000")
     private Integer prodYear;
 
-    @Schema(description = "감독 ID", example = "1")
+    @Schema(description = "감독 ID", example = "ee276d0d-881d-4694-8b9f-751bfa1e2cc1")
     private UUID directorId;
 
     @Builder

@@ -1,5 +1,6 @@
 package chloe.movietalk.exception;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.util.List;
 @Getter
 public class ErrorResponse {
 
+    @Schema(example = "false")
     private final boolean success = false;
     private final int status;
     private final String code;
