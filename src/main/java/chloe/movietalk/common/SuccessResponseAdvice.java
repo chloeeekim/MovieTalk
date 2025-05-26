@@ -1,6 +1,5 @@
 package chloe.movietalk.common;
 
-import chloe.movietalk.dto.common.SuccessResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.HttpStatus;

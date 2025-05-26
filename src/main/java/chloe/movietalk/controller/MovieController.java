@@ -1,10 +1,10 @@
 package chloe.movietalk.controller;
 
-import chloe.movietalk.dto.common.ErrorResponse;
 import chloe.movietalk.dto.request.MovieRequest;
 import chloe.movietalk.dto.response.movie.MovieDetailResponse;
 import chloe.movietalk.dto.response.movie.MovieInfoResponse;
 import chloe.movietalk.dto.response.movie.UpdateMovieResponse;
+import chloe.movietalk.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;

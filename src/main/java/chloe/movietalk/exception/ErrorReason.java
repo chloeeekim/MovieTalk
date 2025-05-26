@@ -1,4 +1,4 @@
-package chloe.movietalk.dto.common;
+package chloe.movietalk.exception;
 
 import lombok.Builder;
 import lombok.Getter;
