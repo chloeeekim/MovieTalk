@@ -1,5 +1,6 @@
 package chloe.movietalk.exception;
 
+import chloe.movietalk.dto.common.ErrorReason;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

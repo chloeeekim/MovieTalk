@@ -1,7 +1,7 @@
 package chloe.movietalk.auth;
 
-import chloe.movietalk.exception.ErrorReason;
-import chloe.movietalk.exception.ErrorResponse;
+import chloe.movietalk.dto.common.ErrorReason;
+import chloe.movietalk.dto.common.ErrorResponse;
 import chloe.movietalk.exception.auth.AuthErrorCode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

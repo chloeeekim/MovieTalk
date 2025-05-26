@@ -1,10 +1,9 @@
 package chloe.movietalk.controller;
 
+import chloe.movietalk.dto.common.ErrorResponse;
 import chloe.movietalk.dto.request.DirectorRequest;
 import chloe.movietalk.dto.response.director.DirectorDetailResponse;
 import chloe.movietalk.dto.response.director.DirectorInfoResponse;
-import chloe.movietalk.exception.ErrorResponse;
-import chloe.movietalk.service.DirectorService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -12,27 +11,18 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/directors")
-@Tag(name = "Director", description = "Director APIs - 감독 목록 조회, 생성, 수정, 삭제 및 필모그라피 갱신 기능 제공")
-public class DirectorController {
-
-    private final DirectorService directorService;
+public interface DirectorController {
 
     @GetMapping
     @Operation(summary = "Get all directors list", description = "모든 감독의 목록을 조회합니다.")
@@ -44,10 +34,7 @@ public class DirectorController {
     public ResponseEntity<Page<DirectorInfoResponse>> getAllDirectors(
             @Parameter(name = "pageable", description = "페이지네이션 옵션")
             @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
-    ) {
-        Page<DirectorInfoResponse> directors = directorService.getAllDirectors(pageable);
-        return ResponseEntity.ok().body(directors);
-    }
+    );
 
     @GetMapping("/{id}")
     @Operation(summary = "Get director by ID", description = "감독 ID로 특정 감독의 상세 정보를 조회합니다.")
@@ -62,10 +49,7 @@ public class DirectorController {
     public ResponseEntity<DirectorDetailResponse> getDirectorById(
             @Parameter(name = "id", description = "감독 ID", required = true)
             @PathVariable UUID id
-    ) {
-        DirectorDetailResponse director = directorService.getDirectorById(id);
-        return ResponseEntity.ok().body(director);
-    }
+    );
 
     @GetMapping("/search")
     @Operation(summary = "Search directors by keyword", description = "감독 이름에 키워드가 포함된 감독 목록을 검색합니다.")
@@ -80,10 +64,7 @@ public class DirectorController {
 
             @Parameter(name = "pageable", description = "페이지네이션 옵션")
             @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
-    ) {
-        Page<DirectorInfoResponse> directors = directorService.searchDirector(keyword, pageable);
-        return ResponseEntity.ok().body(directors);
-    }
+    );
 
     @PostMapping
     @Operation(summary = "Create new director", description = "새로운 감독을 등록합니다.")
@@ -95,10 +76,7 @@ public class DirectorController {
     public ResponseEntity<DirectorInfoResponse> createDirector(
             @Schema(implementation = DirectorRequest.class)
             @RequestBody @Valid DirectorRequest request
-    ) {
-        DirectorInfoResponse director = directorService.createDirector(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(director);
-    }
+    );
 
     @PutMapping("/{id}")
     @Operation(summary = "Update director by ID", description = "감독 ID로 기존 감독 정보를 수정합니다.")
@@ -116,10 +94,7 @@ public class DirectorController {
 
             @Schema(implementation = DirectorRequest.class)
             @RequestBody @Valid DirectorRequest request
-    ) {
-        DirectorInfoResponse director = directorService.updateDirector(id, request);
-        return ResponseEntity.ok().body(director);
-    }
+    );
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete director by ID", description = "감독 ID로 기존 감독 정보를 삭제합니다.")
@@ -133,10 +108,7 @@ public class DirectorController {
     public ResponseEntity<Void> deleteDirector(
             @Parameter(name = "id", description = "감독 ID", required = true)
             @PathVariable UUID id
-    ) {
-        directorService.deleteDirector(id);
-        return ResponseEntity.noContent().build();
-    }
+    );
 
     @PostMapping("/{id}/filmography")
     @Operation(summary = "Update director's filmography by ID", description = "감독 ID로 해당 감독의 필모그라피를 수정합니다.")
@@ -157,8 +129,5 @@ public class DirectorController {
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = Long.class)))
             )
             @RequestBody List<UUID> filmography
-    ) {
-        DirectorDetailResponse director = directorService.updateDirectorFilmography(id, filmography);
-        return ResponseEntity.ok().body(director);
-    }
+    );
 }

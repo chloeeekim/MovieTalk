@@ -1,4 +1,4 @@
-package chloe.movietalk.common;
+package chloe.movietalk.dto.common;
 
 import lombok.Getter;
 

@@ -1,5 +1,7 @@
 package chloe.movietalk.exception;
 
+import chloe.movietalk.dto.common.ErrorReason;
+import chloe.movietalk.dto.common.ErrorResponse;
 import chloe.movietalk.exception.global.GlobalErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
