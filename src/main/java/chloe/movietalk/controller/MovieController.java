@@ -38,7 +38,7 @@ public interface MovieController {
     );
 
     @GetMapping("/{id}")
-    @Operation(summary = "Get moviee by ID", description = "영화 ID로 특정 영화의 상세 정보를 조회합니다.")
+    @Operation(summary = "Get movie by ID", description = "영화 ID로 특정 영화의 상세 정보를 조회합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공",
                     content = {
