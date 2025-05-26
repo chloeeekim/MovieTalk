@@ -5,15 +5,16 @@ import chloe.movietalk.dto.request.UpdateReviewRequest;
 import chloe.movietalk.dto.response.review.ReviewByMovieResponse;
 import chloe.movietalk.dto.response.review.ReviewByUserResponse;
 import chloe.movietalk.dto.response.review.ReviewDetailResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface ReviewService {
 
-    public List<ReviewByMovieResponse> getAllReviewsByMovie(UUID movieId);
+    public Page<ReviewByMovieResponse> getAllReviewsByMovie(UUID movieId, Pageable pageable);
 
-    public List<ReviewByUserResponse> getAllReviewsByUser(UUID userId);
+    public Page<ReviewByUserResponse> getAllReviewsByUser(UUID userId, Pageable pageable);
 
     public ReviewDetailResponse createReview(CreateReviewRequest request);
 

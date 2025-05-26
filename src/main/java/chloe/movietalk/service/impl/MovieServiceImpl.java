@@ -16,13 +16,14 @@ import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import chloe.movietalk.service.MovieService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -34,10 +35,9 @@ public class MovieServiceImpl implements MovieService {
     private final ActorRepository actorRepository;
 
     @Override
-    public List<MovieInfoResponse> getAllMovies() {
-        return movieRepository.findAll().stream()
-                .map(MovieInfoResponse::fromEntity)
-                .collect(Collectors.toList());
+    public Page<MovieInfoResponse> getAllMovies(Pageable pageable) {
+        return movieRepository.findAll(pageable)
+                .map(MovieInfoResponse::fromEntity);
     }
 
     @Override
@@ -49,10 +49,9 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public List<MovieInfoResponse> searchMovies(String keyword) {
-        return movieRepository.findByTitleContaining(keyword).stream()
-                .map(MovieInfoResponse::fromEntity)
-                .collect(Collectors.toList());
+    public Page<MovieInfoResponse> searchMovies(String keyword, Pageable pageable) {
+        return movieRepository.findByTitleContaining(keyword, pageable)
+                .map(MovieInfoResponse::fromEntity);
     }
 
     @Override

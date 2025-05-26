@@ -20,10 +20,11 @@ import chloe.movietalk.repository.ReviewRepository;
 import chloe.movietalk.repository.UserRepository;
 import chloe.movietalk.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -37,23 +38,21 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewLikeRepository reviewLikeRepository;
 
     @Override
-    public List<ReviewByMovieResponse> getAllReviewsByMovie(UUID movieId) {
+    public Page<ReviewByMovieResponse> getAllReviewsByMovie(UUID movieId, Pageable pageable) {
         movieRepository.findById(movieId)
                 .orElseThrow(() -> MovieNotFoundException.EXCEPTION);
 
-        return reviewRepository.findByMovieId(movieId).stream()
-                .map(ReviewByMovieResponse::fromEntity)
-                .toList();
+        return reviewRepository.findByMovieId(movieId, pageable)
+                .map(ReviewByMovieResponse::fromEntity);
     }
 
     @Override
-    public List<ReviewByUserResponse> getAllReviewsByUser(UUID userId) {
+    public Page<ReviewByUserResponse> getAllReviewsByUser(UUID userId, Pageable pageable) {
         userRepository.findById(userId)
                 .orElseThrow(() -> UserNotFoundException.EXCEPTION);
 
-        return reviewRepository.findByUserId(userId).stream()
-                .map(ReviewByUserResponse::fromEntity)
-                .toList();
+        return reviewRepository.findByUserId(userId, pageable)
+                .map(ReviewByUserResponse::fromEntity);
     }
 
     @Override

@@ -15,6 +15,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +41,12 @@ public class ActorController {
                     content = {
                             @Content(array = @ArraySchema(schema = @Schema(implementation = ActorInfoResponse.class)))})
     })
-    public List<ActorInfoResponse> getAllActors() {
-        return actorService.getAllActors();
+    public ResponseEntity<Page<ActorInfoResponse>> getAllActors(
+            @Parameter(name = "pageable", description = "페이지네이션 옵션")
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        Page<ActorInfoResponse> actors = actorService.getAllActors(pageable);
+        return ResponseEntity.ok().body(actors);
     }
 
     @GetMapping("/{id}")
@@ -51,11 +59,12 @@ public class ActorController {
                     content = {
                             @Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public ActorDetailResponse getActorById(
+    public ResponseEntity<ActorDetailResponse> getActorById(
             @Parameter(name = "id", description = "배우 ID", required = true)
             @PathVariable UUID id
     ) {
-        return actorService.getActorById(id);
+        ActorDetailResponse actor = actorService.getActorById(id);
+        return ResponseEntity.ok().body(actor);
     }
 
     @GetMapping("/search")
@@ -65,11 +74,15 @@ public class ActorController {
                     content = {
                             @Content(array = @ArraySchema(schema = @Schema(implementation = ActorInfoResponse.class)))})
     })
-    public List<ActorInfoResponse> searchActors(
+    public ResponseEntity<Page<ActorInfoResponse>> searchActors(
             @Parameter(name = "keyword", description = "검색할 키워드")
-            @RequestParam String keyword
+            @RequestParam String keyword,
+
+            @Parameter(name = "pageable", description = "페이지네이션 옵션")
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        return actorService.searchActor(keyword);
+        Page<ActorInfoResponse> actors = actorService.searchActor(keyword, pageable);
+        return ResponseEntity.ok().body(actors);
     }
 
     @PostMapping

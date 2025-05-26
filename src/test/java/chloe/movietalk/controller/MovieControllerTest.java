@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -53,8 +55,8 @@ public class MovieControllerTest {
     DirectorRepository directorRepository;
 
     @Test
-    @DisplayName("영화 목록 불러오기")
-    public void getAllMovies() throws Exception {
+    @DisplayName("영화 목록 불러오기 : 디폴트 페이지네이션 옵션")
+    public void getAllMoviesWithDefaultPagination() throws Exception {
         // given
         int count = 2;
         List<Movie> movies = getMoviesForTest(count);
@@ -65,9 +67,29 @@ public class MovieControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data", hasSize(count)))
-                .andExpect(jsonPath("data[0].title").value(movies.get(0).getTitle()))
-                .andExpect(jsonPath("data[1].title").value(movies.get(1).getTitle()));
+                .andExpect(jsonPath("data.content", hasSize(count)))
+                .andExpect(jsonPath("data.content[0].title").value(movies.get(0).getTitle()))
+                .andExpect(jsonPath("data.content[1].title").value(movies.get(1).getTitle()));
+    }
+
+    @Test
+    @DisplayName("영화 목록 불러오기 : 페이지네이션 옵션 지정")
+    public void getAllMoviesWithSpecificPagination() throws Exception {
+        // given
+        int count = 2;
+        List<Movie> movies = getMoviesForTest(count);
+        Pageable pageable = PageRequest.of(0, 1);
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/api/movies")
+                .param("page", String.valueOf(pageable.getPageNumber()))
+                .param("size", String.valueOf(pageable.getPageSize())));
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("data.content", hasSize(pageable.getPageSize())))
+                .andExpect(jsonPath("data.content[0].title").value(movies.get(0).getTitle()));
     }
 
     @Test
@@ -98,8 +120,8 @@ public class MovieControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data", hasSize(1)))
-                .andExpect(jsonPath("data[0].title").value(movie.getTitle()));
+                .andExpect(jsonPath("data.content", hasSize(1)))
+                .andExpect(jsonPath("data.content[0].title").value(movie.getTitle()));
     }
 
     @Test

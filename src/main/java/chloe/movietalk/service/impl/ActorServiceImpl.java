@@ -10,6 +10,8 @@ import chloe.movietalk.repository.ActorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import chloe.movietalk.service.ActorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +27,9 @@ public class ActorServiceImpl implements ActorService {
     private final MovieRepository movieRepository;
 
     @Override
-    public List<ActorInfoResponse> getAllActors() {
-        return actorRepository.findAll().stream()
-                .map(ActorInfoResponse::fromEntity)
-                .toList();
+    public Page<ActorInfoResponse> getAllActors(Pageable pageable) {
+        return actorRepository.findAll(pageable)
+                .map(ActorInfoResponse::fromEntity);
     }
 
     @Override
@@ -39,10 +40,9 @@ public class ActorServiceImpl implements ActorService {
     }
 
     @Override
-    public List<ActorInfoResponse> searchActor(String keyword) {
-        return actorRepository.findByNameContaining(keyword).stream()
-                .map(ActorInfoResponse::fromEntity)
-                .toList();
+    public Page<ActorInfoResponse> searchActor(String keyword, Pageable pageable) {
+        return actorRepository.findByNameContaining(keyword, pageable)
+                .map(ActorInfoResponse::fromEntity);
     }
 
     @Override

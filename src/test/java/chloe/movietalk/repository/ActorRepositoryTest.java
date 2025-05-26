@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +45,14 @@ public class ActorRepositoryTest {
         // given
         int count = 30;
         List<Actor> actors = getActorsForTest(count);
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        List<Actor> foundList = actorRepository.findAll();
+        List<Actor> foundList = actorRepository.findAll(pageable).getContent();
 
         // then
-        assertThat(foundList).hasSize(count);
-        assertThat(foundList).containsExactlyInAnyOrderElementsOf(actors);
+        assertThat(foundList).hasSize(pageable.getPageSize());
+        assertThat(foundList).containsExactlyInAnyOrderElementsOf(actors.subList(0, 10));
     }
 
     @Test
@@ -70,10 +73,11 @@ public class ActorRepositoryTest {
     public void findByName() {
         // given
         Actor actor = getActorsForTest(1).get(0);
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
         String keyword = "배우";
-        List<Actor> actorList = actorRepository.findByNameContaining(keyword);
+        List<Actor> actorList = actorRepository.findByNameContaining(keyword, pageable).getContent();
 
         // then
         assertThat(actorList).containsOnly(actor);

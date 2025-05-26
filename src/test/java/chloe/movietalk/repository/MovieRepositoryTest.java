@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,13 +48,14 @@ public class MovieRepositoryTest {
         // given
         int count = 30;
         List<Movie> movies = getMoviesForTest(count, null);
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        List<Movie> foundList = movieRepository.findAll();
+        List<Movie> foundList = movieRepository.findAll(pageable).getContent();
 
         // then
-        assertThat(foundList).hasSize(count);
-        assertThat(foundList).containsExactlyInAnyOrderElementsOf(movies);
+        assertThat(foundList).hasSize(pageable.getPageSize());
+        assertThat(foundList).containsExactlyInAnyOrderElementsOf(movies.subList(0, 10));
     }
 
     @Test
@@ -73,10 +76,11 @@ public class MovieRepositoryTest {
     public void findByTitle() {
         // given
         Movie movie = getMoviesForTest(1, null).get(0);
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
         String keyword = "테스트";
-        List<Movie> movieList = movieRepository.findByTitleContaining(keyword);
+        List<Movie> movieList = movieRepository.findByTitleContaining(keyword, pageable).getContent();
 
         // then
         assertThat(movieList).containsOnly(movie);
@@ -101,9 +105,10 @@ public class MovieRepositoryTest {
         // given
         Director director = getDirectorForTest();
         Movie movie = getMoviesForTest(1, director).get(0);
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        List<Movie> movieList = movieRepository.findByDirectorId(director.getId());
+        List<Movie> movieList = movieRepository.findByDirectorId(director.getId(), pageable).getContent();
 
         // then
         assertThat(movieList).containsOnly(movie);

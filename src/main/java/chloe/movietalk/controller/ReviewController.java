@@ -17,11 +17,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -98,11 +101,15 @@ public class ReviewController {
                     content = {
                             @Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public List<ReviewByMovieResponse> getAllReviewsByMovie(
+    public ResponseEntity<Page<ReviewByMovieResponse>> getAllReviewsByMovie(
             @Parameter(name = "id", description = "영화 ID", required = true)
-            @PathVariable UUID id
+            @PathVariable UUID id,
+
+            @Parameter(name = "pageable", description = "페이지네이션 옵션")
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        return reviewService.getAllReviewsByMovie(id);
+        Page<ReviewByMovieResponse> reviews = reviewService.getAllReviewsByMovie(id, pageable);
+        return ResponseEntity.ok().body(reviews);
     }
 
     @GetMapping("/users/{id}")
@@ -115,11 +122,15 @@ public class ReviewController {
                     content = {
                             @Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public List<ReviewByUserResponse> getAllReviewsByUser(
+    public ResponseEntity<Page<ReviewByUserResponse>> getAllReviewsByUser(
             @Parameter(name = "id", description = "사용자 ID", required = true)
-            @PathVariable UUID id
+            @PathVariable UUID id,
+
+            @Parameter(name = "pageable", description = "페이지네이션 옵션")
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        return reviewService.getAllReviewsByUser(id);
+        Page<ReviewByUserResponse> reviews = reviewService.getAllReviewsByUser(id, pageable);
+        return ResponseEntity.ok().body(reviews);
     }
 
     @Operation(summary = "Like review", description = "사용자가 리뷰에 좋아요를 표시합니다.")

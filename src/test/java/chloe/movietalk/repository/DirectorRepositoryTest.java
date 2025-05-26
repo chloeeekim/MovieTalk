@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +45,14 @@ public class DirectorRepositoryTest {
         // given
         int count = 30;
         List<Director> directors = getDirectorsForTest(count);
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        List<Director> foundList = directorRepository.findAll();
+        List<Director> foundList = directorRepository.findAll(pageable).getContent();
 
         // then
-        assertThat(foundList).hasSize(count);
-        assertThat(foundList).containsExactlyInAnyOrderElementsOf(directors);
+        assertThat(foundList).hasSize(pageable.getPageSize());
+        assertThat(foundList).containsExactlyInAnyOrderElementsOf(directors.subList(0, 10));
     }
 
     @Test
@@ -70,10 +73,11 @@ public class DirectorRepositoryTest {
     public void findByName() {
         // given
         Director director = getDirectorsForTest(1).get(0);
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
         String keyword = "감독";
-        List<Director> directorList = directorRepository.findByNameContaining(keyword);
+        List<Director> directorList = directorRepository.findByNameContaining(keyword, pageable).getContent();
 
         // then
         assertThat(directorList).containsOnly(director);

@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -51,8 +53,8 @@ public class ActorControllerTest {
     MovieActorRepository movieActorRepository;
 
     @Test
-    @DisplayName("배우 목록 불러오기")
-    public void getAllActors() throws Exception {
+    @DisplayName("배우 목록 불러오기 : 디폴트 페이지네이션 옵션")
+    public void getAllActorsWithDefaultPagination() throws Exception {
         // given
         int count = 2;
         List<Actor> actors = getActorsForTest(count);
@@ -63,9 +65,29 @@ public class ActorControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data", hasSize(count)))
-                .andExpect(jsonPath("data[0].name").value(actors.get(0).getName()))
-                .andExpect(jsonPath("data[1].name").value(actors.get(1).getName()));
+                .andExpect(jsonPath("data.content", hasSize(count)))
+                .andExpect(jsonPath("data.content[0].name").value(actors.get(0).getName()))
+                .andExpect(jsonPath("data.content[1].name").value(actors.get(1).getName()));
+    }
+
+    @Test
+    @DisplayName("배우 목록 불러오기 : 페이지네이션 옵션 지정")
+    public void getAllActorsWithSpecificPagination() throws Exception {
+        // given
+        int count = 2;
+        List<Actor> actors = getActorsForTest(count);
+        Pageable pageable = PageRequest.of(0, 1);
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/api/actors")
+                .param("page", String.valueOf(pageable.getPageNumber()))
+                .param("size", String.valueOf(pageable.getPageSize())));
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("data.content", hasSize(pageable.getPageSize())))
+                .andExpect(jsonPath("data.content[0].name").value(actors.get(0).getName()));
     }
 
     @Test
@@ -101,8 +123,8 @@ public class ActorControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data", hasSize(1)))
-                .andExpect(jsonPath("data[0].name").value(actor.getName()));
+                .andExpect(jsonPath("data.content", hasSize(1)))
+                .andExpect(jsonPath("data.content[0].name").value(actor.getName()));
     }
 
     @Test

@@ -16,6 +16,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,8 +42,12 @@ public class MovieController {
                     content = {
                             @Content(array = @ArraySchema(schema = @Schema(implementation = MovieInfoResponse.class)))})
     })
-    public List<MovieInfoResponse> getAllMovies() {
-        return movieService.getAllMovies();
+    public ResponseEntity<Page<MovieInfoResponse>> getAllMovies(
+            @Parameter(name = "pageable", description = "페이지네이션 옵션")
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        Page<MovieInfoResponse> movies = movieService.getAllMovies(pageable);
+        return ResponseEntity.ok().body(movies);
     }
 
     @GetMapping("/{id}")
@@ -52,11 +60,12 @@ public class MovieController {
                     content = {
                             @Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public MovieDetailResponse getMovieById(
+    public ResponseEntity<MovieDetailResponse> getMovieById(
             @Parameter(name = "id", description = "영화 ID", required = true)
             @PathVariable UUID id
     ) {
-        return movieService.getMovieById(id);
+        MovieDetailResponse movie = movieService.getMovieById(id);
+        return ResponseEntity.ok().body(movie);
     }
 
     @GetMapping("/search")
@@ -66,11 +75,15 @@ public class MovieController {
                     content = {
                             @Content(array = @ArraySchema(schema = @Schema(implementation = MovieInfoResponse.class)))})
     })
-    public List<MovieInfoResponse> searchMovies(
+    public ResponseEntity<Page<MovieInfoResponse>> searchMovies(
             @Parameter(name = "keyword", description = "검색할 키워드")
-            @RequestParam String keyword
+            @RequestParam String keyword,
+
+            @Parameter(name = "pageable", description = "페이지네이션 옵션")
+            @PageableDefault(page = 0, size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable
     ) {
-        return movieService.searchMovies(keyword);
+        Page<MovieInfoResponse> movies = movieService.searchMovies(keyword, pageable);
+        return ResponseEntity.ok().body(movies);
     }
 
     @PostMapping

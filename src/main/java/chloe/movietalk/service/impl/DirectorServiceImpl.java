@@ -11,6 +11,8 @@ import chloe.movietalk.repository.DirectorRepository;
 import chloe.movietalk.repository.MovieRepository;
 import chloe.movietalk.service.DirectorService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +28,9 @@ public class DirectorServiceImpl implements DirectorService {
     private final DirectorRepository directorRepository;
 
     @Override
-    public List<DirectorInfoResponse> getAllDirectors() {
-        return directorRepository.findAll().stream()
-                .map(DirectorInfoResponse::fromEntity)
-                .toList();
+    public Page<DirectorInfoResponse> getAllDirectors(Pageable pageable) {
+        return directorRepository.findAll(pageable)
+                .map(DirectorInfoResponse::fromEntity);
     }
 
     @Override
@@ -40,10 +41,9 @@ public class DirectorServiceImpl implements DirectorService {
     }
 
     @Override
-    public List<DirectorInfoResponse> searchDirector(String keyword) {
-        return directorRepository.findByNameContaining(keyword).stream()
-                .map(DirectorInfoResponse::fromEntity)
-                .toList();
+    public Page<DirectorInfoResponse> searchDirector(String keyword, Pageable pageable) {
+        return directorRepository.findByNameContaining(keyword, pageable)
+                .map(DirectorInfoResponse::fromEntity);
     }
 
     @Override

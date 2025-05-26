@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -47,8 +49,8 @@ public class DirectorControllerTest {
     MovieRepository movieRepository;
 
     @Test
-    @DisplayName("감독 목록 불러오기")
-    public void getAllDirectors() throws Exception {
+    @DisplayName("감독 목록 불러오기 : 디폴트 페이지네이션 옵션")
+    public void getAllDirectorsWithDefaultPagination() throws Exception {
         // given
         int count = 2;
         List<Director> directors = getDirectorsForTest(count);
@@ -59,9 +61,29 @@ public class DirectorControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data", hasSize(count)))
-                .andExpect(jsonPath("data[0].name").value(directors.get(0).getName()))
-                .andExpect(jsonPath("data[1].name").value(directors.get(1).getName()));
+                .andExpect(jsonPath("data.content", hasSize(count)))
+                .andExpect(jsonPath("data.content[0].name").value(directors.get(0).getName()))
+                .andExpect(jsonPath("data.content[1].name").value(directors.get(1).getName()));
+    }
+
+    @Test
+    @DisplayName("감독 목록 불러오기 : 페이지네이션 옵션 지정")
+    public void getAllDirectorsWithSpecificPagination() throws Exception {
+        // given
+        int count = 2;
+        List<Director> directors = getDirectorsForTest(count);
+        Pageable pageable = PageRequest.of(0, 1);
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/api/directors")
+                .param("page", String.valueOf(pageable.getPageNumber()))
+                .param("size", String.valueOf(pageable.getPageSize())));
+
+        // then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("data.content", hasSize(pageable.getPageSize())))
+                .andExpect(jsonPath("data.content[0].name").value(directors.get(0).getName()));
     }
 
     @Test
@@ -97,8 +119,8 @@ public class DirectorControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data", hasSize(1)))
-                .andExpect(jsonPath("data[0].name").value(director.getName()));
+                .andExpect(jsonPath("data.content", hasSize(1)))
+                .andExpect(jsonPath("data.content[0].name").value(director.getName()));
     }
 
     @Test

@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -54,9 +56,10 @@ public class ReviewRepositoryTest {
         Movie movie = getMovieForTest();
         SiteUser user = getUserForTest();
         Review review = getReviewForTest(movie, user);
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        List<Review> reviewList = reviewRepository.findByMovieId(movie.getId());
+        List<Review> reviewList = reviewRepository.findByMovieId(movie.getId(), pageable).getContent();
 
         // then
         assertThat(reviewList).containsOnly(review);
@@ -69,9 +72,10 @@ public class ReviewRepositoryTest {
         Movie movie = getMovieForTest();
         SiteUser user = getUserForTest();
         Review review = getReviewForTest(movie, user);
+        Pageable pageable = PageRequest.of(0, 10);
 
         // when
-        List<Review> reviewList = reviewRepository.findByUserId(user.getId());
+        List<Review> reviewList = reviewRepository.findByUserId(user.getId(), pageable).getContent();
 
         // then
         assertThat(reviewList).containsOnly(review);

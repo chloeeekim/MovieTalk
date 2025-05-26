@@ -445,10 +445,10 @@ public class ReviewControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data", hasSize(1)))
-                .andExpect(jsonPath("data[0].rating").value(review.getRating()))
-                .andExpect(jsonPath("data[0].comment").value(review.getComment()))
-                .andExpect(jsonPath("data[0].userInfo.email").value(user.getEmail()));
+                .andExpect(jsonPath("data.content", hasSize(1)))
+                .andExpect(jsonPath("data.content[0].rating").value(review.getRating()))
+                .andExpect(jsonPath("data.content[0].comment").value(review.getComment()))
+                .andExpect(jsonPath("data.content[0].userInfo.email").value(user.getEmail()));
     }
 
     @Test
@@ -480,10 +480,10 @@ public class ReviewControllerTest {
         // then
         resultActions
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("data", hasSize(1)))
-                .andExpect(jsonPath("data[0].rating").value(review.getRating()))
-                .andExpect(jsonPath("data[0].comment").value(review.getComment()))
-                .andExpect(jsonPath("data[0].movieInfo.title").value(movie.getTitle()));
+                .andExpect(jsonPath("data.content", hasSize(1)))
+                .andExpect(jsonPath("data.content[0].rating").value(review.getRating()))
+                .andExpect(jsonPath("data.content[0].comment").value(review.getComment()))
+                .andExpect(jsonPath("data.content[0].movieInfo.title").value(movie.getTitle()));
     }
 
     @Test
