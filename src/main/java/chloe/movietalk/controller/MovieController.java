@@ -78,7 +78,7 @@ public interface MovieController {
                             @Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<MovieInfoResponse> createMovie(
-            @Schema(implementation = MovieInfoResponse.class)
+            @Schema(implementation = MovieRequest.class)
             @RequestBody @Valid MovieRequest request
     );
 
