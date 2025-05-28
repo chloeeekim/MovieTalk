@@ -1,6 +1,6 @@
 package chloe.movietalk.domain.enums;
 
-import chloe.movietalk.exception.global.InvalidEnumValueException;
+import chloe.movietalk.exception.global.InvalidRoleEnumValueException;
 
 import java.util.Arrays;
 
@@ -14,6 +14,6 @@ public enum UserRole {
         return Arrays.stream(values())
                 .filter(g -> g.name().equals(role))
                 .findFirst()
-                .orElseThrow(() -> InvalidEnumValueException.EXCEPTION);
+                .orElseThrow(() -> InvalidRoleEnumValueException.EXCEPTION);
     }
 }

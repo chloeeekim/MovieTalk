@@ -1,6 +1,6 @@
 package chloe.movietalk.domain.enums;
 
-import chloe.movietalk.exception.global.InvalidEnumValueException;
+import chloe.movietalk.exception.global.InvalidGenderEnumValueException;
 
 import java.util.Arrays;
 
@@ -15,6 +15,6 @@ public enum Gender {
         return Arrays.stream(values())
                 .filter(g -> g.name().equals(genderStr))
                 .findFirst()
-                .orElseThrow(() -> InvalidEnumValueException.EXCEPTION);
+                .orElseThrow(() -> InvalidGenderEnumValueException.EXCEPTION);
     }
 }
