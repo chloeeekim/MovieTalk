@@ -5,8 +5,6 @@
 
 ## 🔍 About MovieTalk
 
-***
-
 👤 개인 프로젝트
 
 📅 2025.05.20 - 2025.05.28
@@ -15,8 +13,6 @@
 
 ## 🛠️ 사용 기술 및 라이브러리
 
-***
-
 - JAVA `17`
 - Spring Boot `3.4.5`, Spring Data JPA `3.4.5`, Spring Security `6.4.5`, JWT (JJWT `0.11.5`)
 - H2 `2.3.232`, Redis `3.4.5`
@@ -24,8 +20,6 @@
 - SpringDoc `2.8.8`
 
 ## 👩‍💻 구현 내용
-
-***
 
 1. **사용자 인증 및 권한 관리 (JWT + Spring Security)**
     - 회원가입, 로그인, 로그아웃 기능 구현
@@ -60,13 +54,9 @@
 
 ## 💾 ERD
 
-***
-
 ![MovieTalk ERD.png](readme_assets/MovieTalk%20ERD.png)
 
 ## 🗒️ API 명세 (Swagger)
-
-***
 
 - API 명세서는 다음과 같이 자동 생성됩니다.
   ![swagger example.png](readme_assets/swagger%20example.png)
