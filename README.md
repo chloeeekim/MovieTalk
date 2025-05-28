@@ -26,11 +26,15 @@
     - Access Token / Refresh Token을 통한 인증 시스템 구축
     - Spring Security 필터 커스터마이징으로 요청별 인증 처리
     - `BCryptPasswordEncoder` 를 사용하여 비밀번호를 암호화하여 DB에 저장
+
+
 2. **영화/배우/감독 정보 CRUD + 검색 + 페이징 기능**
     - 영화/배우/감독 등 주요 항목에 대해 등록, 수정, 삭제, 검색 기능 구현
     - 영화:배우(N:N), 영화:감독(N:1) 데이터 매핑
     - Spring Data JPA를 통해 CRUD 처리 및 유효성 검증 적용
     - `Pageable`을 사용하여 리스트 형태로 반환되는 요청들에 페이지네이션 적용
+
+
 3. **영화 리뷰 및 평점 시스템**
     - 사용자는 영화에 대해 평점을 포함한 리뷰 작성 가능
     - 영화 조회 시 평균 평점 확인 가능
@@ -38,16 +42,22 @@
     - 영화 상세 조회 시 평균 평점 및 좋아요 순 상위 3개 리뷰 확인 가능
     - 평점은 0.5점~5점으로, 0.5점 단위로 입력 가능하도록 Validation 처리 추가
     - `Pageable`을 사용하여 리스트 형태로 반환되는 요청들에 페이지네이션 적용
+
+
 4. **Redis 기반 Refresh Token 저장 및 재발급**
     - Refresh Token은 Redis에 저장하고 만료 시간 설정
     - Access Token 만료 시, 특정 에러를 반환하여 refresh를 요청하도록 구현
     - Refresh Token은 Redis TTL 기반으로 자동 만료
     - Token Blacklist 방식으로 로그아웃 기능 구현
+
+
 5. **응답 공통 포맷 적용**
     - `ResponseBodyAdvice` 인터페이스를 구현하여 모든 성공 응답을 `{ success, status, data, timestamp }` 형태로 래핑
     - 에러 발생 시 응답을 `{ success, status, code, reason, timestamp, path }` 형태로 래핑
     - `@ExceptionHandler` 등을 사용하여 전역 예외 처리
     - 에러 발생 원인(e.g., `USER_NOT_FOUND`)을 특정하여 커스텀 에러 코드 및 메시지로 응답
+
+
 6. **SpringDoc 기반 Swagger 문서 자동화**
     - `springdoc-openapi` 를 사용하여 API 명세 자동 생성
     - `OperationCustomizer` 를 활용하여 실제 응답 포맷 구조로 Swagger 응답 스키마 재정의
